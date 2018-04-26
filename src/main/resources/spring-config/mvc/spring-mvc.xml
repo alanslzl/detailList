@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation=" 
+                http://www.springframework.org/schema/beans 
+                http://www.springframework.org/schema/beans/spring-beans-3.1.xsd 
+                http://www.springframework.org/schema/context 
+                http://www.springframework.org/schema/context/spring-context-3.1.xsd 
+                http://www.springframework.org/schema/mvc 
+                http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd">
+
+	<!-- 开启自动扫描包 -->
+	<context:component-scan
+		base-package="com.detailList.*" />
+	<!-- 开启注解驱动 -->
+	<mvc:annotation-driven>
+		<mvc:message-converters>
+			<bean class="com.detailList.utils.UTF8StringHttpMessageConverter" />
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+	<!-- 默认访问跳转到登录页面 -->
+	<mvc:view-controller path="/" view-name="forward:page/login.jsp" />
+	<!-- 在地址栏访问 "网站根路径 + /404",所跳转到的页面404.jsp -->
+	<mvc:view-controller path="/404" view-name="404" />
+	<mvc:view-controller path="/500" view-name="500" />
+	
+	<!-- 配置不用DispatcherServlet拦截的路径(例如：图片、CSS样式、js文件...),其中的"**"代表路径及其子路径-->
+	<mvc:resources mapping="/page/css/**" location="/page/css/" />
+	<mvc:resources mapping="/page/js/**" location="/page/js/" />
+	<mvc:resources mapping="/page/images/**" location="/page/images/" />
+	<mvc:resources mapping="/page/bower_components/**" location="/page/bower_components/" />
+	
+	<mvc:interceptors> 
+		<!-- 多个拦截器，顺序执行 -->
+		<mvc:interceptor> 
+			<mvc:mapping path="/*"/> 
+			<bean class="com.detailList.Intercepter.AuthorizationInterceptor"></bean> 
+		</mvc:interceptor> 
+	</mvc:interceptors> 
+	
+	<!-- 采用SpringMVC自带的JSON转换工具，支持@ResponseBody注解 -->
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />
+			</list>
+		</property>
+	</bean>
+
+	<!-- 配置视图解析器 -->
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView" />
+		<!-- 上面的配置是固定的，下面两个配置意思是：如果你要访问index视图， 它会自动 prefix(前缀) + index + suffix(后缀), 
+			生成/WEB-INF/views/index.jsp -->
+		<property name="prefix" value="/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	<!-- 配置文件上传解析器 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- 上面配置是固定的，下面是配置上传文件的最大大小 -->
+		<property name="maxUploadSize" value="50000000" />
+	</bean>
+
+	<!-- 避免IE执行AJAX时,返回JSON出现下载文件 -->
+	<bean id="mappingJacksonHttpMessageConverter"
+		class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+		<property name="supportedMediaTypes">
+			<list>
+				<value>text/html;charset=UTF-8</value>
+			</list>
+		</property>
+	</bean>
+	<!-- rest模板 -->
+	<bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
+        <property name="requestFactory">
+            <bean class="org.springframework.http.client.SimpleClientHttpRequestFactory">
+                <property name="readTimeout" value="30000"/>
+            </bean>
+        </property>
+    </bean>
+	<!-- 拦截器 <mvc:interceptors> -->
+	<!-- 多个拦截器,顺序执行 <mvc:interceptor> -->
+	<!-- <mvc:mapping path="/**" /> 如果不配置或/*,将拦截所有的Controller <bean class="com.common.interceptor.Interceptor"></bean> </mvc:interceptor> </mvc:interceptors> -->
+</beans>

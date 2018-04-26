@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.detailList.dao.WorkMapper">
+  <resultMap id="BaseResultMap" type="com.detailList.entity.Work">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="work_name" jdbcType="VARCHAR" property="workName" />
+    <result column="liable_person" jdbcType="VARCHAR" property="liablePerson" />
+    <result column="supervisor" jdbcType="VARCHAR" property="supervisor" />
+    <result column="job_require" jdbcType="VARCHAR" property="jobRequire" />
+    <result column="metting_type_id" jdbcType="VARCHAR" property="mettingTypeId" />
+    <result column="work_company" jdbcType="VARCHAR" property="workCompany" />
+    <result column="finish_time" jdbcType="TIMESTAMP" property="finishTime" />
+    <result column="work_label" jdbcType="VARCHAR" property="workLabel" />
+    <result column="work_status" jdbcType="CHAR" property="workStatus" />
+    <result column="work_level" jdbcType="VARCHAR" property="workLevel" />
+    <result column="input_company" jdbcType="VARCHAR" property="inputCompany" />
+    <result column="supervisor_strategy" jdbcType="VARCHAR" property="supervisorStrategy" />
+    <result column="enclosure" jdbcType="VARCHAR" property="enclosure" />
+    <result column="merge_id" jdbcType="VARCHAR" property="mergeId" />
+    <result column="work_progress" jdbcType="VARCHAR" property="workProgress" />
+    <result column="work_publish_person" jdbcType="VARCHAR" property="workPublishPerson" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, work_name, liable_person, supervisor, job_require, metting_type_id, work_company, 
+    finish_time, work_label, work_status, work_level, input_company, supervisor_strategy, 
+    enclosure, merge_id, work_progress, work_publish_person
+  </sql>
+  <select id="selectWorkByWorkTypeId" parameterType="java.lang.String" resultMap="BaseResultMap">
+  		select
+  		dw.*
+  		from dl_work_type dwt 
+		left join dl_work_type_relation dwtr on dwt.id=dwtr.work_type_id
+		left join dl_work dw on dwtr.work_id=dw.id
+		<where>
+			1=1
+			and dwt.id=#{workTypeId}
+		</where>
+  </select>
+  <select id="selectNoTypeWork" parameterType="java.lang.String" resultMap="BaseResultMap">
+  		select dw.*
+		from dl_work dw left join dl_detail_work ddw on dw.id=ddw.work_id
+		left join dl_detail_list ddl on ddw.detail_list_id=ddl.id
+		WHERE
+		1=1
+		and ddl.id=#{detailListId}
+  </select>
+  <select id="selectWork" parameterType="java.lang.String" resultMap="BaseResultMap">
+  		select dw.*
+		from dl_work dw
+		where
+		1=1
+		and dw.liable_person=#{userId} or dw.supervisor=#{userId}
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dl_work
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from dl_work
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.detailList.entity.Work">
+    insert into dl_work (id, work_name, liable_person, 
+      supervisor, job_require, metting_type_id, 
+      work_company, finish_time, work_label, 
+      work_status, work_level, input_company, 
+      supervisor_strategy, enclosure, merge_id, 
+      work_progress, work_publish_person)
+    values (#{id,jdbcType=VARCHAR}, #{workName,jdbcType=VARCHAR}, #{liablePerson,jdbcType=VARCHAR}, 
+      #{supervisor,jdbcType=VARCHAR}, #{jobRequire,jdbcType=VARCHAR}, #{mettingTypeId,jdbcType=VARCHAR}, 
+      #{workCompany,jdbcType=VARCHAR}, #{finishTime,jdbcType=TIMESTAMP}, #{workLabel,jdbcType=VARCHAR}, 
+      #{workStatus,jdbcType=CHAR}, #{workLevel,jdbcType=VARCHAR}, #{inputCompany,jdbcType=VARCHAR}, 
+      #{supervisorStrategy,jdbcType=VARCHAR}, #{enclosure,jdbcType=VARCHAR}, #{mergeId,jdbcType=VARCHAR}, 
+      #{workProgress,jdbcType=VARCHAR}, #{workPublishPerson,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.detailList.entity.Work">
+    insert into dl_work
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="workName != null">
+        work_name,
+      </if>
+      <if test="liablePerson != null">
+        liable_person,
+      </if>
+      <if test="supervisor != null">
+        supervisor,
+      </if>
+      <if test="jobRequire != null">
+        job_require,
+      </if>
+      <if test="mettingTypeId != null">
+        metting_type_id,
+      </if>
+      <if test="workCompany != null">
+        work_company,
+      </if>
+      <if test="finishTime != null">
+        finish_time,
+      </if>
+      <if test="workLabel != null">
+        work_label,
+      </if>
+      <if test="workStatus != null">
+        work_status,
+      </if>
+      <if test="workLevel != null">
+        work_level,
+      </if>
+      <if test="inputCompany != null">
+        input_company,
+      </if>
+      <if test="supervisorStrategy != null">
+        supervisor_strategy,
+      </if>
+      <if test="enclosure != null">
+        enclosure,
+      </if>
+      <if test="mergeId != null">
+        merge_id,
+      </if>
+      <if test="workProgress != null">
+        work_progress,
+      </if>
+      <if test="workPublishPerson != null">
+        work_publish_person,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="workName != null">
+        #{workName,jdbcType=VARCHAR},
+      </if>
+      <if test="liablePerson != null">
+        #{liablePerson,jdbcType=VARCHAR},
+      </if>
+      <if test="supervisor != null">
+        #{supervisor,jdbcType=VARCHAR},
+      </if>
+      <if test="jobRequire != null">
+        #{jobRequire,jdbcType=VARCHAR},
+      </if>
+      <if test="mettingTypeId != null">
+        #{mettingTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="workCompany != null">
+        #{workCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="finishTime != null">
+        #{finishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="workLabel != null">
+        #{workLabel,jdbcType=VARCHAR},
+      </if>
+      <if test="workStatus != null">
+        #{workStatus,jdbcType=CHAR},
+      </if>
+      <if test="workLevel != null">
+        #{workLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="inputCompany != null">
+        #{inputCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="supervisorStrategy != null">
+        #{supervisorStrategy,jdbcType=VARCHAR},
+      </if>
+      <if test="enclosure != null">
+        #{enclosure,jdbcType=VARCHAR},
+      </if>
+      <if test="mergeId != null">
+        #{mergeId,jdbcType=VARCHAR},
+      </if>
+      <if test="workProgress != null">
+        #{workProgress,jdbcType=VARCHAR},
+      </if>
+      <if test="workPublishPerson != null">
+        #{workPublishPerson,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.detailList.entity.Work">
+    update dl_work
+    <set>
+      <if test="workName != null">
+        work_name = #{workName,jdbcType=VARCHAR},
+      </if>
+      <if test="liablePerson != null">
+        liable_person = #{liablePerson,jdbcType=VARCHAR},
+      </if>
+      <if test="supervisor != null">
+        supervisor = #{supervisor,jdbcType=VARCHAR},
+      </if>
+      <if test="jobRequire != null">
+        job_require = #{jobRequire,jdbcType=VARCHAR},
+      </if>
+      <if test="mettingTypeId != null">
+        metting_type_id = #{mettingTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="workCompany != null">
+        work_company = #{workCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="finishTime != null">
+        finish_time = #{finishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="workLabel != null">
+        work_label = #{workLabel,jdbcType=VARCHAR},
+      </if>
+      <if test="workStatus != null">
+        work_status = #{workStatus,jdbcType=CHAR},
+      </if>
+      <if test="workLevel != null">
+        work_level = #{workLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="inputCompany != null">
+        input_company = #{inputCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="supervisorStrategy != null">
+        supervisor_strategy = #{supervisorStrategy,jdbcType=VARCHAR},
+      </if>
+      <if test="enclosure != null">
+        enclosure = #{enclosure,jdbcType=VARCHAR},
+      </if>
+      <if test="mergeId != null">
+        merge_id = #{mergeId,jdbcType=VARCHAR},
+      </if>
+      <if test="workProgress != null">
+        work_progress = #{workProgress,jdbcType=VARCHAR},
+      </if>
+      <if test="workPublishPerson != null">
+        work_publish_person = #{workPublishPerson,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.detailList.entity.Work">
+    update dl_work
+    set work_name = #{workName,jdbcType=VARCHAR},
+      liable_person = #{liablePerson,jdbcType=VARCHAR},
+      supervisor = #{supervisor,jdbcType=VARCHAR},
+      job_require = #{jobRequire,jdbcType=VARCHAR},
+      metting_type_id = #{mettingTypeId,jdbcType=VARCHAR},
+      work_company = #{workCompany,jdbcType=VARCHAR},
+      finish_time = #{finishTime,jdbcType=TIMESTAMP},
+      work_label = #{workLabel,jdbcType=VARCHAR},
+      work_status = #{workStatus,jdbcType=CHAR},
+      work_level = #{workLevel,jdbcType=VARCHAR},
+      input_company = #{inputCompany,jdbcType=VARCHAR},
+      supervisor_strategy = #{supervisorStrategy,jdbcType=VARCHAR},
+      enclosure = #{enclosure,jdbcType=VARCHAR},
+      merge_id = #{mergeId,jdbcType=VARCHAR},
+      work_progress = #{workProgress,jdbcType=VARCHAR},
+      work_publish_person = #{workPublishPerson,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>
