@@ -5,6 +5,7 @@ import java.util.List;
 import com.detailList.dto.DetailListDto;
 import com.detailList.entity.DetailWork;
 import com.detailList.entity.Work;
+import com.detailList.entity.WorkLabel;
 import com.detailList.entity.WorkType;
 import com.detailList.entity.WorkTypeRelation;
 
@@ -14,7 +15,7 @@ public interface WorkService {
 	 * @param detailListId
 	 * @return
 	 */
-	public DetailListDto selectWorkType(String detailListId);
+	public DetailListDto selectWorkType(String detailListId,Work work);
 	
 	/**
 	 * 获取用户的所有工作
@@ -59,4 +60,9 @@ public interface WorkService {
 	 * @param detailListId
 	 */
 	public void deleteDetailWorkByDetailListId(String detailListId);
+	/**
+	 * 新增工作
+	 * @param work
+	 */
+	public Work insertEasyWork(Work work);
 }

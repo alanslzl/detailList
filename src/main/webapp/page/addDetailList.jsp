@@ -90,7 +90,7 @@
 					$("#successMsg").removeClass("hide");
 					setTimeout(function(){
 						window.location.href="<%=path%>/page/descDetailList.jsp";
-					}, 3000);
+					}, 1000);
 				}
 			}
 		});

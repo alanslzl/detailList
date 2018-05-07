@@ -93,8 +93,9 @@
 		        <a class="navbar-brand" href="#" onclick="loadPage('<%=path%>/detailList/queryDetailListManager.do');">清单管理</a>
 		        <a class="navbar-brand" href="#" onclick="loadPage('<%=path%>/work/queryWorkManager.do');">工作管理</a>
 		        <a class="navbar-brand" href="#" onclick="loadPage('<%=path%>/page/templateManager.jsp');">模板管理</a>
-		        <a class="navbar-brand" href="#" onclick="loadPage('<%=path%>/page/templateManager.jsp');">查看他人清单</a>
-		        <a class="navbar-brand" href="#">系统管理</a>
+		        <a class="navbar-brand" href="#" onclick="loadPage('<%=path%>/page/opDetailList.jsp');">查看他人清单</a>
+		        <a class="navbar-brand" href="#" onclick="loadPage('<%=path%>/workLabel/query.do');">工作标签管理</a>
+		        <a class="navbar-brand" href="#" onclick="loadPage('<%=path%>/mettingType/query.do');">会议类型管理</a>
 		    </div>
 		</div>
 	</nav>

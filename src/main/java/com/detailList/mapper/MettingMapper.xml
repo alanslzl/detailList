@@ -1,71 +1,109 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.detailList.dao.MettingMapper">
-  <resultMap id="BaseResultMap" type="com.detailList.entity.Metting">
-    <id column="id" jdbcType="VARCHAR" property="id" />
-    <result column="metting_name" jdbcType="VARCHAR" property="mettingName" />
-    <result column="metting_time" jdbcType="TIMESTAMP" property="mettingTime" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    id, metting_name, metting_time
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from dl_metting
-    where id = #{id,jdbcType=VARCHAR}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from dl_metting
-    where id = #{id,jdbcType=VARCHAR}
-  </delete>
-  <insert id="insert" parameterType="com.detailList.entity.Metting">
-    insert into dl_metting (id, metting_name, metting_time
-      )
-    values (#{id,jdbcType=VARCHAR}, #{mettingName,jdbcType=VARCHAR}, #{mettingTime,jdbcType=TIMESTAMP}
-      )
-  </insert>
-  <insert id="insertSelective" parameterType="com.detailList.entity.Metting">
-    insert into dl_metting
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="mettingName != null">
-        metting_name,
-      </if>
-      <if test="mettingTime != null">
-        metting_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=VARCHAR},
-      </if>
-      <if test="mettingName != null">
-        #{mettingName,jdbcType=VARCHAR},
-      </if>
-      <if test="mettingTime != null">
-        #{mettingTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.detailList.entity.Metting">
-    update dl_metting
-    <set>
-      <if test="mettingName != null">
-        metting_name = #{mettingName,jdbcType=VARCHAR},
-      </if>
-      <if test="mettingTime != null">
-        metting_time = #{mettingTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where id = #{id,jdbcType=VARCHAR}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.detailList.entity.Metting">
-    update dl_metting
-    set metting_name = #{mettingName,jdbcType=VARCHAR},
-      metting_time = #{mettingTime,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=VARCHAR}
-  </update>
+	<resultMap id="BaseResultMap"
+		type="com.detailList.entity.Metting">
+		<id column="id" jdbcType="VARCHAR" property="id" />
+		<result column="metting_name" jdbcType="VARCHAR"
+			property="mettingName" />
+		<result column="metting_time" jdbcType="TIMESTAMP"
+			property="mettingTime" />
+		<result column="insert_user" jdbcType="VARCHAR"
+			property="insertUser" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, metting_name, metting_time,insert_user
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from dl_metting
+		where id = #{id,jdbcType=VARCHAR}
+	</select>
+	<select id="selectMetting" parameterType="com.detailList.entity.Metting"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from dl_metting
+		<where>
+			1=1
+			<if test="id != null">
+				and id = #{id,jdbcType=VARCHAR}
+			</if>
+			<if test="mettingName != null">
+				and mettingName like concat(concat('%',#{mettingName}),'%')
+			</if>
+			<if test="mettingTime != null">
+				and mettingTime = #{mettingTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="insertUser != null">
+				and insertUser = #{insertUser,jdbcType=TIMESTAMP}
+			</if>
+		</where>
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from dl_metting
+		where id = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert"
+		parameterType="com.detailList.entity.Metting">
+		insert into dl_metting (id, metting_name, metting_time,insert_user
+		)
+		values (#{id,jdbcType=VARCHAR}, #{mettingName,jdbcType=VARCHAR},
+		#{mettingTime,jdbcType=TIMESTAMP},#{insertUser,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.detailList.entity.Metting">
+		insert into dl_metting
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="mettingName != null">
+				metting_name,
+			</if>
+			<if test="mettingTime != null">
+				metting_time,
+			</if>
+			<if test="insertUser != null">
+				insert_user,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="mettingName != null">
+				#{mettingName,jdbcType=VARCHAR},
+			</if>
+			<if test="mettingTime != null">
+				#{mettingTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="insertUser != null">
+				#{insertUser,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.detailList.entity.Metting">
+		update dl_metting
+		<set>
+			<if test="mettingName != null">
+				metting_name = #{mettingName,jdbcType=VARCHAR},
+			</if>
+			<if test="mettingTime != null">
+				metting_time = #{mettingTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.detailList.entity.Metting">
+		update dl_metting
+		set metting_name = #{mettingName,jdbcType=VARCHAR},
+		metting_time = #{mettingTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
 </mapper>

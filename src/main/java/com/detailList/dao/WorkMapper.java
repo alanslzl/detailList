@@ -1,6 +1,9 @@
 package com.detailList.dao;
 
 import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
 
 import com.detailList.entity.Work;
 
@@ -17,9 +20,9 @@ public interface WorkMapper {
 
     int updateByPrimaryKey(Work record);
     
-    List<Work> selectWorkByWorkTypeId(String workTypeId);
+    List<Work> selectWorkByWorkTypeId(Map<String, Object> paramMap);
     
-    List<Work> selectNoTypeWork(String detailListId);
+    List<Work> selectNoTypeWork(Map<String, Object> paramMap);
     
-    List<Work> selectWork(String userId);
+    List<Work> selectWork(@Param("userId")String userId);
 }

@@ -9,6 +9,8 @@ public class Metting implements Serializable {
     private String mettingName;
 
     private Date mettingTime;
+    
+    private String insertUser;
 
     private static final long serialVersionUID = 1L;
 
@@ -32,7 +34,15 @@ public class Metting implements Serializable {
         return mettingTime;
     }
 
-    public void setMettingTime(Date mettingTime) {
+    public String getInsertUser() {
+		return insertUser;
+	}
+
+	public void setInsertUser(String insertUser) {
+		this.insertUser = insertUser;
+	}
+
+	public void setMettingTime(Date mettingTime) {
         this.mettingTime = mettingTime;
     }
 

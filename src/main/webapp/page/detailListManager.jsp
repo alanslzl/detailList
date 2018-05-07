@@ -12,13 +12,10 @@
 </head>
 <script type="text/javascript">
 	function addDetailList(){
-		window.location.href="./addDetailList.jsp";
+		window.location.href="<%=path%>/page/addDetailList.jsp";
 	}
-	function updDetailList(){
-		window.location.href="./addDetailList.jsp";
-	}
-	function descDetailList(){
-		window.location.href="<%=path%>/page/descDetailList.jsp";
+	function descDetailList(detailListId){
+		window.location.href="<%=path%>/page/descDetailList.jsp?checkDetailId="+detailListId;
 	}
 	function editDetailList(detailListId){
 		window.location.href="<%=path%>/detailList/editDetailList.do?detailListId="+detailListId;
@@ -112,9 +109,9 @@
 				                    	<c:when test="${fn:length(label.detailListDto.typeWorkListDto) gt 0}">
 				                    		<li class="active"><a href="#${label.detailListDto.typeWorkListDto[0].workTypeId}">${label.detailListDto.typeWorkListDto[0].workTypeName}</a></li>
 				                    	</c:when>
-				                    	<c:otherwise>
+				                    	<c:when test="${fn:length(label.detailListDto.noTypeWorkList) gt 0}">
 				                    		<li class="active"><a href="#${label.detailListDto.noTypeWorkList[0].id}">未分类工作</a></li>
-				                    	</c:otherwise>
+				                    	</c:when>
 				                    </c:choose>
 				                    <c:if test="${fn:length(label.detailListDto.typeWorkListDto) gt 1}">
 				                    	<li><a href="#${label.detailListDto.typeWorkListDto[1].workTypeId}">${label.detailListDto.typeWorkListDto[1].workTypeName}</a></li>
@@ -131,9 +128,12 @@
 							                        <h3>工作简介:
 							                            <small>${label.detailListDto.typeWorkListDto[0].list[0].workName}</small>
 							                        </h3>
-							                        <p>${label.detailListDto.typeWorkListDto[0].list[0].workStatus}</p>
-													<p>工作单位:${label.detailListDto.typeWorkListDto[0].list[0].workCompany}</p>
-							                        <p>负责人:${label.detailListDto.typeWorkListDto[0].list[0].liablePerson}</p>
+							                        <p>责任人:${label.detailListDto.typeWorkListDto[0].list[0].liablePerson}</p>
+													<p>督办人:${label.detailListDto.typeWorkListDto[0].list[0].supervisor}</p>
+							                        <p>工作状态:${label.detailListDto.typeWorkListDto[0].list[0].workStatus}</p>
+							                        <p>工作等级:${label.detailListDto.typeWorkListDto[0].list[0].workLevel}</p>
+							                        <p>工作单位:${label.detailListDto.typeWorkListDto[0].list[0].workCompany}</p>
+							                        <p>工作要求:${label.detailListDto.typeWorkListDto[0].list[0].supervisorStrategy}</p>
 						                        </c:if>
 						                    </div>
 				                		</c:when>
@@ -143,9 +143,12 @@
 							                    		<h3>工作简介:
 								                            <small>${label.detailListDto.noTypeWorkList[0].workName}</small>
 								                        </h3>
-								                        <p>${label.detailListDto.noTypeWorkList[0].workStatus}</p>
-														<p>工作单位:${label.detailListDto.noTypeWorkList[0].workCompany}</p>
-								                        <p>负责人:${label.detailListDto.noTypeWorkList[0].liablePerson}</p>
+								                        <p>责任人:${label.detailListDto.noTypeWorkList[0].liablePerson}</p>
+														<p>督办人:${label.detailListDto.noTypeWorkList[0].supervisor}</p>
+								                        <p>工作状态:${label.detailListDto.noTypeWorkList[0].workStatus}</p>
+								                        <p>工作等级:${label.detailListDto.noTypeWorkList[0].workLevel}</p>
+								                        <p>工作单位:${label.detailListDto.noTypeWorkList[0].workCompany}</p>
+								                        <p>工作要求:${label.detailListDto.noTypeWorkList[0].supervisorStrategy}</p>
 							                    </div>
 						                    </c:if>
 				                		</c:otherwise>
@@ -153,21 +156,27 @@
 				                    <div class="tab-pane" id="${label.detailListDto.typeWorkListDto[1].workTypeId}">
 				                    	<c:if test="${fn:length(label.detailListDto.typeWorkListDto[1].list) gt 0}">
 					                        <h3>工作简介:
-					                            <small>${label.detailListDto.typeWorkListDto[1].list[0].workName}</small>
+					                            <small>${label.detailListDto.typeWorkListDto[0].list[0].workName}</small>
 					                        </h3>
-					                        <p>${label.detailListDto.typeWorkListDto[1].list[0].workStatus}</p>
-											<p>工作单位:${label.detailListDto.typeWorkListDto[1].list[0].workCompany}</p>
-					                        <p>负责人:${label.detailListDto.typeWorkListDto[1].list[0].liablePerson}</p>
+					                        <p>责任人:${label.detailListDto.typeWorkListDto[0].list[0].liablePerson}</p>
+											<p>督办人:${label.detailListDto.typeWorkListDto[0].list[0].supervisor}</p>
+					                        <p>工作状态:${label.detailListDto.typeWorkListDto[0].list[0].workStatus}</p>
+					                        <p>工作等级:${label.detailListDto.typeWorkListDto[0].list[0].workLevel}</p>
+					                        <p>工作单位:${label.detailListDto.typeWorkListDto[0].list[0].workCompany}</p>
+					                        <p>工作要求:${label.detailListDto.typeWorkListDto[0].list[0].supervisorStrategy}</p>
 				                        </c:if>
 				                    </div>
 				                    <div class="tab-pane" id="${label.detailListDto.typeWorkListDto[2].workTypeId}">
 				                        <c:if test="${fn:length(label.detailListDto.typeWorkListDto[2].list) gt 1}">
 					                        <h3>工作简介:
-					                            <small>${label.detailListDto.typeWorkListDto[2].list[0].workName}</small>
+					                            <small>${label.detailListDto.typeWorkListDto[0].list[0].workName}</small>
 					                        </h3>
-					                        <p>${label.detailListDto.typeWorkListDto[2].list[0].workStatus}</p>
-											<p>工作单位:${label.detailListDto.typeWorkListDto[2].list[0].workCompany}</p>
-					                        <p>负责人:${label.detailListDto.typeWorkListDto[2].list[0].liablePerson}</p>
+					                        <p>责任人:${label.detailListDto.typeWorkListDto[0].list[0].liablePerson}</p>
+											<p>督办人:${label.detailListDto.typeWorkListDto[0].list[0].supervisor}</p>
+					                        <p>工作状态:${label.detailListDto.typeWorkListDto[0].list[0].workStatus}</p>
+					                        <p>工作等级:${label.detailListDto.typeWorkListDto[0].list[0].workLevel}</p>
+					                        <p>工作单位:${label.detailListDto.typeWorkListDto[0].list[0].workCompany}</p>
+					                        <p>工作要求:${label.detailListDto.typeWorkListDto[0].list[0].supervisorStrategy}</p>
 				                        </c:if>
 				                    </div>
 				                </div>
@@ -218,7 +227,7 @@
 			                 	<c:forEach items="${tableData}" var="table">
 			                 		<tr>
 					                     <td>${table.detailListName}</td>
-					                     <td class="center">林琳</td>
+					                     <td class="center">${table.detailListPerson}</td>
 					                     <td class="center">
 					                         <a class="btn btn-success" href="#" onclick="descDetailList();">
 					                             <i class="glyphicon glyphicon-zoom-in icon-white"></i>

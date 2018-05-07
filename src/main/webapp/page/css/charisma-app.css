@@ -1,5 +1,8 @@
 @import url(https://fonts.googleapis.com/css?family=Shojumaru);
 
+.row{
+	padding-top: 12px;
+}
 select {
     background-color: #fff;
 }

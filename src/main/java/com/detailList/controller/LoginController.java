@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.detailList.entity.User;
+import com.detailList.entity.Zhr2001;
 import com.detailList.service.UserService;
 
 @Controller
@@ -23,7 +24,9 @@ public class LoginController{
         try {
         	User user = userService.login(currUser);
         	if(null!=user){
+        		Zhr2001 userInfo = userService.selectByPrimaryKey(Integer.parseInt(user.getId()));
         		request.getSession().setAttribute("user", user);
+        		request.getSession().setAttribute("userInfo", userInfo);
         		return "redirect:/index.do";
         	}else {
         		throw new AuthenticationException("用户验证失败");

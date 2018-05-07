@@ -1,27 +1,33 @@
 package com.detailList.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.detailList.dao.DetailWorkMapper;
 import com.detailList.dao.WorkExportTemplateMapper;
 import com.detailList.dao.WorkLabelMapper;
-import com.detailList.dao.WorkLabelRelationMapper;
 import com.detailList.dao.WorkMapper;
 import com.detailList.dao.WorkNodeMapper;
 import com.detailList.dao.WorkTalkRecordMapper;
 import com.detailList.dao.WorkTypeMapper;
 import com.detailList.dao.WorkTypeRelationMapper;
+import com.detailList.dao.workPersonMapper;
 import com.detailList.dto.DetailListDto;
 import com.detailList.dto.DetailListTypeDto;
 import com.detailList.entity.DetailWork;
 import com.detailList.entity.Work;
+import com.detailList.entity.WorkLabel;
 import com.detailList.entity.WorkType;
 import com.detailList.entity.WorkTypeRelation;
+import com.detailList.entity.workPerson;
 import com.detailList.service.WorkService;
+import com.detailList.utils.StringUtils;
 
 @Service
 public class WorkServiceImpl implements WorkService{
@@ -41,9 +47,6 @@ public class WorkServiceImpl implements WorkService{
 	private WorkLabelMapper workLabelMapper;
 	
 	@Autowired
-	private WorkLabelRelationMapper workLabelRelationMapper;
-	
-	@Autowired
 	private WorkTalkRecordMapper workTalkRecordMapper;
 	
 	@Autowired
@@ -51,19 +54,29 @@ public class WorkServiceImpl implements WorkService{
 	
 	@Autowired
 	private WorkExportTemplateMapper workExportTemplateMapper;
+	
+	@Autowired
+	private workPersonMapper workPersonMapper;
+	
 
-	public DetailListDto selectWorkType(String detailListId){
+	public DetailListDto selectWorkType(String detailListId,Work work){
 		List<DetailListTypeDto> dtolist = new ArrayList<DetailListTypeDto>();
 		List<WorkType> typeList = workTypeMapper.selectWorkType(detailListId);
 		for (WorkType workType : typeList) {
 			DetailListTypeDto dto = new DetailListTypeDto();
 			dto.setWorkTypeId(workType.getId());
 			dto.setWorkTypeName(workType.getWorkTypeName());
-			List<Work> workList = workMapper.selectWorkByWorkTypeId(workType.getId());
+			Map<String, Object> paramMap = new HashMap<String, Object>();
+			paramMap.put("workTypeId", workType.getId());
+			paramMap.put("queryWork", work);
+			List<Work> workList = workMapper.selectWorkByWorkTypeId(paramMap);
 			dto.setList(workList);
 			dtolist.add(dto);
 		}
-		List<Work> workList = workMapper.selectNoTypeWork(detailListId);
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("detailListId", detailListId);
+		paramMap.put("queryWork", work);
+		List<Work> workList = workMapper.selectNoTypeWork(paramMap);
 		DetailListDto dto = new DetailListDto();
 		dto.setTypeWorkListDto(dtolist);
 		dto.setNoTypeWorkList(workList);
@@ -93,5 +106,29 @@ public class WorkServiceImpl implements WorkService{
 	}
 	public void deleteDetailWorkByDetailListId(String detailListId) {
 		detailWorkMapper.deleteDetailWorkByDetailListId(detailListId);
+	}
+	public Work insertEasyWork(Work work) {
+		//督办人
+		String[] supervisorArr = work.getSupervisor().split(",");
+		for (String supervisor : supervisorArr) {
+			workPerson p = new workPerson();
+			p.setId(StringUtils.genUUid());
+			p.setType("1");
+			p.setUserId(supervisor);
+			p.setWorkId(work.getId());
+			workPersonMapper.insertSelective(p);
+		}
+		//责任人
+		String [] liablePersonArr =  work.getLiablePerson().split(",");
+		for (String liablePerson : liablePersonArr) {
+			workPerson p = new workPerson();
+			p.setId(StringUtils.genUUid());
+			p.setType("0");
+			p.setUserId(liablePerson);
+			p.setWorkId(work.getId());
+			workPersonMapper.insertSelective(p);
+		}
+		workMapper.insertSelective(work);
+		return work;
 	}
 }

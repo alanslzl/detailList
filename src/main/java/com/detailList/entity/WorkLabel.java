@@ -6,6 +6,8 @@ public class WorkLabel implements Serializable {
     private String id;
 
     private String labelName;
+    
+    private String insertUser;
 
     private static final long serialVersionUID = 1L;
 
@@ -50,7 +52,15 @@ public class WorkLabel implements Serializable {
         return result;
     }
 
-    @Override
+    public String getInsertUser() {
+		return insertUser;
+	}
+
+	public void setInsertUser(String insertUser) {
+		this.insertUser = insertUser;
+	}
+
+	@Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(getClass().getSimpleName());

@@ -1,5 +1,7 @@
 package com.detailList.dao;
 
+import java.util.List;
+
 import com.detailList.entity.Metting;
 
 public interface MettingMapper {
@@ -14,4 +16,6 @@ public interface MettingMapper {
     int updateByPrimaryKeySelective(Metting record);
 
     int updateByPrimaryKey(Metting record);
+    
+    List<Metting> selectMetting(Metting record);
 }

@@ -2,15 +2,12 @@ package com.detailList.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 public class Work implements Serializable {
     private String id;
 
     private String workName;
-
-    private String liablePerson;
-
-    private String supervisor;
 
     private String jobRequire;
 
@@ -37,8 +34,22 @@ public class Work implements Serializable {
     private String workProgress;
 
     private String workPublishPerson;
+    
+    private String liablePerson;
+    
+    private String supervisor;
+    
+    public List<WorkNode> nodeList;
 
-    private static final long serialVersionUID = 1L;
+    public List<WorkNode> getNodeList() {
+		return nodeList;
+	}
+
+	public void setNodeList(List<WorkNode> nodeList) {
+		this.nodeList = nodeList;
+	}
+
+	private static final long serialVersionUID = 1L;
 
     public String getId() {
         return id;
@@ -54,22 +65,6 @@ public class Work implements Serializable {
 
     public void setWorkName(String workName) {
         this.workName = workName == null ? null : workName.trim();
-    }
-
-    public String getLiablePerson() {
-        return liablePerson;
-    }
-
-    public void setLiablePerson(String liablePerson) {
-        this.liablePerson = liablePerson == null ? null : liablePerson.trim();
-    }
-
-    public String getSupervisor() {
-        return supervisor;
-    }
-
-    public void setSupervisor(String supervisor) {
-        this.supervisor = supervisor == null ? null : supervisor.trim();
     }
 
     public String getJobRequire() {
@@ -92,7 +87,23 @@ public class Work implements Serializable {
         return workCompany;
     }
 
-    public void setWorkCompany(String workCompany) {
+    public String getLiablePerson() {
+		return liablePerson;
+	}
+
+	public void setLiablePerson(String liablePerson) {
+		this.liablePerson = liablePerson;
+	}
+
+	public String getSupervisor() {
+		return supervisor;
+	}
+
+	public void setSupervisor(String supervisor) {
+		this.supervisor = supervisor;
+	}
+
+	public void setWorkCompany(String workCompany) {
         this.workCompany = workCompany == null ? null : workCompany.trim();
     }
 
@@ -190,8 +201,6 @@ public class Work implements Serializable {
         Work other = (Work) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
             && (this.getWorkName() == null ? other.getWorkName() == null : this.getWorkName().equals(other.getWorkName()))
-            && (this.getLiablePerson() == null ? other.getLiablePerson() == null : this.getLiablePerson().equals(other.getLiablePerson()))
-            && (this.getSupervisor() == null ? other.getSupervisor() == null : this.getSupervisor().equals(other.getSupervisor()))
             && (this.getJobRequire() == null ? other.getJobRequire() == null : this.getJobRequire().equals(other.getJobRequire()))
             && (this.getMettingTypeId() == null ? other.getMettingTypeId() == null : this.getMettingTypeId().equals(other.getMettingTypeId()))
             && (this.getWorkCompany() == null ? other.getWorkCompany() == null : this.getWorkCompany().equals(other.getWorkCompany()))
@@ -213,8 +222,6 @@ public class Work implements Serializable {
         int result = 1;
         result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
         result = prime * result + ((getWorkName() == null) ? 0 : getWorkName().hashCode());
-        result = prime * result + ((getLiablePerson() == null) ? 0 : getLiablePerson().hashCode());
-        result = prime * result + ((getSupervisor() == null) ? 0 : getSupervisor().hashCode());
         result = prime * result + ((getJobRequire() == null) ? 0 : getJobRequire().hashCode());
         result = prime * result + ((getMettingTypeId() == null) ? 0 : getMettingTypeId().hashCode());
         result = prime * result + ((getWorkCompany() == null) ? 0 : getWorkCompany().hashCode());
@@ -239,8 +246,6 @@ public class Work implements Serializable {
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
         sb.append(", workName=").append(workName);
-        sb.append(", liablePerson=").append(liablePerson);
-        sb.append(", supervisor=").append(supervisor);
         sb.append(", jobRequire=").append(jobRequire);
         sb.append(", mettingTypeId=").append(mettingTypeId);
         sb.append(", workCompany=").append(workCompany);

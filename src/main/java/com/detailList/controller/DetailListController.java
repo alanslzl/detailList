@@ -1,9 +1,16 @@
 package com.detailList.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -24,11 +31,15 @@ import com.detailList.dto.WorkTypeDto;
 import com.detailList.entity.DetailList;
 import com.detailList.entity.DetailWork;
 import com.detailList.entity.User;
+import com.detailList.entity.Work;
+import com.detailList.entity.WorkExportTemplate;
 import com.detailList.entity.WorkType;
 import com.detailList.entity.WorkTypeRelation;
 import com.detailList.service.DetailListService;
 import com.detailList.service.WorkService;
+import com.detailList.utils.DateUtils;
 import com.detailList.utils.StringUtils;
+import com.detailList.utils.freemakerUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
@@ -67,7 +78,7 @@ public class DetailListController{
 			PageHelper.startPage(page, 3);
 			List<DetailList> queryList = detailListService.selectDetailList(detailList);
 			for (DetailList dl : queryList) {
-				DetailListDto wtList = workService.selectWorkType(dl.getId());
+				DetailListDto wtList = workService.selectWorkType(dl.getId(),new Work());
 				DetailListManagerDto dto = new DetailListManagerDto();
 				dto.setDetailList(dl);
 				dto.setDetailListDto(wtList);
@@ -205,5 +216,51 @@ public class DetailListController{
 			e.printStackTrace();
 			return JSONUtils.toJSONString(Result.error(e.getMessage()));
 		}
+	}
+	@RequestMapping("/exportDetailList")
+	public String exportDetailList(HttpServletRequest request,HttpServletResponse response,String detailListId) throws IOException{
+		DetailList dt = detailListService.selectDetailListById(detailListId);
+		DetailListDto allWork = workService.selectWorkType(detailListId,new Work());
+		WorkExportTemplate template = new WorkExportTemplate();
+		template.setDense("公司机密⭐十年");
+		template.setMettingName("商务、研发和信息化周会");
+		template.setUpdateTime(DateUtils.getDateFormat());
+		template.setCompanyName("董办");
+		template.setDetailTypeStyle("楷体");
+		Map<String,Object> map = new HashMap<String,Object>();
+		
+		map.put("typeWorkList", allWork.getTypeWorkListDto());
+		map.put("notypeWorkList", allWork.getNoTypeWorkList());
+		map.put("detailList", dt);
+		map.put("template", template);
+		//提示：在调用工具类生成Word文档之前应当检查所有字段是否完整
+        //否则Freemarker的模板殷勤在处理时可能会因为找不到值而报错，这里暂时忽略这个步骤
+        File file = null;
+        InputStream fin = null;
+        ServletOutputStream out = null;
+        try{
+            //调用工具类WordGenerator的createDoc方法生成Word文档
+            file = freemakerUtil.createDoc(map, "workDetail");
+            fin = new FileInputStream(file);
+            response.setCharacterEncoding("utf-8");
+            response.setContentType("application/msword");
+            response.addHeader("Content-Disposition", "attachment;filename=工作清单.doc");
+            out = response.getOutputStream();
+            byte[] buffer = new byte[1024];//缓冲区
+            int bytesToRead = -1;
+            // 通过循环将读入的Word文件的内容输出到浏览器中  
+            while((bytesToRead = fin.read(buffer)) != -1) {  
+                out.write(buffer, 0, bytesToRead);  
+            }
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        finally{
+            if(fin != null) fin.close();  
+            if(out != null) out.close();  
+            if(file != null) file.delete(); // 删除临时文件  
+        }
+        return null;
 	}
 }

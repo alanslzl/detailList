@@ -7,17 +7,27 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.detailList.dto.DetailListDto;
+import com.detailList.dto.EasyWorkDto;
 import com.detailList.dto.Result;
 import com.detailList.entity.DetailList;
+import com.detailList.entity.DetailWork;
 import com.detailList.entity.User;
 import com.detailList.entity.Work;
+import com.detailList.entity.WorkTypeRelation;
+import com.detailList.entity.Zhr2001;
 import com.detailList.service.WorkService;
+import com.detailList.utils.StringUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
@@ -49,9 +59,14 @@ public class WorkController{
 	}
 	@RequestMapping("/queryDetailListWork")
 	@ResponseBody
-	public Object queryDetailListWork(HttpServletRequest request,HttpServletResponse response,@Param("detailList")DetailList detailList) {
+	public Object queryDetailListWork(HttpServletRequest request,HttpServletResponse response,@Param("detailList")DetailList detailList,String queryWork) {
 		try {
-			DetailListDto dto = workService.selectWorkType(detailList.getId());
+			Work work = null;
+			if(queryWork!=null) {
+				JSONObject obj = JSON.parseObject(queryWork);
+				work = obj.parseObject(queryWork, Work.class);
+			}
+			DetailListDto dto = workService.selectWorkType(detailList.getId(),work);
 			return dto;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -89,5 +104,34 @@ public class WorkController{
 			e.printStackTrace();
 		}
 		return view;
+	}
+	@RequestMapping("/addEasyWork")
+	@ResponseBody
+	public String addEasyWork(HttpServletRequest request,HttpServletResponse response,@ModelAttribute EasyWorkDto dto) {
+		Zhr2001 userInfo = (Zhr2001)request.getSession().getAttribute("userInfo");
+		Work work = new Work();
+		work.setId(StringUtils.genUUid());
+		work.setWorkName(dto.getWorkName());
+		work.setLiablePerson(dto.getLiablePerson());
+		work.setSupervisor(dto.getSupervisor());
+		work.setSupervisorStrategy(dto.getSupervisorStrategy());
+		work.setWorkCompany(userInfo.getOrgeh());
+		work.setInputCompany(userInfo.getOrgeh());
+		work.setWorkStatus("0");
+		work = workService.insertEasyWork(work);
+		if(dto.getWorkType().equals("notype")){
+			DetailWork dw = new DetailWork();
+			dw.setId(StringUtils.genUUid());
+			dw.setWorkId(work.getId());
+			dw.setDetailListId(dto.getDetailListId());
+			workService.insertDetailWork(dw);
+		}else{
+			WorkTypeRelation wtr = new WorkTypeRelation();
+			wtr.setId(StringUtils.genUUid());
+			wtr.setWorkId(work.getId());
+			wtr.setWorkTypeId(dto.getWorkType());
+			workService.insertWorkTypeRelation(wtr);
+		}
+		return JSON.toJSONString(Result.success());
 	}
 }

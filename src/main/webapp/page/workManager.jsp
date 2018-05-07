@@ -95,7 +95,7 @@
 					<div class="box col-md-3">
 						<div class="box-inner">
 				            <div class="box-header well">
-				                <h2><i class="glyphicon glyphicon-user"></i>${label.workName}</h2>
+				                <h2><i class="glyphicon glyphicon-user"></i>${fn:substring(label.workName,0,12)}...</h2>
 				                <div class="box-icon">
 				                	<a href="#" class="btn btn-setting btn-round btn-default" title="编辑工作"><i
 				                            class="glyphicon glyphicon-cog" onclick="editWork();"></i></a>
@@ -107,12 +107,12 @@
 				            </div>
 				            <div id="myTabContent" class="tab-content">
 			                    <div class="tab-pane active" id="info">
-			                        <h5>工作简介:
-			                            <small>${label.workName}</small>
+			                        <h5>工作名称:
+			                            <a href="#" onclick="descWork();">${fn:substring(label.workName,0,25)}...</a>
 			                        </h5>
-			                        <p>${label.workStatus}</p>
-									<p>工作单位:${label.workCompany}</p>
-			                        <p>负责人:${label.liablePerson}</p>
+									<p>责任人:${label.liablePerson}</p>
+			                        <p>督办人:${label.supervisor}</p>
+			                        <p>工作要求:<small>${fn:substring(label.jobRequire,0,25)}...</small></p>
 			                    </div>
 			                </div>
 			        	</div>

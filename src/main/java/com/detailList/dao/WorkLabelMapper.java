@@ -1,5 +1,7 @@
 package com.detailList.dao;
 
+import java.util.List;
+
 import com.detailList.entity.WorkLabel;
 
 public interface WorkLabelMapper {
@@ -14,4 +16,6 @@ public interface WorkLabelMapper {
     int updateByPrimaryKeySelective(WorkLabel record);
 
     int updateByPrimaryKey(WorkLabel record);
+    
+    List<WorkLabel> selectWorkLabel(WorkLabel label);
 }

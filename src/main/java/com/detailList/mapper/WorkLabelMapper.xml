@@ -4,10 +4,26 @@
   <resultMap id="BaseResultMap" type="com.detailList.entity.WorkLabel">
     <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="label_name" jdbcType="VARCHAR" property="labelName" />
+    <result column="insert_user" jdbcType="VARCHAR" property="insertUser" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, label_name
+    id, label_name,insert_user
   </sql>
+  
+  <select id="selectWorkLabel" parameterType="com.detailList.entity.WorkLabel" resultMap="BaseResultMap">
+    select 
+    dwl.id,dwl.label_name,CONCAT(z1.NACHN,z1.VORNA) as insert_user
+    from dl_work_label dwl left join zhr2_001 z1 on dwl.insert_user=z1.PERNR
+    <where>
+    	1=1
+    	<if test="labelName!=null">
+	    	and label_name like concat(concat('%',#{labelName}),'%') 
+    	</if>
+    	<if test="insertUser!=null">
+    		and insert_user=#{inserUser}
+    	</if>
+    </where>
+  </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
@@ -19,8 +35,8 @@
     where id = #{id,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.detailList.entity.WorkLabel">
-    insert into dl_work_label (id, label_name)
-    values (#{id,jdbcType=VARCHAR}, #{labelName,jdbcType=VARCHAR})
+    insert into dl_work_label (id, label_name,insert_user)
+    values (#{id,jdbcType=VARCHAR}, #{labelName,jdbcType=VARCHAR},#{insertUser,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.detailList.entity.WorkLabel">
     insert into dl_work_label
@@ -31,6 +47,9 @@
       <if test="labelName != null">
         label_name,
       </if>
+      <if test="insertUser != null">
+        insert_user
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -38,6 +57,9 @@
       </if>
       <if test="labelName != null">
         #{labelName,jdbcType=VARCHAR},
+      </if>
+      <if test="insertUser != null">
+        #{insertUser,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>

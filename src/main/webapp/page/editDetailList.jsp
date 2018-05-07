@@ -117,8 +117,8 @@
 				if(data.resultCode == 0){
 					$("#successMsg").removeClass("hide");
 					setTimeout(function(){
-						window.location.href="<%=path%>/page/descDetailList.jsp";
-					}, 3000);
+						window.location.href="<%=path%>/page/descDetailList.jsp?checkDetailId="+detailListId;
+					}, 1000);
 				}
 			}
 		});
