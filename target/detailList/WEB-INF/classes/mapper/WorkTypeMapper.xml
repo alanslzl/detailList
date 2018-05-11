@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.detailList.dao.WorkTypeMapper">
+  <resultMap id="BaseResultMap" type="com.detailList.entity.WorkType">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="detail_list_id" jdbcType="VARCHAR" property="detailListId" />
+    <result column="work_type_name" jdbcType="VARCHAR" property="workTypeName" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, detail_list_id, work_type_name
+  </sql>
+  
+  <select id="selectWorkType" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	select 
+    	<include refid="Base_Column_List" />
+    from dl_work_type
+    <where>
+    	1=1
+    	and detail_list_id=#{detailListId}
+    </where>
+    order by work_type_name
+  </select>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dl_work_type
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from dl_work_type
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.detailList.entity.WorkType">
+    insert into dl_work_type (id, detail_list_id, work_type_name
+      )
+    values (#{id,jdbcType=VARCHAR}, #{detailListId,jdbcType=VARCHAR}, #{workTypeName,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.detailList.entity.WorkType">
+    insert into dl_work_type
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="detailListId != null">
+        detail_list_id,
+      </if>
+      <if test="workTypeName != null">
+        work_type_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="detailListId != null">
+        #{detailListId,jdbcType=VARCHAR},
+      </if>
+      <if test="workTypeName != null">
+        #{workTypeName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.detailList.entity.WorkType">
+    update dl_work_type
+    <set>
+      <if test="detailListId != null">
+        detail_list_id = #{detailListId,jdbcType=VARCHAR},
+      </if>
+      <if test="workTypeName != null">
+        work_type_name = #{workTypeName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.detailList.entity.WorkType">
+    update dl_work_type
+    set detail_list_id = #{detailListId,jdbcType=VARCHAR},
+      work_type_name = #{workTypeName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <delete id="deleteByDetailListId" parameterType="String">
+  		delete from dl_work_type where detail_list_id=#{detailListId}
+  </delete>
+</mapper>

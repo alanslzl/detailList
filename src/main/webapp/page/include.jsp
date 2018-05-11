@@ -25,6 +25,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <link href='<%=path %>/page/css/jquery.iphone.toggle.css' rel='stylesheet'>
 <link href='<%=path %>/page/css/uploadify.css' rel='stylesheet'>
 <link href='<%=path %>/page/css/animate.min.css' rel='stylesheet'>
+<link href='<%=path %>/page/css/fileinput.min.css' rel='stylesheet'>
 
 <script src="<%=path %>/page/js/jquery/jquery.js"></script>
 <script src="<%=path %>/page/js/bootstrap/dist/js/bootstrap.js"></script>
@@ -50,3 +51,5 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <script src="<%=path %>/page/js/jquery.uploadify-3.1.min.js"></script>
 <script src="<%=path %>/page/js/jquery.history.js"></script>
 <script src="<%=path %>/page/js/charisma.js"></script>
+<script src="<%=path %>/page/js/fileinput.min.js"></script>
+<script src="<%=path %>/page/js/zh.js"></script>

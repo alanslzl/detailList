@@ -17,7 +17,7 @@ public class Work implements Serializable {
 
     private Date finishTime;
 
-    private String workLabel;
+    private String workLabelId;
 
     private String workStatus;
 
@@ -34,22 +34,16 @@ public class Work implements Serializable {
     private String workProgress;
 
     private String workPublishPerson;
-    
-    private String liablePerson;
+
+    private Date mettingTime;
     
     private String supervisor;
     
+    private String liablePerson;
+    
     public List<WorkNode> nodeList;
 
-    public List<WorkNode> getNodeList() {
-		return nodeList;
-	}
-
-	public void setNodeList(List<WorkNode> nodeList) {
-		this.nodeList = nodeList;
-	}
-
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     public String getId() {
         return id;
@@ -87,20 +81,20 @@ public class Work implements Serializable {
         return workCompany;
     }
 
-    public String getLiablePerson() {
-		return liablePerson;
-	}
-
-	public void setLiablePerson(String liablePerson) {
-		this.liablePerson = liablePerson;
-	}
-
-	public String getSupervisor() {
+    public String getSupervisor() {
 		return supervisor;
 	}
 
 	public void setSupervisor(String supervisor) {
 		this.supervisor = supervisor;
+	}
+
+	public String getLiablePerson() {
+		return liablePerson;
+	}
+
+	public void setLiablePerson(String liablePerson) {
+		this.liablePerson = liablePerson;
 	}
 
 	public void setWorkCompany(String workCompany) {
@@ -111,16 +105,24 @@ public class Work implements Serializable {
         return finishTime;
     }
 
-    public void setFinishTime(Date finishTime) {
+    public List<WorkNode> getNodeList() {
+		return nodeList;
+	}
+
+	public void setNodeList(List<WorkNode> nodeList) {
+		this.nodeList = nodeList;
+	}
+
+	public void setFinishTime(Date finishTime) {
         this.finishTime = finishTime;
     }
 
-    public String getWorkLabel() {
-        return workLabel;
+    public String getWorkLabelId() {
+        return workLabelId;
     }
 
-    public void setWorkLabel(String workLabel) {
-        this.workLabel = workLabel == null ? null : workLabel.trim();
+    public void setWorkLabelId(String workLabelId) {
+        this.workLabelId = workLabelId == null ? null : workLabelId.trim();
     }
 
     public String getWorkStatus() {
@@ -187,6 +189,14 @@ public class Work implements Serializable {
         this.workPublishPerson = workPublishPerson == null ? null : workPublishPerson.trim();
     }
 
+    public Date getMettingTime() {
+        return mettingTime;
+    }
+
+    public void setMettingTime(Date mettingTime) {
+        this.mettingTime = mettingTime;
+    }
+
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -205,7 +215,7 @@ public class Work implements Serializable {
             && (this.getMettingTypeId() == null ? other.getMettingTypeId() == null : this.getMettingTypeId().equals(other.getMettingTypeId()))
             && (this.getWorkCompany() == null ? other.getWorkCompany() == null : this.getWorkCompany().equals(other.getWorkCompany()))
             && (this.getFinishTime() == null ? other.getFinishTime() == null : this.getFinishTime().equals(other.getFinishTime()))
-            && (this.getWorkLabel() == null ? other.getWorkLabel() == null : this.getWorkLabel().equals(other.getWorkLabel()))
+            && (this.getWorkLabelId() == null ? other.getWorkLabelId() == null : this.getWorkLabelId().equals(other.getWorkLabelId()))
             && (this.getWorkStatus() == null ? other.getWorkStatus() == null : this.getWorkStatus().equals(other.getWorkStatus()))
             && (this.getWorkLevel() == null ? other.getWorkLevel() == null : this.getWorkLevel().equals(other.getWorkLevel()))
             && (this.getInputCompany() == null ? other.getInputCompany() == null : this.getInputCompany().equals(other.getInputCompany()))
@@ -213,7 +223,8 @@ public class Work implements Serializable {
             && (this.getEnclosure() == null ? other.getEnclosure() == null : this.getEnclosure().equals(other.getEnclosure()))
             && (this.getMergeId() == null ? other.getMergeId() == null : this.getMergeId().equals(other.getMergeId()))
             && (this.getWorkProgress() == null ? other.getWorkProgress() == null : this.getWorkProgress().equals(other.getWorkProgress()))
-            && (this.getWorkPublishPerson() == null ? other.getWorkPublishPerson() == null : this.getWorkPublishPerson().equals(other.getWorkPublishPerson()));
+            && (this.getWorkPublishPerson() == null ? other.getWorkPublishPerson() == null : this.getWorkPublishPerson().equals(other.getWorkPublishPerson()))
+            && (this.getMettingTime() == null ? other.getMettingTime() == null : this.getMettingTime().equals(other.getMettingTime()));
     }
 
     @Override
@@ -226,7 +237,7 @@ public class Work implements Serializable {
         result = prime * result + ((getMettingTypeId() == null) ? 0 : getMettingTypeId().hashCode());
         result = prime * result + ((getWorkCompany() == null) ? 0 : getWorkCompany().hashCode());
         result = prime * result + ((getFinishTime() == null) ? 0 : getFinishTime().hashCode());
-        result = prime * result + ((getWorkLabel() == null) ? 0 : getWorkLabel().hashCode());
+        result = prime * result + ((getWorkLabelId() == null) ? 0 : getWorkLabelId().hashCode());
         result = prime * result + ((getWorkStatus() == null) ? 0 : getWorkStatus().hashCode());
         result = prime * result + ((getWorkLevel() == null) ? 0 : getWorkLevel().hashCode());
         result = prime * result + ((getInputCompany() == null) ? 0 : getInputCompany().hashCode());
@@ -235,6 +246,7 @@ public class Work implements Serializable {
         result = prime * result + ((getMergeId() == null) ? 0 : getMergeId().hashCode());
         result = prime * result + ((getWorkProgress() == null) ? 0 : getWorkProgress().hashCode());
         result = prime * result + ((getWorkPublishPerson() == null) ? 0 : getWorkPublishPerson().hashCode());
+        result = prime * result + ((getMettingTime() == null) ? 0 : getMettingTime().hashCode());
         return result;
     }
 
@@ -250,7 +262,7 @@ public class Work implements Serializable {
         sb.append(", mettingTypeId=").append(mettingTypeId);
         sb.append(", workCompany=").append(workCompany);
         sb.append(", finishTime=").append(finishTime);
-        sb.append(", workLabel=").append(workLabel);
+        sb.append(", workLabelId=").append(workLabelId);
         sb.append(", workStatus=").append(workStatus);
         sb.append(", workLevel=").append(workLevel);
         sb.append(", inputCompany=").append(inputCompany);
@@ -259,6 +271,7 @@ public class Work implements Serializable {
         sb.append(", mergeId=").append(mergeId);
         sb.append(", workProgress=").append(workProgress);
         sb.append(", workPublishPerson=").append(workPublishPerson);
+        sb.append(", mettingTime=").append(mettingTime);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

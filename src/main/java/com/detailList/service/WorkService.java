@@ -6,6 +6,7 @@ import com.detailList.dto.DetailListDto;
 import com.detailList.entity.DetailWork;
 import com.detailList.entity.Work;
 import com.detailList.entity.WorkLabel;
+import com.detailList.entity.WorkNode;
 import com.detailList.entity.WorkType;
 import com.detailList.entity.WorkTypeRelation;
 
@@ -65,4 +66,19 @@ public interface WorkService {
 	 * @param work
 	 */
 	public Work insertEasyWork(Work work);
+	/**
+	 * 简单查看工作内容
+	 * @param workId
+	 * @return
+	 */
+	public Work queryEasyWork(String workId);
+	/**
+	 * 新增工作
+	 * @param work
+	 */
+	public void insertWork(Work work);
+	
+	public void insertWorkPersonRelation(Work work);
+	
+	public void insertNode(WorkNode record);
 }

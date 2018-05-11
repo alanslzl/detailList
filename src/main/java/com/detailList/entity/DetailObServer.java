@@ -10,6 +10,8 @@ public class DetailObServer implements Serializable {
 
     private String userId;
 
+    private String obUserId;
+
     private Date createTime;
 
     private static final long serialVersionUID = 1L;
@@ -38,6 +40,14 @@ public class DetailObServer implements Serializable {
         this.userId = userId == null ? null : userId.trim();
     }
 
+    public String getObUserId() {
+        return obUserId;
+    }
+
+    public void setObUserId(String obUserId) {
+        this.obUserId = obUserId == null ? null : obUserId.trim();
+    }
+
     public Date getCreateTime() {
         return createTime;
     }
@@ -61,6 +71,7 @@ public class DetailObServer implements Serializable {
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
             && (this.getDetailListId() == null ? other.getDetailListId() == null : this.getDetailListId().equals(other.getDetailListId()))
             && (this.getUserId() == null ? other.getUserId() == null : this.getUserId().equals(other.getUserId()))
+            && (this.getObUserId() == null ? other.getObUserId() == null : this.getObUserId().equals(other.getObUserId()))
             && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()));
     }
 
@@ -71,6 +82,7 @@ public class DetailObServer implements Serializable {
         result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
         result = prime * result + ((getDetailListId() == null) ? 0 : getDetailListId().hashCode());
         result = prime * result + ((getUserId() == null) ? 0 : getUserId().hashCode());
+        result = prime * result + ((getObUserId() == null) ? 0 : getObUserId().hashCode());
         result = prime * result + ((getCreateTime() == null) ? 0 : getCreateTime().hashCode());
         return result;
     }
@@ -84,6 +96,7 @@ public class DetailObServer implements Serializable {
         sb.append(", id=").append(id);
         sb.append(", detailListId=").append(detailListId);
         sb.append(", userId=").append(userId);
+        sb.append(", obUserId=").append(obUserId);
         sb.append(", createTime=").append(createTime);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");

@@ -26,4 +26,8 @@ public class WorkLabelServiceImpl implements WorkLabelService{
 	public void delWorkLabel(String id) {
 		workLabelMapper.deleteByPrimaryKey(id);
 	}
+	@Override
+	public WorkLabel queryWorkLabelById(String id) {
+		return workLabelMapper.selectByPrimaryKey(id);
+	}
 }

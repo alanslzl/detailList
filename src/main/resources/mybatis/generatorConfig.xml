@@ -37,7 +37,7 @@
 			<property name="enableSubPackages" value="true" />
 		</javaClientGenerator>
 		<!--生成对应表及类名 -->
-		<table tableName="dl_detail_work" domainObjectName="DetailWork"
+		<table tableName="dl_detail_observer" domainObjectName="DetailObServer"
 			enableCountByExample="false" enableUpdateByExample="false"
 			enableDeleteByExample="false" enableSelectByExample="false"
 			selectByExampleQueryId="false">

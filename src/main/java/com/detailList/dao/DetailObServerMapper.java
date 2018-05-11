@@ -1,5 +1,8 @@
 package com.detailList.dao;
 
+import java.util.List;
+import java.util.Map;
+
 import com.detailList.entity.DetailObServer;
 
 public interface DetailObServerMapper {
@@ -14,4 +17,8 @@ public interface DetailObServerMapper {
     int updateByPrimaryKeySelective(DetailObServer record);
 
     int updateByPrimaryKey(DetailObServer record);
+    
+    List<Map<String, Object>> selectObUser(DetailObServer record); 
+    
+    void deleteByDetailListId(String detailListId);
 }

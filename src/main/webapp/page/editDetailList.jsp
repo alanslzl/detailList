@@ -111,7 +111,8 @@
 				"detailListId":detailListId,
 				"detailListName":detailListName,
 				"workTypeAndWork":JSON.stringify(workTypeAndWork),
-				"noTypeWork":JSON.stringify(noTypeWork)
+				"noTypeWork":JSON.stringify(noTypeWork),
+				"obUser":$("#obUserId").val()
 			},//数据，这里使用的是Json格式进行传输   
 			success:function(data) {//返回数据根据结果进行相应的处理
 				if(data.resultCode == 0){
@@ -165,9 +166,130 @@
 			}
 		});
 	}
+	var personInput;
+	//选择责任人人员信息窗口
+	function choicePerson(obj){
+		createChoicePersonTable();
+		$("#choicePersonModal").modal();
+		personInput = obj;
+	}
+	//创建责任人table
+	function createChoicePersonTable(){
+		$('#choicePersonTable').bootstrapTable('refresh', { pageNumber: 1 });
+	}
+	//责任人人人员选择方法
+	function choicePersonInfo(){
+		var choiceInfoArr = [];
+		var showNames = [];
+		var userNos = [];
+		$("#choicePersonTable input[type='checkbox']:checked").each(function(){
+			var userNo = $(this).parent().parent().children("td").eq(1).text();
+			var surnName = $(this).parent().parent().children("td").eq(2).text();
+			var name = $(this).parent().parent().children("td").eq(3).text();
+			var info = {
+				'userNo':userNo,	
+				'names':surnName + "" +name
+			}
+			showNames.push(surnName + "" +name);
+			choiceInfoArr.push(info);
+			userNos.push(userNo);
+		});
+		$("#choicePersonModal").modal("hide");
+		$(personInput).val(showNames);
+		$(personInput).prev().val(userNos);
+	}
+	//创建选择人员信息表格
+	function createTable(tableName){
+		$("#"+tableName).bootstrapTable({ // 对应table标签的id
+			  method: 'post',
+			  contentType : "application/x-www-form-urlencoded",
+		      url: "<%=path%>/personInfo/queryPersonInfo.do", // 获取表格数据的url
+		      cache: false, // 设置为 false 禁用 AJAX 数据缓存， 默认为true
+		      striped: true,  //表格显示条纹，默认为false
+		      pagination: true, // 在表格底部显示分页组件，默认false
+		      clickToSelect: true,
+		      pageList: [5,10], // 设置页面可以显示的数据条数
+		      height: 340,
+		      pageSize: 7, // 页面数据条数
+		      pageNumber: 1, // 首页页码
+		      search: true,
+		      searchAlign: "left",
+		      searchOnEnterKey: true,
+		      sidePagination: 'client', // 设置为服务器端分页
+		      queryParams: function (params) { // 请求服务器数据时发送的参数，可以在这里添加额外的查询参数，返回false则终止请求
+		          return {
+		              personInfo: $("#personInfo").val() // 额外添加的参数
+		          }
+		      },
+		      sortName: 'id', // 要排序的字段
+		      sortOrder: 'desc', // 排序规则
+		      columns: [
+		          {
+		        	  field:'choiceUserCheck',
+		              checkbox: true, // 显示一个勾选框
+		              align: 'center' // 居中显示
+		              
+		          }, {
+		              field: 'id', // 返回json数据中的name
+		              visible:false,
+		              align: 'center', // 左右居中
+		              valign: 'middle' // 上下居中
+		          }, {
+		              field: 'pernr', // 返回json数据中的name
+		              title: '人员编号', // 表格表头显示文字
+		              align: 'center', // 左右居中
+		              valign: 'middle' // 上下居中
+		          }, {
+		              field: 'nachn',
+		              title: '姓',
+		              align: 'center',
+		              valign: 'middle'
+		          }, {
+		              field: 'vorna',
+		              title: '名',
+		              align: 'center',
+		              valign: 'middle'
+		          }, {
+		              field: 'plans',
+		              title: '职位',
+		              align: 'center',
+		              valign: 'middle'
+		          },{
+		              field: 'orgeh',
+		              title: '组织机构',
+		              align: 'center',
+		              valign: 'middle'
+		          }, {
+		              field: 'zsxzy',
+		              title: '所学专业',
+		              align: 'center',
+		              valign: 'middle'
+		          }
+		      ],
+		      onLoadSuccess: function(){  //加载成功时执行
+		            console.info("加载成功");
+		      },
+		      onLoadError: function(){  //加载失败时执行
+		            console.info("加载数据失败");
+		      }
+		});
+	}
+	function createObUsers(data){
+		data = JSON.parse(data);
+		var userIds=[];
+		var userNames=[];
+		for(var i = 0 ; i < data.length;i++){
+			userIds.push(data[i].userId);
+			userNames.push(data[i].userName);
+		}
+		$("#obUserId").val(userIds);
+		$("#obUserName").val(userNames);
+	}
 	$(function(){
+		createObUsers('${obUsers}');
 		createWorkLi("${detailListId}");
 		createWorkSlot("${detailListId}");
+		createTable("choicePersonTable");
 	});
 </script>
 </head>
@@ -183,6 +305,19 @@
 						<label class="col-md-2">清单名称</label>
 						<div class="col-md-10">
 							<input class="form-control" id="detailListName" value="${detailListName}" type="text">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="col-md-11" align="center">
+					<div class="form-group">
+						<label class="col-md-2">共享给他人</label>
+						<div class="col-md-10">
+							<input class="form-control" id="obUserId" type="hidden">
+							<input class="form-control" id="obUserName" type="text" onclick="choicePerson(this);">
 						</div>
 					</div>
 				</div>

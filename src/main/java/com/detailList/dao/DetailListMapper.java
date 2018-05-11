@@ -18,4 +18,8 @@ public interface DetailListMapper {
     int updateByPrimaryKey(DetailList record);
     
     List<DetailList> selectDetailList(DetailList detailList);
+    
+    List<DetailList> selecObDetailList(DetailList detailList);
+    
+    List<DetailList> selectObDetailListByUserId(String userId);
 }

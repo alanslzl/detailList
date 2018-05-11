@@ -23,6 +23,7 @@ import com.detailList.dto.DetailListTypeDto;
 import com.detailList.entity.DetailWork;
 import com.detailList.entity.Work;
 import com.detailList.entity.WorkLabel;
+import com.detailList.entity.WorkNode;
 import com.detailList.entity.WorkType;
 import com.detailList.entity.WorkTypeRelation;
 import com.detailList.entity.workPerson;
@@ -108,6 +109,11 @@ public class WorkServiceImpl implements WorkService{
 		detailWorkMapper.deleteDetailWorkByDetailListId(detailListId);
 	}
 	public Work insertEasyWork(Work work) {
+		insertWorkPersonRelation(work);
+		workMapper.insertSelective(work);
+		return work;
+	}
+	public void insertWorkPersonRelation(Work work) {
 		//督办人
 		String[] supervisorArr = work.getSupervisor().split(",");
 		for (String supervisor : supervisorArr) {
@@ -128,7 +134,14 @@ public class WorkServiceImpl implements WorkService{
 			p.setWorkId(work.getId());
 			workPersonMapper.insertSelective(p);
 		}
+	}
+	public Work queryEasyWork(String workId) {
+		return workMapper.selectByWorkId(workId);
+	}
+	public void insertWork(Work work) {
 		workMapper.insertSelective(work);
-		return work;
+	}
+	public void insertNode(WorkNode record) {
+		workNodeMapper.insertSelective(record);
 	}
 }

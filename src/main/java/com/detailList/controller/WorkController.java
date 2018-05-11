@@ -24,6 +24,7 @@ import com.detailList.entity.DetailList;
 import com.detailList.entity.DetailWork;
 import com.detailList.entity.User;
 import com.detailList.entity.Work;
+import com.detailList.entity.WorkNode;
 import com.detailList.entity.WorkTypeRelation;
 import com.detailList.entity.Zhr2001;
 import com.detailList.service.WorkService;
@@ -57,6 +58,13 @@ public class WorkController{
 			return Result.error(e.getMessage());
 		}
 	}
+	@RequestMapping("/queryEasyWork")
+	@ResponseBody
+	public Object easyWork(HttpServletRequest request,HttpServletResponse response,String workId) {
+		Work work = workService.queryEasyWork(workId);
+		return work;
+	}
+	
 	@RequestMapping("/queryDetailListWork")
 	@ResponseBody
 	public Object queryDetailListWork(HttpServletRequest request,HttpServletResponse response,@Param("detailList")DetailList detailList,String queryWork) {
@@ -105,6 +113,15 @@ public class WorkController{
 		}
 		return view;
 	}
+	
+	
+	/**
+	 * 简单版新增工作
+	 * @param request
+	 * @param response
+	 * @param dto
+	 * @return
+	 */
 	@RequestMapping("/addEasyWork")
 	@ResponseBody
 	public String addEasyWork(HttpServletRequest request,HttpServletResponse response,@ModelAttribute EasyWorkDto dto) {
@@ -131,6 +148,28 @@ public class WorkController{
 			wtr.setWorkId(work.getId());
 			wtr.setWorkTypeId(dto.getWorkType());
 			workService.insertWorkTypeRelation(wtr);
+		}
+		return JSON.toJSONString(Result.success());
+	}
+	@RequestMapping("/addWork")
+	@ResponseBody
+	public String addWork(HttpServletRequest request,HttpServletResponse response,String workListStr) {
+		try {
+			Zhr2001 userInfo = (Zhr2001)request.getSession().getAttribute("userInfo");
+			List<Work> workList = JSONArray.parseArray(workListStr, Work.class);
+			for (Work work : workList) {
+				work.setId(StringUtils.genUUid());
+				work.setWorkPublishPerson(userInfo.getPernr());
+				workService.insertWork(work);
+				workService.insertWorkPersonRelation(work);
+				for(WorkNode node : work.getNodeList()) {
+					node.setId(StringUtils.genUUid());
+					node.setWorkId(work.getId());
+					workService.insertNode(node);;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return JSON.toJSONString(Result.success());
 	}

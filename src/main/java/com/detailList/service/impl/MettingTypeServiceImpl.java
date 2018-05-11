@@ -26,4 +26,7 @@ public class MettingTypeServiceImpl implements MettingTypeService{
 	public void delMetting(String id) {
 		mettingMapper.deleteByPrimaryKey(id);
 	}
+	public Metting queryMettingTypeById(String id) {
+		return mettingMapper.selectByPrimaryKey(id);
+	}
 }

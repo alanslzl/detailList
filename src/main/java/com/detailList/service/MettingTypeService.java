@@ -26,4 +26,6 @@ public interface MettingTypeService {
 	 * @param id
 	 */
 	public void delMetting(String id);
+	
+	public Metting queryMettingTypeById(String id);
 }

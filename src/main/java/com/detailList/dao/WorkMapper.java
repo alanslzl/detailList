@@ -25,4 +25,6 @@ public interface WorkMapper {
     List<Work> selectNoTypeWork(Map<String, Object> paramMap);
     
     List<Work> selectWork(@Param("userId")String userId);
+    
+    Work selectByWorkId(String workId);
 }

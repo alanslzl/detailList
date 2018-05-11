@@ -29,13 +29,16 @@ import com.detailList.dto.DetailListManagerDto;
 import com.detailList.dto.Result;
 import com.detailList.dto.WorkTypeDto;
 import com.detailList.entity.DetailList;
+import com.detailList.entity.DetailObServer;
 import com.detailList.entity.DetailWork;
 import com.detailList.entity.User;
 import com.detailList.entity.Work;
 import com.detailList.entity.WorkExportTemplate;
 import com.detailList.entity.WorkType;
 import com.detailList.entity.WorkTypeRelation;
+import com.detailList.entity.Zhr2001;
 import com.detailList.service.DetailListService;
+import com.detailList.service.ObDetailListService;
 import com.detailList.service.WorkService;
 import com.detailList.utils.DateUtils;
 import com.detailList.utils.StringUtils;
@@ -53,13 +56,19 @@ public class DetailListController{
 	@Autowired
 	private WorkService workService;
 	
+	@Autowired
+	private ObDetailListService obDetailListService;
+	
 	@RequestMapping("/editDetailList")
 	public ModelAndView editDetailList(HttpServletRequest request,HttpServletResponse response,String detailListId) {
 		ModelAndView view = new ModelAndView("page/editDetailList");
 		try {
+			Zhr2001 user = (Zhr2001)request.getSession().getAttribute("userInfo");
+			List<Map<String, Object>> ads = obDetailListService.selectObUser(null,user.getPernr(),detailListId);
 			DetailList ndl = detailListService.selectDetailListById(detailListId);
 			view.addObject("detailListId", detailListId);
 			view.addObject("detailListName", ndl.getDetailListName());
+			view.addObject("obUsers", JSONUtils.toJSONString(ads));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -124,8 +133,10 @@ public class DetailListController{
 		@Param("detailListId")String detailListId,
 			@Param("detailListName")String detailListName,
 				@Param("workTypeAndWork")String workTypeAndWork,
-					@Param("noTypeWork")String noTypeWork) {
+					@Param("noTypeWork")String noTypeWork,
+						@Param("obUser")String obUser) {
 		try {
+			Zhr2001 user = (Zhr2001)request.getSession().getAttribute("userInfo");
 			//修改清单
 			DetailList ndl = detailListService.selectDetailListById(detailListId);
 			ndl.setDetailListName(detailListName);
@@ -161,6 +172,16 @@ public class DetailListController{
 				work.setWorkId(workId);
 				workService.insertDetailWork(work);;
 			}
+			obDetailListService.deleteByDetailListId(detailListId);
+			String obuserz[] = obUser.split(",");
+			for (String u : obuserz) {
+				DetailObServer ob = new DetailObServer();
+				ob.setId(StringUtils.genUUid());
+				ob.setDetailListId(ndl.getId());
+				ob.setUserId(user.getPernr());
+				ob.setObUserId(u);
+				obDetailListService.insertSelective(ob);;
+			}
 			return JSON.toJSONString(Result.success());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -173,15 +194,16 @@ public class DetailListController{
 	public Object addDetailList(HttpServletRequest request,HttpServletResponse response,
 			@Param("detailListName")String detailListName,
 				@Param("workTypeAndWork")String workTypeAndWork,
-					@Param("noTypeWork")String noTypeWork) {
+					@Param("noTypeWork")String noTypeWork,
+						@Param("obUser")String obUser) {
 		try {
 			//取得用户
-			User user = (User)request.getSession().getAttribute("user");
+			Zhr2001 user = (Zhr2001)request.getSession().getAttribute("userInfo");
 			//创建清单
 			DetailList ndl = new DetailList();
 			ndl.setId(StringUtils.genUUid());
 			ndl.setDetailListName(detailListName);
-			ndl.setDetailListPerson(user.getId());
+			ndl.setDetailListPerson(user.getPernr());
 			ndl.setCreateTime(new Date());
 			ndl = detailListService.insertDetailList(ndl);
 			//获取新增清单的工作类别
@@ -210,6 +232,15 @@ public class DetailListController{
 				work.setDetailListId(ndl.getId());
 				work.setWorkId(workId);
 				workService.insertDetailWork(work);;
+			}
+			String obuserz[] = obUser.split(",");
+			for (String u : obuserz) {
+				DetailObServer ob = new DetailObServer();
+				ob.setId(StringUtils.genUUid());
+				ob.setDetailListId(ndl.getId());
+				ob.setUserId(user.getPernr());
+				ob.setObUserId(u);
+				obDetailListService.insertSelective(ob);;
 			}
 			return JSON.toJSONString(Result.success());
 		} catch (Exception e) {

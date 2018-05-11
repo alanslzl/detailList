@@ -26,4 +26,8 @@ public interface WorkLabelService {
 	 * @param id
 	 */
 	public void delWorkLabel(String id);
+	/**
+	 * 根据id查询工作标签
+	 */
+	public WorkLabel queryWorkLabelById(String id);
 }
