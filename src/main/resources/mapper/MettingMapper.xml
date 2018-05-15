@@ -22,6 +22,7 @@
 	<select id="selectMetting" parameterType="com.detailList.entity.Metting"
 		resultMap="BaseResultMap">
 		select
+		dm.id,
 		metting_name,
 		CONCAT(z1.NACHN,z1.VORNA) as insert_user
 		from dl_metting dm left join zhr2_001 z1 on dm.insert_user=z1.PERNR

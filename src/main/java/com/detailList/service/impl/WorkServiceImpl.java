@@ -17,6 +17,8 @@ import com.detailList.dao.WorkNodeMapper;
 import com.detailList.dao.WorkTalkRecordMapper;
 import com.detailList.dao.WorkTypeMapper;
 import com.detailList.dao.WorkTypeRelationMapper;
+import com.detailList.dao.mergeWorkMapper;
+import com.detailList.dao.workEnclosureMapper;
 import com.detailList.dao.workPersonMapper;
 import com.detailList.dto.DetailListDto;
 import com.detailList.dto.DetailListTypeDto;
@@ -26,6 +28,8 @@ import com.detailList.entity.WorkLabel;
 import com.detailList.entity.WorkNode;
 import com.detailList.entity.WorkType;
 import com.detailList.entity.WorkTypeRelation;
+import com.detailList.entity.mergeWork;
+import com.detailList.entity.workEnclosure;
 import com.detailList.entity.workPerson;
 import com.detailList.service.WorkService;
 import com.detailList.utils.StringUtils;
@@ -58,6 +62,12 @@ public class WorkServiceImpl implements WorkService{
 	
 	@Autowired
 	private workPersonMapper workPersonMapper;
+	
+	@Autowired
+	private workEnclosureMapper workEnclosureMapper;
+	
+	@Autowired
+	private mergeWorkMapper mergeWorkMapper;
 	
 
 	public DetailListDto selectWorkType(String detailListId,Work work){
@@ -143,5 +153,11 @@ public class WorkServiceImpl implements WorkService{
 	}
 	public void insertNode(WorkNode record) {
 		workNodeMapper.insertSelective(record);
+	}
+	public void addMergeWork(mergeWork record) {
+		mergeWorkMapper.insertSelective(record);
+	}
+	public void addWorkEnclosure(workEnclosure e) {
+		workEnclosureMapper.insertSelective(e);
 	}
 }

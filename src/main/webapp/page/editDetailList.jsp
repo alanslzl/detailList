@@ -482,6 +482,48 @@
 				</div><!-- /.modal-content -->
 			</div><!-- /.modal -->
 		</div>
+		<div class="modal fade" id="choicePersonModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog" style="width:800px;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+							&times;
+						</button>
+						<h4 class="modal-title" id="myModalLabel">
+							选择人员信息
+						</h4>
+					</div>
+					<div class="modal-body">
+						<div style="height:530px;overflow: auto;">
+							<div class="ch-container">
+								<div class="row">
+									<div class="form-group">
+										<div class="col-lg-12">
+											<label class="col-md-3">人员信息</label>
+											<div class="col-md-7">
+												<input class="form-control" id="choicePersonInfo" type="text">
+											</div>
+											<button type="button" class="btn btn-primary" onclick="createChoicePersonTable();">查询</button>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<table class="table table-striped table-bordered responsive" id="choicePersonTable">
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+						</button>
+						<button type="button" class="btn btn-primary" onclick="choicePersonInfo();">
+							确认
+						</button>
+					</div>
+				</div><!-- /.modal-content -->
+			</div><!-- /.modal -->
+		</div>
 	<script>
 		jQuery(function($) {
 			$('#dragslot').dragslot({

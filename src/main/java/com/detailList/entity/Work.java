@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class Work implements Serializable {
     private String id;
 
@@ -42,8 +44,8 @@ public class Work implements Serializable {
     private String liablePerson;
     
     public List<WorkNode> nodeList;
-
-    private static final long serialVersionUID = 1L;
+    
+	private static final long serialVersionUID = 1L;
 
     public String getId() {
         return id;

@@ -13,8 +13,6 @@
     <result column="work_level" jdbcType="VARCHAR" property="workLevel" />
     <result column="input_company" jdbcType="VARCHAR" property="inputCompany" />
     <result column="supervisor_strategy" jdbcType="VARCHAR" property="supervisorStrategy" />
-    <result column="enclosure" jdbcType="VARCHAR" property="enclosure" />
-    <result column="merge_id" jdbcType="VARCHAR" property="mergeId" />
     <result column="work_progress" jdbcType="VARCHAR" property="workProgress" />
     <result column="work_publish_person" jdbcType="VARCHAR" property="workPublishPerson" />
     <result column="metting_time" jdbcType="TIMESTAMP" property="mettingTime" />
@@ -86,12 +84,6 @@
       <if test="supervisorStrategy != null">
         supervisor_strategy,
       </if>
-      <if test="enclosure != null">
-        enclosure,
-      </if>
-      <if test="mergeId != null">
-        merge_id,
-      </if>
       <if test="workProgress != null">
         work_progress,
       </if>
@@ -135,12 +127,6 @@
       </if>
       <if test="supervisorStrategy != null">
         #{supervisorStrategy,jdbcType=VARCHAR},
-      </if>
-      <if test="enclosure != null">
-        #{enclosure,jdbcType=VARCHAR},
-      </if>
-      <if test="mergeId != null">
-        #{mergeId,jdbcType=VARCHAR},
       </if>
       <if test="workProgress != null">
         #{workProgress,jdbcType=VARCHAR},
@@ -279,6 +265,7 @@
 				AND dw.work_company = #{queryWork.workCompany}
 			</if>
 			</if>
+			and dw.id not in (select DISTINCT merge_work_id from dl_merge_work)
 		</where>
   </select>
   <select id="selectNoTypeWork" parameterType="java.util.Map" resultMap="BaseResultMap">
@@ -336,6 +323,7 @@
 			AND dw.work_company = #{queryWork.workCompany}
 		</if>
 		</if>
+		and dw.id not in (select DISTINCT merge_work_id from dl_merge_work)
   </select>
   <select id="selectWork" parameterType="java.lang.String" resultMap="BaseResultMap">
   		select dw.*,lp.liable_person,sv.supervisor from (SELECT
@@ -368,7 +356,7 @@
 		<if test="userId!=null and userId!=''">
 			and FIND_IN_SET(#{userId},lp.user_id) or FIND_IN_SET(#{userId},sv.user_id)
 		</if>
-		and dw.merge_id is null
+		and dw.id not in (select DISTINCT merge_work_id from dl_merge_work)
   </select>
   
   <select id="selectByWorkId" parameterType="java.lang.String" resultMap="BaseResultMap">

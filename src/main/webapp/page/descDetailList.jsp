@@ -137,10 +137,6 @@
 	function descWork(){
 		window.location.href="<%=path%>/page/queryWork.jsp";
 	}
-	//工作简介
-	function easyWork(){
-		$("#addWorkModal").modal();
-	}
 	//导出modal展示
 	function exportDetailList(){
 		//$("#exportDetailListModal").modal();
@@ -406,10 +402,10 @@
 				"workId":workId,
 			},//数据，这里使用的是Json格式进行传输   
 			success:function(data) {//返回数据根据结果进行相应的处理
-				$("#newWorkName").val(data.workName);
-				$("#newLiablePerson").val(data.liablePerson);
-				$("#newSupervisor").val(data.supervisor);
-				$("#newSupervisorStrategy").val(data.supervisorStrategy);
+				$("#easyWorkName").val(data.workName);
+				$("#easyLiablePerson").val(data.liablePerson);
+				$("#easySupervisor").val(data.supervisor);
+				$("#easySupervisorStrategy").val(data.supervisorStrategy);
 			}
 		});
 		$("#easyWorkModal").modal();
@@ -771,7 +767,7 @@
 											<div class="col-lg-12">
 												<label class="col-md-3">工作名称</label>
 												<div class="col-md-9">
-													<input class="form-control" id="newWorkName" type="text">
+													<input class="form-control" id="easyWorkName" type="text">
 												</div>
 											</div>
 										</div>
@@ -781,8 +777,8 @@
 											<div class="col-lg-12">
 												<label class="col-md-3">责任人</label>
 												<div class="col-md-9">
-													<input class="form-control" id="newLiablePersonId" type="hidden">
-													<input class="form-control" id="newLiablePerson" type="text">
+													<input class="form-control" id="easyLiablePersonId" type="hidden">
+													<input class="form-control" id="easyLiablePerson" type="text">
 												</div>
 											</div>
 										</div>
@@ -792,8 +788,8 @@
 											<div class="col-lg-12">
 												<label class="col-md-3">督办人</label>
 												<div class="col-md-9">
-													<input class="form-control" id="newSupervisorId" type="hidden">
-													<input class="form-control" id="newSupervisor" type="text">
+													<input class="form-control" id="easySupervisorId" type="hidden">
+													<input class="form-control" id="easySupervisor" type="text">
 												</div>
 											</div>
 										</div>
@@ -803,7 +799,7 @@
 											<div class="col-lg-12">
 												<label class="col-md-3">工作要求</label>
 												<div class="col-md-9">
-													<textarea class="form-control" rows="5" cols="5" id="newSupervisorStrategy"></textarea>
+													<textarea class="form-control" rows="5" cols="5" id="easySupervisorStrategy"></textarea>
 												</div>
 											</div>
 										</div>

@@ -1,5 +1,6 @@
 package com.detailList.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,8 +10,10 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.druid.support.json.JSONUtils;
@@ -27,10 +30,13 @@ import com.detailList.entity.Work;
 import com.detailList.entity.WorkNode;
 import com.detailList.entity.WorkTypeRelation;
 import com.detailList.entity.Zhr2001;
+import com.detailList.entity.mergeWork;
+import com.detailList.entity.workEnclosure;
 import com.detailList.service.WorkService;
+import com.detailList.utils.FileUtils;
 import com.detailList.utils.StringUtils;
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.PageInfo;import freemarker.template.utility.StringUtil;
 
 
 @RestController
@@ -167,10 +173,40 @@ public class WorkController{
 					node.setWorkId(work.getId());
 					workService.insertNode(node);;
 				}
+				if(org.apache.commons.lang.StringUtils.isNotEmpty(work.getMergeId())) {
+					String[] mergeIds = work.getMergeId().split(",");
+					for (String mergeId : mergeIds) {
+						mergeWork mer = new mergeWork();
+						mer.setId(StringUtils.genUUid());
+						mer.setWorkId(work.getId());
+						mer.setMergeWorkId(mergeId);
+						workService.addMergeWork(mer);
+					}
+				}
+				if(org.apache.commons.lang.StringUtils.isNotEmpty(work.getEnclosure())) {
+					String[] enclosures = work.getEnclosure().split(",");
+					for (String enclosure : enclosures) {
+						workEnclosure e = new workEnclosure();
+						e.setId(StringUtils.genUUid());
+						e.setWorkId(work.getId());
+						e.setEnclosure(enclosure);
+						workService.addWorkEnclosure(e);
+					}
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return JSON.toJSONString(Result.success());
+	}
+	@RequestMapping("/uploadEnclosure")
+	@ResponseBody
+	public String uploadFiles(HttpServletRequest request,HttpServletResponse response,@RequestParam MultipartFile[] enclosure) {
+		List<String> urls = new ArrayList<>();
+		for (MultipartFile multipartFile : enclosure) {
+			String url = FileUtils.uploadFile(multipartFile);
+			urls.add(url);
+		}
+		return JSONUtils.toJSONString(urls);
 	}
 }

@@ -9,6 +9,8 @@ import com.detailList.entity.WorkLabel;
 import com.detailList.entity.WorkNode;
 import com.detailList.entity.WorkType;
 import com.detailList.entity.WorkTypeRelation;
+import com.detailList.entity.mergeWork;
+import com.detailList.entity.workEnclosure;
 
 public interface WorkService {
 	/**
@@ -81,4 +83,8 @@ public interface WorkService {
 	public void insertWorkPersonRelation(Work work);
 	
 	public void insertNode(WorkNode record);
+	
+	public void addMergeWork(mergeWork record);
+	
+	public void addWorkEnclosure(workEnclosure e);
 }
