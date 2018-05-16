@@ -37,12 +37,7 @@
 			<property name="enableSubPackages" value="true" />
 		</javaClientGenerator>
 		<!--生成对应表及类名 -->
-		<table tableName="dl_work_enclosure" domainObjectName="workEnclosure"
-			enableCountByExample="false" enableUpdateByExample="false"
-			enableDeleteByExample="false" enableSelectByExample="false"
-			selectByExampleQueryId="false">
-		</table>
-		<table tableName="dl_merge_work" domainObjectName="mergeWork"
+		<table tableName="dl_user_group" domainObjectName="userGroup"
 			enableCountByExample="false" enableUpdateByExample="false"
 			enableDeleteByExample="false" enableSelectByExample="false"
 			selectByExampleQueryId="false">
