@@ -17,5 +17,5 @@ public interface userGroupMapper {
 
     int updateByPrimaryKey(userGroup record);
     
-    public List<userGroup> queryUserGroup(userGroup userGroup);
+    public List<userGroup> selectGroup(userGroup userGroup);
 }
