@@ -7,6 +7,8 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.detailList.entity.DetailList;
+
 import freemarker.template.Configuration;
 import freemarker.template.Template;
  
@@ -34,7 +36,8 @@ public class freemakerUtil {
 	    }
 
 	    public static File createDoc(Map<?,?> dataMap,String type){
-	        String name = "temp"+(int)(Math.random()*100000)+".doc";
+	    	DetailList dt = (DetailList) dataMap.get("detailList");
+	        String name = dt.getDetailListName();
 	        File f = new File(name);
 	        Template t = allTemplate.get(type);
 	        try{

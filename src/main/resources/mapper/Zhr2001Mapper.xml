@@ -2,7 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.detailList.dao.Zhr2001Mapper">
   <resultMap id="BaseResultMap" type="com.detailList.entity.Zhr2001">
-    <id column="id" jdbcType="INTEGER" property="id" />
     <result column="PERNR" jdbcType="VARCHAR" property="pernr" />
     <result column="WERKS" jdbcType="VARCHAR" property="werks" />
     <result column="BTRTL" jdbcType="VARCHAR" property="btrtl" />
@@ -55,7 +54,7 @@
     <result column="BEZEI" jdbcType="VARCHAR" property="bezei" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, PERNR, WERKS, BTRTL, PERSG, PERSK, ABKRS, PLANS, ORGEH, NACHN, VORNA, GBDAT, 
+    PERNR, WERKS, BTRTL, PERSG, PERSK, ABKRS, PLANS, ORGEH, NACHN, VORNA, GBDAT, 
     GESCH, DAT01, GBDEP, LOCAT, FAMST, SLART, ZXXXX, ZSXZY, USRID_5, POSTY, POSNC, ORGEH_1, 
     ORGEH_2, ORGEH_3, USRID_3, GBLND, INSTI, GBORT, ZLPOS, ZPOSTY, ZTDETAIL, ICNUM, ZBMCJ, 
     DATUM, ZDATE, USRID_4, RACKY, PCODE, DAT02, ZGCLB, ORGEH_4, ORGEH_5, ORGEH_6, NATIO, 
@@ -65,8 +64,16 @@
     select 
     <include refid="Base_Column_List" />
     from zhr2_001
-    where id = #{id,jdbcType=INTEGER}
+    where pernr = #{id,jdbcType=INTEGER}
   </select>
+  
+  <select id="selectPersonInfoByDomainId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select z1.* from zhr2_001 z1 left join hr_domain_pernr hdp on z1.PERNR=hdp.PERNR
+		WHERE
+		1=1
+		and hdp.DOMAINID=#{domainId}
+  </select>
+  
   <select id="selectPersonInfo" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     DISTINCT

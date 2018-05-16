@@ -82,7 +82,7 @@
 								<w:sz w:val="32" />
 								<w:szCs w:val="32" />
 							</w:rPr>
-							<w:t>${template.dense}</w:t>
+							<w:t><#if template.dense??>${template.dense}</#if></w:t>
 						</w:r>
 					</w:p>
 					<w:p w:rsidR="00387002" w:rsidRDefault="00387002">
@@ -130,7 +130,7 @@
 								<w:sz w:val="72" />
 								<w:szCs w:val="72" />
 							</w:rPr>
-							<w:t>${detailList.detailListName}</w:t>
+							<w:t><#if detailList.detailListName??>${detailList.detailListName}</#if></w:t>
 						</w:r>
 						<w:r>
 							<w:rPr>
@@ -151,7 +151,7 @@
 								<w:eastAsianLayout w:id="1692587521"
 									w:combine="1" />
 							</w:rPr>
-							<w:t>${template.mettingName}</w:t>
+							<w:t><#if template.mettingName??>${template.mettingName}</#if></w:t>
 						</w:r>
 						<w:r w:rsidRPr="00387002">
 							<w:rPr>
@@ -172,7 +172,7 @@
 								<w:eastAsianLayout w:id="1692587521"
 									w:combine="1" />
 							</w:rPr>
-							<w:t>${template.companyName},${template.updateTime}更新</w:t>
+							<w:t><#if template.companyName??>${template.companyName}</#if>,<#if template.updateTime??>${template.updateTime}</#if>更新</w:t>
 						</w:r>
 					</w:p>
 					<w:p w:rsidR="00387002" w:rsidRDefault="00387002" />
@@ -200,7 +200,7 @@
 								<w:sz w:val="32" />
 								<w:szCs w:val="32" />
 							</w:rPr>
-							<w:t>${notypeWork.workName}</w:t>
+							<w:t><#if notypeWork.workName??> ${notypeWork.workName}</#if></w:t>
 						</w:r>
 						<w:r>
 							<w:rPr>
@@ -209,7 +209,7 @@
 								<w:sz w:val="32" />
 								<w:szCs w:val="32" />
 							</w:rPr>
-							<w:t>（${notypeWork.supervisorStrategy}）</w:t>
+							<w:t><#if notypeWork.supervisorStrategy??>（${notypeWork.supervisorStrategy}）</#if></w:t>
 						</w:r>
 						<w:r>
 							<w:rPr>
@@ -217,7 +217,7 @@
 									w:hint="eastAsia" />
 								<w:vertAlign w:val="superscript" />
 							</w:rPr>
-							<w:t>${notypeWork.mettingTypeId}</w:t>
+							<w:t><#if notypeWork.mettingTypeId??>${notypeWork.mettingTypeId}</#if></w:t>
 						</w:r>
 						<w:r>
 							<w:rPr>
@@ -225,7 +225,7 @@
 									w:hint="eastAsia" />
 								<w:color w:val="FF0000" />
 							</w:rPr>
-							<w:t>（${notypeWork.workProgress}）</w:t>
+							<w:t><#if notypeWork.workProgress??>（${notypeWork.workProgress}）</#if></w:t>
 						</w:r>
 					</w:p>
 					<#if notypeWork.nodeList??>
@@ -246,7 +246,7 @@
 								<w:sz w:val="32" />
 								<w:szCs w:val="32" />
 							</w:rPr>
-							<w:t>${node.nodeName}</w:t>
+							<w:t><#if node.nodeName??>${node.nodeName}</#if></w:t>
 						</w:r>
 						<w:r>
 							<w:rPr>
@@ -255,7 +255,7 @@
 								<w:sz w:val="28" />
 								<w:szCs w:val="28" />
 							</w:rPr>
-							<w:t>${node.nodeContent}</w:t>
+							<w:t><#if node.nodeContent??>${node.nodeContent}</#if></w:t>
 						</w:r>
 						<w:r>
 							<w:rPr>
@@ -264,7 +264,7 @@
 								<w:sz w:val="28" />
 								<w:szCs w:val="28" />
 							</w:rPr>
-							<w:t>（${node.nodeProgress}）</w:t>
+							<w:t><#if node.nodeProgress??>（${node.nodeProgress}）</#if></w:t>
 						</w:r>
 					</w:p>
 					</#list>
@@ -294,7 +294,7 @@
 								<w:sz w:val="32" />
 								<w:szCs w:val="32" />
 							</w:rPr>
-							<w:t>${typeWork_index+1}、${typeWork.workTypeName}</w:t>
+							<w:t>${typeWork_index+1}、<#if typeWork.workTypeName??>${typeWork.workTypeName}</#if></w:t>
 						</w:r>
 					</w:p>
 					<#if typeWork.list??>
@@ -319,7 +319,7 @@
 								<w:sz w:val="32" />
 								<w:szCs w:val="32" />
 							</w:rPr>
-							<w:t>${work_index+1}、${work.workName}。</w:t>
+							<w:t>${work_index+1}、<#if work.workName??>${work.workName}</#if>。</w:t>
 						</w:r>
 						<w:r>
 							<w:rPr>
@@ -328,7 +328,7 @@
 								<w:sz w:val="32" />
 								<w:szCs w:val="32" />
 							</w:rPr>
-							<w:t>（${work.supervisorStrategy}）</w:t>
+							<w:t><#if work.supervisorStrategy??>（${work.supervisorStrategy}）</#if></w:t>
 						</w:r>
 						<w:r>
 							<w:rPr>
@@ -336,7 +336,7 @@
 									w:hint="eastAsia" />
 								<w:vertAlign w:val="superscript" />
 							</w:rPr>
-							<w:t>${work.mettingTypeId}</w:t>
+							<w:t><#if work.mettingTypeId??>${work.mettingTypeId}</#if></w:t>
 						</w:r>
 						<w:r>
 							<w:rPr>
@@ -344,7 +344,7 @@
 									w:hint="eastAsia" />
 								<w:color w:val="FF0000" />
 							</w:rPr>
-							<w:t>（${work.workProgress}） </w:t>
+							<w:t><#if work.workProgress??>（${work.workProgress}）</#if> </w:t>
 						</w:r>
 						<w:bookmarkStart w:id="0" w:name="_GoBack" />
 						<w:bookmarkEnd w:id="0" />
@@ -367,7 +367,7 @@
 								<w:sz w:val="32" />
 								<w:szCs w:val="32" />
 							</w:rPr>
-							<w:t>${node.nodeName}</w:t>
+							<w:t><#if node.nodeName??>${node.nodeName}</#if></w:t>
 						</w:r>
 						<w:r>
 							<w:rPr>
@@ -376,7 +376,7 @@
 								<w:sz w:val="28" />
 								<w:szCs w:val="28" />
 							</w:rPr>
-							<w:t>${node.nodeContent}</w:t>
+							<w:t><#if node.nodeContent??>${node.nodeContent}</#if></w:t>
 						</w:r>
 						<w:r>
 							<w:rPr>
@@ -385,7 +385,7 @@
 								<w:sz w:val="28" />
 								<w:szCs w:val="28" />
 							</w:rPr>
-							<w:t>（${node.nodeProgress}）</w:t>
+							<w:t><#if node.nodeProgress??>（${node.nodeProgress}）</#if></w:t>
 						</w:r>
 					</w:p>
 					</#list>

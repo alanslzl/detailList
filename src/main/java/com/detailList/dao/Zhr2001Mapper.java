@@ -20,4 +20,6 @@ public interface Zhr2001Mapper {
     int updateByPrimaryKey(Zhr2001 record);
     
     List<Zhr2001> selectPersonInfo(@Param("personInfo")String personInfo);
+    
+    Zhr2001 selectPersonInfoByDomainId(String domainId);
 }

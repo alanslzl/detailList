@@ -25,7 +25,6 @@ import com.detailList.dto.EasyWorkDto;
 import com.detailList.dto.Result;
 import com.detailList.entity.DetailList;
 import com.detailList.entity.DetailWork;
-import com.detailList.entity.User;
 import com.detailList.entity.Work;
 import com.detailList.entity.WorkNode;
 import com.detailList.entity.WorkTypeRelation;
@@ -36,7 +35,7 @@ import com.detailList.service.WorkService;
 import com.detailList.utils.FileUtils;
 import com.detailList.utils.StringUtils;
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;import freemarker.template.utility.StringUtil;
+import com.github.pagehelper.PageInfo;
 
 
 @RestController
@@ -56,8 +55,8 @@ public class WorkController{
 	@ResponseBody
 	public Object queryWork(HttpServletRequest request,HttpServletResponse response,Work work) {
 		try {
-			User user = (User)request.getSession().getAttribute("user");
-			List<Work> workList = workService.selectWork(user.getId());
+			Zhr2001 user = (Zhr2001)request.getSession().getAttribute("userInfo");
+			List<Work> workList = workService.selectWork(user.getPernr());
 			return workList;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -103,14 +102,14 @@ public class WorkController{
 			if(null == tablePage) {
 				tablePage = 1;
 			}
-			User user = (User)request.getSession().getAttribute("user");
+			Zhr2001 user = (Zhr2001)request.getSession().getAttribute("userInfo");
 			PageHelper.startPage(labelPage, 8);
-			List<Work> workList = workService.selectWork(user.getId());
+			List<Work> workList = workService.selectWork(user.getPernr());
 			PageInfo<Work> labelPageInfo=new PageInfo<Work>(workList);
 			view.addObject("labelPage", labelPageInfo);
 			view.addObject("labelList", workList);
 			PageHelper.startPage(tablePage, 8);
-			workList = workService.selectWork(user.getId());
+			workList = workService.selectWork(user.getPernr());
 			PageInfo<Work> tablePageInfo=new PageInfo<Work>(workList);
 			view.addObject("tablePage", tablePageInfo);
 			view.addObject("tableList", workList);

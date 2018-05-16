@@ -5,11 +5,14 @@ C:\Users\29653\git\detailList\src\main\java\com\detailList\dto\DetailListDto.jav
 C:\Users\29653\git\detailList\src\main\java\com\detailList\controller\WorkLabelController.java
 C:\Users\29653\git\detailList\src\main\java\com\detailList\entity\Zhr2002.java
 C:\Users\29653\git\detailList\src\main\java\com\detailList\controller\ObDetailListController.java
+C:\Users\29653\git\detailList\src\main\java\com\detailList\dao\workEnclosureMapper.java
 C:\Users\29653\git\detailList\src\main\java\com\detailList\utils\DateUtils.java
+C:\Users\29653\git\detailList\src\main\java\com\detailList\utils\FileUtils.java
 C:\Users\29653\git\detailList\src\main\java\com\detailList\dao\WorkMapper.java
 C:\Users\29653\git\detailList\src\main\java\com\detailList\dao\WorkTypeRelationMapper.java
 C:\Users\29653\git\detailList\src\main\java\com\detailList\utils\WebContext.java
 C:\Users\29653\git\detailList\src\main\java\com\detailList\dao\WorkNodeMapper.java
+C:\Users\29653\git\detailList\src\main\java\com\detailList\dao\mergeWorkMapper.java
 C:\Users\29653\git\detailList\src\main\java\com\detailList\dao\WorkTalkRecordMapper.java
 C:\Users\29653\git\detailList\src\main\java\com\detailList\entity\WorkTypeRelation.java
 C:\Users\29653\git\detailList\src\main\java\com\detailList\service\impl\UserServiceImpl.java
@@ -38,6 +41,7 @@ C:\Users\29653\git\detailList\src\main\java\com\detailList\service\DetailListSer
 C:\Users\29653\git\detailList\src\main\java\com\detailList\entity\WorkType.java
 C:\Users\29653\git\detailList\src\main\java\com\detailList\service\impl\WorkLabelServiceImpl.java
 C:\Users\29653\git\detailList\src\main\java\com\detailList\entity\WorkLabel.java
+C:\Users\29653\git\detailList\src\main\java\com\detailList\utils\LdapValidator.java
 C:\Users\29653\git\detailList\src\main\java\com\detailList\utils\DESUtil.java
 C:\Users\29653\git\detailList\src\main\java\com\detailList\dao\Zhr2001Mapper.java
 C:\Users\29653\git\detailList\src\main\java\com\detailList\service\MettingTypeService.java
@@ -53,6 +57,7 @@ C:\Users\29653\git\detailList\src\main\java\com\detailList\controller\MettingTyp
 C:\Users\29653\git\detailList\src\main\java\com\detailList\entity\DetailObServer.java
 C:\Users\29653\git\detailList\src\main\java\com\detailList\dao\DetailWorkMapper.java
 C:\Users\29653\git\detailList\src\main\java\com\detailList\dto\WorkTypeDto.java
+C:\Users\29653\git\detailList\src\main\java\com\detailList\entity\mergeWork.java
 C:\Users\29653\git\detailList\src\main\java\com\detailList\utils\ValidateCodeUtils.java
 C:\Users\29653\git\detailList\src\main\java\com\detailList\service\UserService.java
 C:\Users\29653\git\detailList\src\main\java\com\detailList\controller\DetailListController.java
@@ -68,6 +73,7 @@ C:\Users\29653\git\detailList\src\main\java\com\detailList\dto\DetailListManager
 C:\Users\29653\git\detailList\src\main\java\com\detailList\entity\User.java
 C:\Users\29653\git\detailList\src\main\java\com\detailList\controller\PersonInfoController.java
 C:\Users\29653\git\detailList\src\main\java\com\detailList\dao\WorkTypeMapper.java
+C:\Users\29653\git\detailList\src\main\java\com\detailList\entity\workEnclosure.java
 C:\Users\29653\git\detailList\src\main\java\com\detailList\utils\ExceptionUtils.java
 C:\Users\29653\git\detailList\src\main\java\com\detailList\dao\DetailObServerMapper.java
 C:\Users\29653\git\detailList\src\main\java\com\detailList\utils\ArabicToChineseUtils.java

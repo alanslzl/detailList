@@ -14,7 +14,7 @@
   <select id="selectDetailList" parameterType="com.detailList.entity.DetailList" resultMap="BaseResultMap">
   		select dl.id,dl.detail_list_name,CONCAT(du.NACHN,du.VORNA) as detail_list_person
 		from 
-		dl_detail_list dl left join zhr2_001 du on dl.detail_list_person=du.id
+		dl_detail_list dl left join zhr2_001 du on dl.detail_list_person=du.pernr
 		<where>
 			1=1
 			and du.PERNR=#{detailListPerson}

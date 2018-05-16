@@ -58,6 +58,9 @@
 		} catch (ex) {
 		}
 	}
+	function logout(){
+		window.location.href="<%=path%>/logout.do";
+	}
 	$(function() {
 		window.setInterval("reinitIframe()", 200);
 	});
@@ -77,16 +80,17 @@
 			</div>
 			<div id="userInfo" class="col-md-3">
 				<div id="welcomeLogin"></div>
-				欢迎您,颜峰 <a href="#"> <i class="glyphicon glyphicon-user">个人中心</i></a>
+				欢迎您,${sessionScope.userInfo.nachn}${sessionScope.userInfo.vorna}<a href="#"> <i class="glyphicon glyphicon-user">个人中心</i></a>
 				<a data-toggle="tooltip" title="6个工作事项" class="top-block" href="#" onclick="loadPage('<%=path%>/page/work.jsp');">
 		            <i class="glyphicon glyphicon-exclamation-sign">工作事项</i>
 		            <span class="notification">(6)</span>
 		        </a>
+		        <a href="#" onclick="logout();" class="top-block">退出</a>
 			</div>
 		</div>
 	</div>
 	<nav class="navbar navbar-default" role="navigation">
-		<div class="container-fluid" style="background-color: #bd0625e6;"> 
+		<div class="container-fluid" style="background-color: rgb(179,39,39);"> 
 		    <div class="navbar-header">
 		        <a class="navbar-brand" href="#" onclick="loadPage('<%=path%>/page/descDetailList.jsp');">首页</a>
 		        <a class="navbar-brand" href="#" onclick="loadPage('<%=path%>/page/addWork.jsp');">工作录入</a>
@@ -96,6 +100,7 @@
 		        <a class="navbar-brand" href="#" onclick="loadPage('<%=path%>/page/templateManager.jsp');">导出模板管理</a>
 		        <a class="navbar-brand" href="#" onclick="loadPage('<%=path%>/workLabel/query.do');">工作标签管理</a>
 		        <a class="navbar-brand" href="#" onclick="loadPage('<%=path%>/mettingType/query.do');">会议类型管理</a>
+		        <a class="navbar-brand" href="#" onclick="loadPage('<%=path%>/mettingType/query.do');">工作组管理</a>
 		    </div>
 		</div>
 	</nav>

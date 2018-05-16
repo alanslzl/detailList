@@ -23,4 +23,7 @@ public class UserServiceImpl implements UserService{
 	public Zhr2001 selectByPrimaryKey(Integer id){
 		return zhr2001Mapper.selectByPrimaryKey(id);
 	}
+	public Zhr2001 selectPersonInfoByDomainId(String domainId){
+		return zhr2001Mapper.selectPersonInfoByDomainId(domainId);
+	}
 }

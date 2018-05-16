@@ -17,28 +17,8 @@
 	border: 1px solid black;
 }
 
-.modal.in .modal-dialog {
-	-webkit-transform: translate(0, -50%);
-	-ms-transform: translate(0, -50%);
-	-o-transform: translate(0, -50%);
-	transform: translate(0, -50%)
-}
-
-.modal-dialog {
-	position: absolute;
-	width: auto;
-	margin: 10px auto;
-	left: 0;
-	right: 0;
-	top: 50%
-}
 ..file-drop-zone{
 	height:120px;
-}
-@media ( min-width :768px) {
-	.modal-dialog {
-		width: 600px
-	}
 }
 </style>
 <script type="text/javascript">
@@ -190,9 +170,17 @@ function createChoiceWorkTable(){
 var personInput;
 //选择责任人人员信息窗口
 function choicePerson(obj){
-	//createChoicePersonTable();
-	createTable("choicePersonTable");
-	$("#choicePersonModal").modal();
+	$("#choicePersonInfo").val("");
+	createChoicePersonTable();
+	$("#choicePersonModal").modal().css({
+		"margin-top":function(){
+			if($(obj).offset().top<150){
+				return +($(obj).offset().top-150)
+			}else{
+				return +($(obj).offset().top-440)
+			}
+		}
+	});
 	personInput = obj;
 }
 //责任人人人员选择方法
@@ -222,9 +210,53 @@ function choicePersonInfo(){
 		}
 	}
 	$("#choicePersonModal").modal("hide");
-	$(personInput).val(showNames)
-	$(personInput).prev().val(userNos)
+	$(personInput).val(showNames);
+	$(personInput).prev().val(userNos);
 }
+Array.prototype.contains = function(val)  
+{  
+     for (var i = 0; i < this.length; i++)  
+    {  
+       if (this[i] == val)  
+      {  
+       return true;  
+      }  
+    }  
+     return false;  
+}; 
+Array.prototype.remove = function(val) {
+	var index = this.indexOf(val);
+	if (index > -1) {
+	this.splice(index, 1);
+	}
+	};
+Array.prototype.each = function(fn){
+	fn = fn || Function.K;
+	var a = [];
+	var args = Array.prototype.slice.call(arguments, 1);
+	for(var i = 0; i < this.length; i++){
+	var res = fn.apply(this,[this[i],i].concat(args));
+	if(res != null) a.push(res);
+	}
+	return a;
+}; 
+Array.intersect = function(a, b){
+	return a.uniquelize().each(function(o){return b.contains(o) ? o : null});
+};
+/**
+* 得到一个数组不重复的元素集合<br/>
+* 唯一化一个数组
+* @returns {Array} 由不重复元素构成的数组
+*/
+Array.prototype.uniquelize = function(){
+	var ra = new Array();
+	for(var i = 0; i < this.length; i ++){
+		if(!ra.contains(this[i])){
+			ra.push(this[i]);
+		}
+	}
+	return ra;
+}; 
 //判断方法 后面的值是否在前面的数组中
 function IsInArray(arr,val){ 
 	var testStr=','+arr.join(",")+","; 
@@ -296,12 +328,12 @@ function createTable(tableName){
 		  method: 'post',
 		  contentType : "application/x-www-form-urlencoded",
 	      url: "<%=path%>/personInfo/queryPersonInfo.do", // 获取表格数据的url
-	      cache: false, // 设置为 false 禁用 AJAX 数据缓存， 默认为true
+	      cache: true, // 设置为 false 禁用 AJAX 数据缓存， 默认为true
 	      striped: true,  //表格显示条纹，默认为false
 	      pagination: true, // 在表格底部显示分页组件，默认false
 	      clickToSelect: true,
 	      pageList: [5,10], // 设置页面可以显示的数据条数
-	      height: 340,
+	      height: 440,
 	      pageSize: 7, // 页面数据条数
 	      pageNumber: 1, // 首页页码
 	      //search: true,
@@ -377,7 +409,7 @@ function createWorkTable(tableName){
 	      pagination: true, // 在表格底部显示分页组件，默认false
 	      clickToSelect: true,
 	      pageList: [5,10], // 设置页面可以显示的数据条数
-	      height: 340,
+	      height: 440,
 	      pageSize: 7, // 页面数据条数
 	      pageNumber: 1, // 首页页码
 	      search: true,
@@ -476,6 +508,11 @@ function createFileInput(obj){
         console.log('文件上传失败！');
     });
 }
+function removeChoice(obj){
+	$(obj).parent().prev().find("input").each(function(){
+		$(this).val("");
+	});
+}
 </script>
 </head>
 <body>
@@ -518,19 +555,29 @@ function createFileInput(obj){
 				</div>
 			</div>
 			<div class="row">
-				<div class="form-group">
+				<div class="form-group" id="choiceG">
 					<div class="col-lg-6">
 						<label class="col-md-2">责任人</label>
-						<div class="col-md-6">
-							<input class="form-control" id="liablePersonId" type="hidden">
-							<input class="form-control" id="liablePerson" type="text" onfocus="choicePerson(this);">
+						<div class="col-md-9" style="padding-left: 0px;">
+							<div class="col-md-8">
+								<input class="form-control" id="liablePersonId" type="hidden">
+								<input class="form-control" id="liablePerson" type="text" onfocus="choicePerson(this);">
+							</div>
+							<div class="col-md-4">
+								<button class="form-control" onclick="removeChoice(this);">清除选中</button>
+							</div>
 						</div>
 					</div>
 					<div class="col-lg-6">
 						<label class="col-md-2">督办人</label>
-						<div class="col-md-6">
-							<input class="form-control" id="supervisorId" type="hidden">
-							<input class="form-control" id="supervisor" type="text" onfocus="choicePerson(this);">
+						<div class="col-md-9" style="padding-right: 44px;">
+							<div class="col-md-8">
+								<input class="form-control" id="supervisorId" type="hidden">
+								<input class="form-control" id="supervisor" type="text" onfocus="choicePerson(this);">
+							</div>
+							<div class="col-md-4">
+								<button class="form-control" onclick="removeChoice(this);">清除选中</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -663,29 +710,29 @@ function createFileInput(obj){
 				</div>
 				<div id="nodeDiv">
 				</div>
-			</div>
-			<div style="padding-top: 30px;"></div>
-			<div class="row">
-				<div class="form-group">
-					<div id="mergeWorkDiv" class="col-lg-12">
-					</div>
-					<div class="col-lg-12">
-						<label class="col-md-1">工作合并</label>
-						<div class="col-md-11">
-							<input class="form-control" id="mergeIds" type="hidden">
-							<button type="button" class="btn btn-default" data-toggle="modal" onclick="choiceWork(this);">合并工作</button>
+				<div style="padding-top: 30px;"></div>
+				<div class="row">
+					<div class="form-group">
+						<div id="mergeWorkDiv" class="col-lg-12">
 						</div>
+						<div class="col-lg-12">
+							<label class="col-md-1">工作合并</label>
+							<div class="col-md-11">
+								<input class="form-control" id="mergeIds" type="hidden">
+								<button type="button" class="btn btn-default" data-toggle="modal" onclick="choiceWork(this);">合并工作</button>
+							</div>
+						</div>
+						
 					</div>
-					
 				</div>
-			</div>
-			<div class="row">
-				<div class="form-group">
-					<div class="col-lg-12">
-						<label class="col-md-1">附件</label>
-						<div class="col-md-11">
-							<input class="form-control" id="enclosureId" type="hidden">
-							<input id="enclosure" name="enclosure" type="file" multiple  class="file-loading"  data-show-upload="false" data-show-caption="true">
+				<div class="row">
+					<div class="form-group">
+						<div class="col-lg-12">
+							<label class="col-md-1">附件</label>
+							<div class="col-md-11">
+								<input class="form-control" id="enclosureId" type="hidden">
+								<input id="enclosure" name="enclosure" type="file" multiple  class="file-loading"  data-show-upload="false" data-show-caption="true">
+							</div>
 						</div>
 					</div>
 				</div>
@@ -776,7 +823,7 @@ function createFileInput(obj){
 		</div>
 	</div>
 	<!-- /.modal -->
-	<div class="modal fade" id="choicePersonModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal fade" id="choicePersonModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="overflow-y:hidden;">
 			<div class="modal-dialog" style="width:800px;">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -788,7 +835,7 @@ function createFileInput(obj){
 						</h4>
 					</div>
 					<div class="modal-body">
-						<div style="height:530px;overflow: auto;">
+						<div style="height:600px;overflow: auto;">
 							<ul class="nav nav-tabs" id="myTab">
 								  <li class="active"><a href="#home">人员选择</a></li>
 								  <li><a href="#profile">工作组选择</a></li>
@@ -880,6 +927,7 @@ function createFileInput(obj){
 		//initWorkLabel();
 		//$("#cpworkDiv").find("#workLevel").selectpicker("refresh");
 		//$("#cpworkDiv").find("#workStatus").selectpicker("refresh");
+		createTable("choicePersonTable");
 		addManyWork();
 	});
 </script>

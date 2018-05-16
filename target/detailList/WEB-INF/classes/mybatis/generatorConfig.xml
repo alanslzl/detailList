@@ -37,14 +37,15 @@
 			<property name="enableSubPackages" value="true" />
 		</javaClientGenerator>
 		<!--生成对应表及类名 -->
-		<table tableName="dl_work" domainObjectName="Work"
+		<table tableName="dl_work_enclosure" domainObjectName="workEnclosure"
 			enableCountByExample="false" enableUpdateByExample="false"
 			enableDeleteByExample="false" enableSelectByExample="false"
 			selectByExampleQueryId="false">
-			<columnOverride column="job_require" javaType="java.lang.String" jdbcType="VARCHAR" />  
-			<columnOverride column="work_name" javaType="java.lang.String" jdbcType="VARCHAR" />  
-			<columnOverride column="supervisor_strategy" javaType="java.lang.String" jdbcType="VARCHAR" />  
-			<columnOverride column="work_progress" javaType="java.lang.String" jdbcType="VARCHAR" />  
+		</table>
+		<table tableName="dl_merge_work" domainObjectName="mergeWork"
+			enableCountByExample="false" enableUpdateByExample="false"
+			enableDeleteByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false">
 		</table>
 	</context>
 </generatorConfiguration>

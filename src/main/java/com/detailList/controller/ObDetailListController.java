@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.detailList.dto.Result;
 import com.detailList.entity.DetailList;
 import com.detailList.entity.User;
+import com.detailList.entity.Zhr2001;
 import com.detailList.service.ObDetailListService;
 
 @RestController
@@ -33,8 +34,8 @@ public class ObDetailListController {
 	@ResponseBody
 	public Object queryObUser(HttpServletRequest request,HttpServletResponse response) {
 		try {
-			User user = (User)request.getSession().getAttribute("user");
-			List<Map<String, Object>> queryList = obDetailListService.selectObUser(null,user.getId(),null);
+			Zhr2001 user = (Zhr2001)request.getSession().getAttribute("userInfo");
+			List<Map<String, Object>> queryList = obDetailListService.selectObUser(null,user.getPernr(),null);
 			return queryList;
 		} catch (Exception e) {
 			e.printStackTrace();

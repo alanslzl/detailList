@@ -97,7 +97,7 @@ li.slot-item:not(:last-child){
 	background-color: #ecdb50;
 }
 .bg-red{
-	background-color: #bd0625e6;
+	background-color: rgb(179,39,39);
 }
 
 .slot-title{

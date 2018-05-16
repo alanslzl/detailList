@@ -5,10 +5,11 @@
     <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="detail_list_id" jdbcType="VARCHAR" property="detailListId" />
     <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="ob_user_id" jdbcType="VARCHAR" property="obUserId" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, detail_list_id, user_id, create_time
+    id, detail_list_id, user_id, ob_user_id, create_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -16,21 +17,33 @@
     from dl_detail_observer
     where id = #{id,jdbcType=VARCHAR}
   </select>
-  <select id="selectObUser" parameterType="java.lang.String" resultType="java.util.Map">
+	<select id="selectObUser" parameterType="java.lang.String" resultType="java.util.Map">
   	select DISTINCT dlo.user_id as userId,CONCAT(z1.NACHN,z1.VORNA) as userName from dl_detail_observer dlo left join zhr2_001 z1 on dlo.user_id=z1.PERNR
 		WHERE
 		1=1
-		and dlo.ob_user_id=#{userId}
+		<if test="obUserId!=null and obUserId!=''">
+			and dlo.ob_user_id=#{obUserId}
+		</if>
+		<if test="userId!=null and userId!=''">
+			and dlo.user_id=#{userId}
+		</if>
+		<if test="detailListId!=null and detailListId!=''">
+			and dlo.detail_list_id=#{detailListId}
+		</if>
   </select>
+  <delete id="deleteByDetailListId" parameterType="java.lang.String">
+    delete from dl_detail_observer
+    where detail_list_id = #{id,jdbcType=VARCHAR}
+  </delete>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from dl_detail_observer
     where id = #{id,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.detailList.entity.DetailObServer">
     insert into dl_detail_observer (id, detail_list_id, user_id, 
-      create_time)
+      ob_user_id, create_time)
     values (#{id,jdbcType=VARCHAR}, #{detailListId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP})
+      #{obUserId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.detailList.entity.DetailObServer">
     insert into dl_detail_observer
@@ -43,6 +56,9 @@
       </if>
       <if test="userId != null">
         user_id,
+      </if>
+      <if test="obUserId != null">
+        ob_user_id,
       </if>
       <if test="createTime != null">
         create_time,
@@ -58,6 +74,9 @@
       <if test="userId != null">
         #{userId,jdbcType=VARCHAR},
       </if>
+      <if test="obUserId != null">
+        #{obUserId,jdbcType=VARCHAR},
+      </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -72,6 +91,9 @@
       <if test="userId != null">
         user_id = #{userId,jdbcType=VARCHAR},
       </if>
+      <if test="obUserId != null">
+        ob_user_id = #{obUserId,jdbcType=VARCHAR},
+      </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -82,6 +104,7 @@
     update dl_detail_observer
     set detail_list_id = #{detailListId,jdbcType=VARCHAR},
       user_id = #{userId,jdbcType=VARCHAR},
+      ob_user_id = #{obUserId,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=VARCHAR}
   </update>

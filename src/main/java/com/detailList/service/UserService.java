@@ -7,4 +7,6 @@ public interface UserService {
 	public User login(User user);
 	
 	public Zhr2001 selectByPrimaryKey(Integer id);
+	
+	public Zhr2001 selectPersonInfoByDomainId(String domainId);
 }

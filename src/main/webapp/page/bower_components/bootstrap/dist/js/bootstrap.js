@@ -897,9 +897,16 @@ if (typeof jQuery === 'undefined') { throw new Error('Bootstrap\'s JavaScript re
       that.$element
         .addClass('in')
         .attr('aria-hidden', false)
-
       that.enforceFocus()
-
+      that.$element.children().eq(0).css("position", "absolute").css({
+          "margin":"0px",
+          "top": function () {
+              return (that.$element.height() - that.$element.children().eq(0).height()-40) / 3 + "px";
+          },
+          "left": function () {
+              return (that.$element.width() - that.$element.children().eq(0).width()) / 2 + "px";
+          }
+      });
       var e = $.Event('shown.bs.modal', { relatedTarget: _relatedTarget })
 
       transition ?

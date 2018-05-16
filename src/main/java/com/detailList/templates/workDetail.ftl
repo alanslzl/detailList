@@ -264,7 +264,7 @@
 								<w:sz w:val="28" />
 								<w:szCs w:val="28" />
 							</w:rPr>
-							<w:t>（<#if node.nodeProgress??>${node.nodeProgress}</#if>）</w:t>
+							<w:t><#if node.nodeProgress??>（${node.nodeProgress}）</#if></w:t>
 						</w:r>
 					</w:p>
 					</#list>
@@ -328,7 +328,7 @@
 								<w:sz w:val="32" />
 								<w:szCs w:val="32" />
 							</w:rPr>
-							<w:t>（${work.supervisorStrategy}）</w:t>
+							<w:t><#if work.supervisorStrategy??>（${work.supervisorStrategy}）</#if></w:t>
 						</w:r>
 						<w:r>
 							<w:rPr>
@@ -344,7 +344,7 @@
 									w:hint="eastAsia" />
 								<w:color w:val="FF0000" />
 							</w:rPr>
-							<w:t>（<#if work.workProgress??>${work.workProgress}</#if>） </w:t>
+							<w:t><#if work.workProgress??>（${work.workProgress}）</#if> </w:t>
 						</w:r>
 						<w:bookmarkStart w:id="0" w:name="_GoBack" />
 						<w:bookmarkEnd w:id="0" />
@@ -385,7 +385,7 @@
 								<w:sz w:val="28" />
 								<w:szCs w:val="28" />
 							</w:rPr>
-							<w:t>（<#if node.nodeProgress??>${node.nodeProgress}</#if>）</w:t>
+							<w:t><#if node.nodeProgress??>（${node.nodeProgress}）</#if></w:t>
 						</w:r>
 					</w:p>
 					</#list>

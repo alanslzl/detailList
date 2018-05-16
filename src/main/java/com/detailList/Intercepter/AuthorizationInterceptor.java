@@ -6,6 +6,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.detailList.entity.User;
+import com.detailList.entity.Zhr2001;
 
 /*  
  *  拦截器必须实现HandlerInterceptor接口 
@@ -13,7 +14,7 @@ import com.detailList.entity.User;
 public class AuthorizationInterceptor implements HandlerInterceptor {
 
 	// 不拦截"/loginForm"和"/login"请求
-	private static final String[] IGNORE_URI = { "page/login.jsp","login.do","doLogin.do" };
+	private static final String[] IGNORE_URI = { "page/login.jsp","login.do","doLogin.do","ldapLogin.do" };
 
 	/*
 	 * 该方法将在整个请求完成之后执行， 主要作用是用于清理资源的，
@@ -59,9 +60,9 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
 		// 拦截请求
 		if (!flag) {
 			// 1.获取session中的用户
-			User user = (User) request.getSession().getAttribute("user");
+			Zhr2001 userInfo = (Zhr2001) request.getSession().getAttribute("userInfo");
 			// 2.判断用户是否已经登录
-			if (user == null) {
+			if (userInfo == null) {
 				// 如果用户没有登录，则设置提示信息，跳转到登录页面
 				System.out.println("AuthorizationInterceptor拦截请求：");
 				request.setAttribute("message", "请先登录再访问网站");

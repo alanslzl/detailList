@@ -23,6 +23,7 @@
 		1=1
 		<if test="obUserId!=null and obUserId!=''">
 			and dlo.ob_user_id=#{obUserId}
+			and dlo.user_id!=#{obUserId}
 		</if>
 		<if test="userId!=null and userId!=''">
 			and dlo.user_id=#{userId}

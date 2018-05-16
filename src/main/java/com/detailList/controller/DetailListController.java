@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -64,7 +65,7 @@ public class DetailListController{
 		ModelAndView view = new ModelAndView("page/editDetailList");
 		try {
 			Zhr2001 user = (Zhr2001)request.getSession().getAttribute("userInfo");
-			List<Map<String, Object>> ads = obDetailListService.selectObUser(null,user.getPernr(),detailListId);
+			List<Map<String, Object>> ads = obDetailListService.selectObUser(user.getPernr(),null,detailListId);
 			DetailList ndl = detailListService.selectDetailListById(detailListId);
 			view.addObject("detailListId", detailListId);
 			view.addObject("detailListName", ndl.getDetailListName());
@@ -82,8 +83,8 @@ public class DetailListController{
 				page = 1;
 			}
 			List<DetailListManagerDto> dtoList = new ArrayList<>();
-			User user = (User)request.getSession().getAttribute("user");
-			detailList.setDetailListPerson(user.getId());
+			Zhr2001 user = (Zhr2001)request.getSession().getAttribute("userInfo");
+			detailList.setDetailListPerson(user.getPernr());
 			PageHelper.startPage(page, 3);
 			List<DetailList> queryList = detailListService.selectDetailList(detailList);
 			for (DetailList dl : queryList) {
@@ -117,8 +118,8 @@ public class DetailListController{
 	@ResponseBody
 	public Object queryDetailList(HttpServletRequest request,HttpServletResponse response,DetailList detailList) {
 		try {
-			User user = (User)request.getSession().getAttribute("user");
-			detailList.setDetailListPerson(user.getId());
+			Zhr2001 user = (Zhr2001)request.getSession().getAttribute("userInfo");
+			detailList.setDetailListPerson(user.getPernr());
 			List<DetailList> queryList = detailListService.selectDetailList(detailList);
 			return queryList;
 		} catch (Exception e) {
@@ -173,14 +174,16 @@ public class DetailListController{
 				workService.insertDetailWork(work);;
 			}
 			obDetailListService.deleteByDetailListId(detailListId);
-			String obuserz[] = obUser.split(",");
-			for (String u : obuserz) {
-				DetailObServer ob = new DetailObServer();
-				ob.setId(StringUtils.genUUid());
-				ob.setDetailListId(ndl.getId());
-				ob.setUserId(user.getPernr());
-				ob.setObUserId(u);
-				obDetailListService.insertSelective(ob);;
+			if(org.apache.commons.lang.StringUtils.isNotEmpty(obUser)) {
+				String obuserz[] = obUser.split(",");
+				for (String u : obuserz) {
+					DetailObServer ob = new DetailObServer();
+					ob.setId(StringUtils.genUUid());
+					ob.setDetailListId(ndl.getId());
+					ob.setUserId(user.getPernr());
+					ob.setObUserId(u);
+					obDetailListService.insertSelective(ob);;
+				}
 			}
 			return JSON.toJSONString(Result.success());
 		} catch (Exception e) {
@@ -255,11 +258,10 @@ public class DetailListController{
 		WorkExportTemplate template = new WorkExportTemplate();
 		template.setDense("公司机密⭐十年");
 		template.setMettingName("商务、研发和信息化周会");
-		template.setUpdateTime(DateUtils.getDateFormat());
+		template.setUpdateTime(DateUtils.getDateFormat("yyyy-MM-dd"));
 		template.setCompanyName("董办");
 		template.setDetailTypeStyle("楷体");
 		Map<String,Object> map = new HashMap<String,Object>();
-		
 		map.put("typeWorkList", allWork.getTypeWorkListDto());
 		map.put("notypeWorkList", allWork.getNoTypeWorkList());
 		map.put("detailList", dt);
@@ -275,7 +277,8 @@ public class DetailListController{
             fin = new FileInputStream(file);
             response.setCharacterEncoding("utf-8");
             response.setContentType("application/msword");
-            response.addHeader("Content-Disposition", "attachment;filename=工作清单.doc");
+            String fileName = new String(file.getName().getBytes("gb2312"), "ISO8859-1");
+            response.addHeader("Content-Disposition", "attachment;filename="+fileName+".doc");
             out = response.getOutputStream();
             byte[] buffer = new byte[1024];//缓冲区
             int bytesToRead = -1;

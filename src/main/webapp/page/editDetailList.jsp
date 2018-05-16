@@ -15,7 +15,7 @@
 <style type="text/css">
 .modal.in 
 .modal-dialog{-webkit-transform:translate(0,-50%);-ms-transform:translate(0,-50%);-o-transform:translate(0,-50%);transform:translate(0,-50%)}
-.modal-dialog{position:absolute;width:auto;margin:10px auto;left:0;right:0;top:33%}
+.modal-dialog{position:absolute;width:auto;margin:10px auto;left:0;right:0;top:45%}
 @media (min-width:768px){.modal-dialog{width:600px}
 </style>
 <script type="text/javascript">
@@ -182,21 +182,35 @@
 		var choiceInfoArr = [];
 		var showNames = [];
 		var userNos = [];
-		$("#choicePersonTable input[type='checkbox']:checked").each(function(){
-			var userNo = $(this).parent().parent().children("td").eq(1).text();
-			var surnName = $(this).parent().parent().children("td").eq(2).text();
-			var name = $(this).parent().parent().children("td").eq(3).text();
+		var personVal = $(personInput).val();
+		var personNo = $(personInput).prev().val();
+		if(personVal!=''){
+			showNames.push(personVal);
+			userNos.push(personNo);
+		}
+		var rows = $('#choicePersonTable').bootstrapTable('getSelections');
+		for(var i = 0 ; i < rows.length;i++){
+			var userNo = rows[i].pernr;
+			var surnName = rows[i].nachn;
+			var name = rows[i].vorna;
 			var info = {
 				'userNo':userNo,	
 				'names':surnName + "" +name
 			}
-			showNames.push(surnName + "" +name);
-			choiceInfoArr.push(info);
-			userNos.push(userNo);
-		});
+			if(!IsInArray(userNos,userNo)){
+				showNames.push(surnName + "" +name);
+				choiceInfoArr.push(info);
+				userNos.push(userNo);
+			}
+		}
 		$("#choicePersonModal").modal("hide");
 		$(personInput).val(showNames);
 		$(personInput).prev().val(userNos);
+	}
+	//判断方法 后面的值是否在前面的数组中
+	function IsInArray(arr,val){ 
+		var testStr=','+arr.join(",")+","; 
+		return testStr.indexOf(","+val+",")!=-1; 
 	}
 	//创建选择人员信息表格
 	function createTable(tableName){
@@ -209,7 +223,7 @@
 		      pagination: true, // 在表格底部显示分页组件，默认false
 		      clickToSelect: true,
 		      pageList: [5,10], // 设置页面可以显示的数据条数
-		      height: 340,
+		      height: 495,
 		      pageSize: 7, // 页面数据条数
 		      pageNumber: 1, // 首页页码
 		      search: true,
@@ -218,7 +232,7 @@
 		      sidePagination: 'client', // 设置为服务器端分页
 		      queryParams: function (params) { // 请求服务器数据时发送的参数，可以在这里添加额外的查询参数，返回false则终止请求
 		          return {
-		              personInfo: $("#personInfo").val() // 额外添加的参数
+		              personInfo: $("#choicePersonInfo").val() // 额外添加的参数
 		          }
 		      },
 		      sortName: 'id', // 要排序的字段
@@ -226,7 +240,7 @@
 		      columns: [
 		          {
 		        	  field:'choiceUserCheck',
-		              checkbox: true, // 显示一个勾选框
+		              radio: true, // 显示一个勾选框
 		              align: 'center' // 居中显示
 		              
 		          }, {
@@ -285,6 +299,11 @@
 		$("#obUserId").val(userIds);
 		$("#obUserName").val(userNames);
 	}
+	function removeChoice(obj){
+		$(obj).parent().prev().find("input").each(function(){
+			$(this).val("");
+		});
+	}
 	$(function(){
 		createObUsers('${obUsers}');
 		createWorkLi("${detailListId}");
@@ -315,9 +334,14 @@
 				<div class="col-md-11" align="center">
 					<div class="form-group">
 						<label class="col-md-2">共享给他人</label>
-						<div class="col-md-10">
-							<input class="form-control" id="obUserId" type="hidden">
-							<input class="form-control" id="obUserName" type="text" onclick="choicePerson(this);">
+						<div class="col-md-10" style="padding-left: 0px;">
+							<div class="col-md-10">
+								<input class="form-control" id="obUserId" type="hidden">
+								<input class="form-control" id="obUserName" type="text" onclick="choicePerson(this);">
+							</div>
+							<div class="col-md-2">
+								<button class="form-control" onclick="removeChoice(this);">清除选中</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -494,7 +518,7 @@
 						</h4>
 					</div>
 					<div class="modal-body">
-						<div style="height:530px;overflow: auto;">
+						<div style="height:610px;overflow: auto;">
 							<div class="ch-container">
 								<div class="row">
 									<div class="form-group">

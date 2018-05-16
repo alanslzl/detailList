@@ -77,7 +77,16 @@
 	}
 	//修改清单
 	function editDetailList(){
-		window.location.href="<%=path%>/detailList/editDetailList.do?detailListId="+detailListId;
+		var colors = [];
+		var lis = $("#workDetailListUl").find("li");
+		for(var i = 0 ; i < lis.length ; i++){
+			colors.push(lis[i].style.backgroundColor);
+		}
+		if(IsInArray(colors,"rgb(100, 214, 244)")){
+			window.location.href="<%=path%>/detailList/editDetailList.do?detailListId="+detailListId;
+		}else{
+			alert("请选择清单!");
+		}
 	}
 	//创建工作li
 	function createWorkLi(detailListId,work){
@@ -140,7 +149,17 @@
 	//导出modal展示
 	function exportDetailList(){
 		//$("#exportDetailListModal").modal();
-		window.location.href="<%=path%>/detailList/exportDetailList.do?detailListId="+detailListId;
+		var colors = [];
+		var lis = $("#workDetailListUl").find("li");
+		for(var i = 0 ; i < lis.length ; i++){
+			colors.push(lis[i].style.backgroundColor);
+		}
+		if(IsInArray(colors,"rgb(100, 214, 244)")){
+			window.location.href="<%=path%>/detailList/exportDetailList.do?detailListId="+detailListId;
+		}else{
+			alert("请选择清单!");
+		}
+		
 	}
 	//切换选择模板或创建模板
 	function showNewExportDetailDiv(){
