@@ -11,6 +11,7 @@
     <result column="node_reason_change" jdbcType="VARCHAR" property="nodeReasonChange" />
     <result column="node_knot_apply" jdbcType="VARCHAR" property="nodeKnotApply" />
     <result column="node_status" jdbcType="CHAR" property="nodeStatus" />
+    <result column="node_liable_name" jdbcType="VARCHAR" property="nodeLiableName" />
   </resultMap>
   <sql id="Base_Column_List">
     id, work_id, node_name, node_content, finish_time, node_liable, node_reason_change, 
@@ -21,6 +22,12 @@
     <include refid="Base_Column_List" />
     from dl_work_node
     where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByWorkId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dl_work_node
+    where work_id = #{workId,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from dl_work_node
@@ -139,4 +146,33 @@
       node_status = #{nodeStatus,jdbcType=CHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
+  <select id="queryNodeByWorkId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <![CDATA[ select al.*,lp.node_liable_name from dl_work_node as al 
+		INNER JOIN (
+			SELECT
+				dwp.id,
+				GROUP_CONCAT(CONCAT(z1.NACHN, z1.VORNA)) AS node_liable_name
+			FROM
+				(SELECT
+			a.*, SUBSTRING_INDEX(
+				SUBSTRING_INDEX(
+					a.node_liable,
+					',',
+					b.help_topic_id + 1
+				),
+				',' ,- 1
+			) AS user_id
+		FROM
+			dl_work_node a
+		LEFT JOIN mysql.help_topic b ON b.help_topic_id < (
+			LENGTH(a.node_liable) - LENGTH(
+				REPLACE (a.node_liable, ',', '')
+			) + 1
+		) ) AS dwp
+			INNER JOIN zhr2_001 z1 ON dwp.user_id = z1.PERNR
+			GROUP BY
+				dwp.id
+		) lp ON al.id = lp.id
+		    and al.work_Id = #{workId,jdbcType=VARCHAR} ]]> 
+  </select>
 </mapper>

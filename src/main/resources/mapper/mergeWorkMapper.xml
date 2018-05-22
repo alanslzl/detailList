@@ -5,9 +5,11 @@
     <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="work_id" jdbcType="VARCHAR" property="workId" />
     <result column="merge_work_id" jdbcType="VARCHAR" property="mergeWorkId" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="merge_Work_Name" jdbcType="VARCHAR" property="mergeWorkName" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, work_id, merge_work_id
+    id, work_id, merge_work_id,type
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -20,9 +22,9 @@
     where id = #{id,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.detailList.entity.mergeWork">
-    insert into dl_merge_work (id, work_id, merge_work_id
+    insert into dl_merge_work (id, work_id, merge_work_id,type
       )
-    values (#{id,jdbcType=VARCHAR}, #{workId,jdbcType=VARCHAR}, #{mergeWorkId,jdbcType=VARCHAR}
+    values (#{id,jdbcType=VARCHAR}, #{workId,jdbcType=VARCHAR}, #{mergeWorkId,jdbcType=VARCHAR},#{type,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.detailList.entity.mergeWork">
@@ -37,6 +39,9 @@
       <if test="mergeWorkId != null">
         merge_work_id,
       </if>
+      <if test="type != null">
+        type,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -47,6 +52,9 @@
       </if>
       <if test="mergeWorkId != null">
         #{mergeWorkId,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -68,4 +76,14 @@
       merge_work_id = #{mergeWorkId,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
+  <select id="queryMergeWork" parameterType="java.lang.String" resultMap="BaseResultMap">
+  			SELECT
+			dwk.*, dw.work_name as merge_Work_Name
+			FROM
+			dl_merge_work AS dwk
+			LEFT JOIN dl_work AS dw ON dwk.merge_work_id = dw.id
+  			where
+  			1=1
+  			and work_id=#{workId}
+  </select>
 </mapper>

@@ -1,5 +1,6 @@
 package com.detailList.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,51 +15,54 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSON;
 import com.detailList.dto.Result;
+import com.detailList.entity.WorkExportTemplate;
 import com.detailList.entity.Zhr2001;
-import com.detailList.entity.userGroup;
-import com.detailList.service.UserGroupService;
+import com.detailList.service.TemplateService;
+import com.detailList.utils.StringUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
 @RestController
-@RequestMapping("/userGroup")
-public class UserGroupController {
+@RequestMapping("/template")
+public class TemplateController {
 	@Autowired
-	private UserGroupService userGroupService;
+	private TemplateService TemplateService;
 	
 	@RequestMapping("/query")
-	public ModelAndView queryuserGroup(HttpServletRequest request,HttpServletResponse response,Integer page,userGroup userGroup) {
-		ModelAndView view = new ModelAndView("/page/userGroupManager");
+	public ModelAndView queryTemplate(HttpServletRequest request,HttpServletResponse response,Integer page,String templateName) {
+		ModelAndView view = new ModelAndView("/page/templateManager");
 		try {
 			if(null == page) {
 				page = 1;
 			}
 			PageHelper.startPage(page, 10);
-			List<userGroup> userGroupList = userGroupService.queryUserGroup(userGroup);
-			PageInfo<userGroup> userGroupPage=new PageInfo<userGroup>(userGroupList);
-			view.addObject("page", userGroupPage);
-			view.addObject("userGroup", userGroupList);
+			List<WorkExportTemplate> templateList = TemplateService.selectByName(templateName);
+			PageInfo<WorkExportTemplate> templatePage=new PageInfo<WorkExportTemplate>(templateList);
+			view.addObject("page", templatePage);
+			view.addObject("template", templateList);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return view;
 	}
 	@RequestMapping("/queryAll")
-	public Object queryuserGroupAll(HttpServletRequest request,HttpServletResponse response,Integer page,userGroup userGroup) {
+	public Object queryTemplateAll(HttpServletRequest request,HttpServletResponse response) {
 		try {
-			List<userGroup> userGroupList = userGroupService.queryUserGroup(userGroup);
-			return userGroupList;
+			List<WorkExportTemplate> templateList = TemplateService.selectByName(null);
+			return templateList;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return JSONUtils.toJSONString(Result.error(e.getMessage()));
 		}
 	}
 	@RequestMapping("/add")
-	public String insertuserGroup(HttpServletRequest request,HttpServletResponse response,userGroup userGroup) {
+	public String insertTemplate(HttpServletRequest request,HttpServletResponse response,WorkExportTemplate template) {
 		try {
 			Zhr2001 userInfo = (Zhr2001)request.getSession().getAttribute("userInfo");
-			userGroup.setInsertUser(userInfo.getPernr());
-			userGroupService.insertUserGroup(userGroup);
+			template.setId(StringUtils.genUUid());
+			template.setCreateUser(userInfo.getPernr());
+			template.setUpdateTime(new Date());
+			TemplateService.insertSelective(template);
 			return JSON.toJSONString(Result.success());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -66,9 +70,10 @@ public class UserGroupController {
 		}
 	}
 	@RequestMapping("/edit")
-	public String updateuserGroup(HttpServletRequest request,HttpServletResponse response,userGroup userGroup) {
+	public String updateTemplate(HttpServletRequest request,HttpServletResponse response,WorkExportTemplate template) {
 		try {
-			userGroupService.editUserGroup(userGroup);
+			template.setUpdateTime(new Date());
+			TemplateService.updateByPrimaryKeySelective(template);
 			return JSON.toJSONString(Result.success());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -76,9 +81,9 @@ public class UserGroupController {
 		}
 	}
 	@RequestMapping("/del")
-	public String deleteuserGroup(HttpServletRequest request,HttpServletResponse response,int id) {
+	public String deleteTemplate(HttpServletRequest request,HttpServletResponse response,String id) {
 		try {
-			userGroupService.delUserGroup(id);
+			TemplateService.deleteByPrimaryKey(id);
 			return JSON.toJSONString(Result.success());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -87,13 +92,12 @@ public class UserGroupController {
 	}
 	@RequestMapping("/queryById")
 	@ResponseBody
-	public Object queryuserGroupById(HttpServletRequest request,HttpServletResponse response,int id) {
+	public Object queryTemplateById(HttpServletRequest request,HttpServletResponse response,String id) {
 		try {
-			return userGroupService.queryUserGroupById(id);
+			return TemplateService.selectByPrimaryKey(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return JSONUtils.toJSONString(Result.error(e.getMessage()));
 		}
 	}
 }
-

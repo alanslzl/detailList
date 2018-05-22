@@ -76,7 +76,6 @@
   
   <select id="selectPersonInfo" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
-    DISTINCT
     i.id,i.PERNR,i.WERKS,i.BTRTL,i.PERSG,i.PERSK,i.ABKRS,i.PLANS,o.STEXT as ORGEH,i.NACHN,i.VORNA,i.GBDAT,i.
     GESCH,i.DAT01,i.GBDEP,i.LOCAT,i.FAMST,i.SLART,i.ZXXXX,i.ZSXZY,i.USRID_5,i.POSTY,i.POSNC,i.ORGEH_1,i.
     ORGEH_2,i.ORGEH_3,i.USRID_3,i.GBLND,i.INSTI,i.GBORT,i.ZLPOS,i.ZPOSTY,i.ZTDETAIL,i.ICNUM,i.ZBMCJ,i.
@@ -91,6 +90,7 @@
 	    	or concat(nachn,vorna) like concat(concat('%',#{personInfo}),'%')
     	</if>
     </where>
+    group by i.id
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from zhr2_001

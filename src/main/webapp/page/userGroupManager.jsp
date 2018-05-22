@@ -23,6 +23,11 @@
 			}
 		});
 	}
+	function removeChoice(obj){
+		$(obj).parent().prev().find("input").each(function(){
+			$(this).val("");
+		});
+	}
 	function addUserGroup(){
 		$("#UserGroupId").val("");
 		$("#UserGroupName").val("");
@@ -34,15 +39,18 @@
 		$("#myModalLabel").html("修改工作组");
 		$.ajax({   
 			type:"POST", //提交方式   
-			url:"<%=path%>/UserGroup/queryById.do",//路径
+			url:"<%=path%>/userGroup/queryById.do",//路径
 			data:{
 				"id":id
 			},//数据，这里使用的是Json格式进行传输   
 			success:function(data) {//返回数据根据结果进行相应的处理
 				console.log(data);
 				$("#UserGroupId").val(data.id);
-				$("#UserGroupName").val(data.userGroupName);
+				$("#UserGroupName").val(data.groupName);
 				$("#insertUser").val(data.insertUser);
+				$("#groupComment").val(data.groupComment);
+				$("#userName").val(data.groupUser);
+				$("#userId").val(data.groupUserId);
 			}
 		});
 		$("#UserGroupModal").modal();
@@ -50,7 +58,7 @@
 	function delUserGroup(id){
 		$.ajax({   
 			type:"POST", //提交方式   
-			url:"<%=path%>/UserGroup/del.do",//路径
+			url:"<%=path%>/userGroup/del.do",//路径
 			data:{
 				"id":id
 			},//数据，这里使用的是Json格式进行传输   
@@ -62,22 +70,24 @@
 	function mergeUserGroup(){
 		var UserGroupId = $("#UserGroupId").val();
 		var UserGroupName = $("#UserGroupName").val();
+		var groupComment = $("#groupComment").val();
 		var insertUser = $("#insertUser").val();
 		var userId = $("#userId").val();
 		var url;
 		if(UserGroupId!=null && UserGroupId!=''){
-			url = "<%=path%>/UserGroup/edit.do";
+			url = "<%=path%>/userGroup/edit.do";
 		}else{
-			url = "<%=path%>/UserGroup/add.do";
+			url = "<%=path%>/userGroup/add.do";
 		}
 		$.ajax({   
 			type:"POST", //提交方式   
 			url:url,//路径
 			data:{
 				"id":UserGroupId,
-				"userGroupName":UserGroupName,
+				"groupName":UserGroupName,
 				"insertUser":insertUser,
-				"userId":userId
+				"groupComment":groupComment,
+				"groupUser":userId
 			},//数据，这里使用的是Json格式进行传输   
 			success:function(data) {//返回数据根据结果进行相应的处理
 				window.location.reload();
@@ -94,42 +104,35 @@
 		$("#choicePersonModal").modal();
 		personInput = obj;
 	}
-	//责任人人人员选择方法
-	function choicePersonInfo(){
-		var choiceInfoArr = [];
-		var showNames = [];
-		var userNos = [];
-		var personVal = $(personInput).val();
-		var personNo = $(personInput).prev().val();
-		if(personVal!=''){
-			showNames.push(personVal);
-			userNos.push(personNo);
-		}
-		var rows = $('#choicePersonTable').bootstrapTable('getSelections');
-		for(var i = 0 ; i < rows.length;i++){
-			var userNo = rows[i].pernr;
-			var surnName = rows[i].nachn;
-			var name = rows[i].vorna;
-			var info = {
-				'userNo':userNo,	
-				'names':surnName + "" +name
-			}
-			if(!IsInArray(userNos,userNo)){
-				showNames.push(surnName + "" +name);
-				choiceInfoArr.push(info);
-				userNos.push(userNo);
+	//去除数组里重复方法
+	function hovercUnique(arr) {
+		var result = [], hash = {};
+		for (var i = 0, elem; (elem = arr[i]) != null; i++) {
+			if (!hash[elem]) {
+				result.push(elem);
+				hash[elem] = true;
 			}
 		}
-		$("#choicePersonModal").modal("hide");
-		$("#UserGroupModal").modal();
-		$(personInput).val(showNames);
-		$(personInput).prev().val(userNos);
+		return result;
 	}
 	//判断方法 后面的值是否在前面的数组中
 	function IsInArray(arr,val){ 
 		var testStr=','+arr.join(",")+","; 
 		return testStr.indexOf(","+val+",")!=-1; 
 	}
+	Array.prototype.indexOf = function(val) {
+		for (var i = 0; i < this.length; i++) {
+			if (this[i] == val) 
+				return i;
+		}
+		return -1;
+	};
+	Array.prototype.remove = function(val) {
+		var index = this.indexOf(val);
+			if (index > -1) {
+			this.splice(index, 1);
+		}
+	};
 	//创建责任人table
 	function createChoicePersonTable(){
 		$('#choicePersonTable').bootstrapTable('refresh', { pageNumber: 1 });
@@ -152,10 +155,12 @@
 		      //searchAlign: "left",
 		      strictSearch: true,
 		      searchOnEnterKey: true,
-		      sidePagination: 'client', // 设置为服务器端分页
+		      sidePagination: 'server', // 设置为服务器端分页
+		      queryParamsType:'',
 		      queryParams: function (params) { // 请求服务器数据时发送的参数，可以在这里添加额外的查询参数，返回false则终止请求
 		          return {
-		              personInfo: $("#choicePersonInfo").val() // 额外添加的参数
+		              personInfo: $("#choicePersonInfo").val(), // 额外添加的参数
+		              page: params.pageNumber
 		          }
 		      },
 		      sortName: 'id', // 要排序的字段
@@ -163,8 +168,9 @@
 		      columns: [
 		          {
 		        	  field:'choiceUserCheck',
-		              radio: true, // 显示一个勾选框
-		              align: 'center' // 居中显示
+		              checkbox: true, // 显示一个勾选框
+		              align: 'center', // 居中显示
+		              formatter:stateFormatter
 		              
 		          }, {
 		              field: 'id', // 返回json数据中的name
@@ -203,14 +209,59 @@
 		              valign: 'middle'
 		          }
 		      ],
+		      onClickRow:function(row, tr,flied){
+				var personVal =[];
+				var personNo = [];
+				var pval = $(personInput).val().trim();
+				var rval = $(personInput).prev().val().trim();
+				var name = row.nachn+""+row.vorna;
+				if(pval!='' && rval!=''){
+					personVal=personVal.concat($(personInput).val().trim().split(","));
+					personNo=personNo.concat($(personInput).prev().val().trim().split(","));
+				}
+				if(IsInArray(personVal,name)&&IsInArray(personNo,row.pernr)){
+					personVal.remove(name);
+					personNo.remove(row.pernr)
+				}else{
+					personVal = personVal.concat(name);
+					personNo = personNo.concat(row.pernr);
+				}
+				personVal = hovercUnique(personVal);
+				personNo = hovercUnique(personNo);
+				$(personInput).val(personVal);
+				$(personInput).prev().val(personNo);
+		      },
 		      onLoadSuccess: function(){  //加载成功时执行
-		            console.info("加载成功");
+		    	  console.info("加载数据成功");
 		      },
 		      onLoadError: function(){  //加载失败时执行
 		            console.info("加载数据失败");
 		      }
 		});
 	}
+	function stateFormatter(value, row, index){
+		var personVal =[];
+		var personNo = [];
+		var pval = $(personInput).val().trim();
+		var rval = $(personInput).prev().val().trim();
+		var name = row.nachn+""+row.vorna;
+		if(pval!='' && rval!=''){
+			personVal=personVal.concat($(personInput).val().trim().split(","));
+			personNo=personNo.concat($(personInput).prev().val().trim().split(","));
+			if(IsInArray(personVal,name)&&IsInArray(personNo,row.pernr)){
+				return {
+					disabled : false,//设置是否可用
+		            checked : true//设置选中
+				}
+			}
+		}
+		return value;
+	}
+	$(function () { 
+		$('#choicePersonModal').on('hide.bs.modal', function () {
+			$("#UserGroupModal").modal();
+		});
+	});
 </script>
 <body>
 	<div class="ch-container">
@@ -254,6 +305,7 @@
 			                 <thead>
 				                 <tr>
 				                     <th>工作组名称</th>
+				                     <th>工作组人员</th>
 				                     <th>工作组说明</th>
 				                     <th>操作</th>
 				                 </tr>
@@ -262,6 +314,7 @@
 			                 	<c:forEach items="${userGroup}" var="userGroup">
 			                 		<tr>
 					                     <td class="center">${userGroup.groupName}</td>
+					                     <td class="center">${userGroup.groupUser}</td>
 					                     <td class="center">${userGroup.groupComment}</td>
 					                     <td class="center">
 					                         <a class="btn btn-info" href="#" onclick="editUserGroup('${userGroup.id}');">
@@ -385,9 +438,8 @@
 									<div class="col-lg-12">
 										<label class="col-md-3">人员信息</label>
 										<div class="col-md-7">
-											<input class="form-control" id="choicePersonInfo" type="text">
+											<input class="form-control" id="choicePersonInfo" type="text" onkeyup="createChoicePersonTable();">
 										</div>
-										<button type="button" class="btn btn-primary" onclick="createChoicePersonTable();">查询</button>
 									</div>
 								</div>
 							</div>
@@ -398,10 +450,7 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">关闭
-						</button>
-						<button type="button" class="btn btn-primary" onclick="choicePersonInfo();">
-							确认
+						<button type="button" class="btn btn-default" data-dismiss="modal" onclick="choicePersonInfo();">关闭
 						</button>
 					</div>
 				</div><!-- /.modal-content -->

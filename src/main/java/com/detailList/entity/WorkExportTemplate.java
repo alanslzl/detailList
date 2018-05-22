@@ -29,8 +29,14 @@ public class WorkExportTemplate implements Serializable {
     private String workContentStyle;
 
     private String workProgressStyle;
+
+    private String createUser;
+
+    private Date updateTime;
     
-    private String updateTime;
+    private String relationWorkStyle;
+    
+    private String nodeStyle;
 
     private static final long serialVersionUID = 1L;
 
@@ -42,15 +48,7 @@ public class WorkExportTemplate implements Serializable {
         this.id = id == null ? null : id.trim();
     }
 
-	public String getUpdateTime() {
-		return updateTime;
-	}
-
-	public void setUpdateTime(String updateTime) {
-		this.updateTime = updateTime;
-	}
-
-	public String getTemplateName() {
+    public String getTemplateName() {
         return templateName;
     }
 
@@ -106,7 +104,23 @@ public class WorkExportTemplate implements Serializable {
         this.mettingNameStyle = mettingNameStyle == null ? null : mettingNameStyle.trim();
     }
 
-    public String getCompanyName() {
+    public String getRelationWorkStyle() {
+		return relationWorkStyle;
+	}
+
+	public void setRelationWorkStyle(String relationWorkStyle) {
+		this.relationWorkStyle = relationWorkStyle;
+	}
+
+	public String getNodeStyle() {
+		return nodeStyle;
+	}
+
+	public void setNodeStyle(String nodeStyle) {
+		this.nodeStyle = nodeStyle;
+	}
+
+	public String getCompanyName() {
         return companyName;
     }
 
@@ -146,6 +160,22 @@ public class WorkExportTemplate implements Serializable {
         this.workProgressStyle = workProgressStyle == null ? null : workProgressStyle.trim();
     }
 
+    public String getCreateUser() {
+        return createUser;
+    }
+
+    public void setCreateUser(String createUser) {
+        this.createUser = createUser == null ? null : createUser.trim();
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -170,7 +200,9 @@ public class WorkExportTemplate implements Serializable {
             && (this.getCompanyStyle() == null ? other.getCompanyStyle() == null : this.getCompanyStyle().equals(other.getCompanyStyle()))
             && (this.getWorkNameStyle() == null ? other.getWorkNameStyle() == null : this.getWorkNameStyle().equals(other.getWorkNameStyle()))
             && (this.getWorkContentStyle() == null ? other.getWorkContentStyle() == null : this.getWorkContentStyle().equals(other.getWorkContentStyle()))
-            && (this.getWorkProgressStyle() == null ? other.getWorkProgressStyle() == null : this.getWorkProgressStyle().equals(other.getWorkProgressStyle()));
+            && (this.getWorkProgressStyle() == null ? other.getWorkProgressStyle() == null : this.getWorkProgressStyle().equals(other.getWorkProgressStyle()))
+            && (this.getCreateUser() == null ? other.getCreateUser() == null : this.getCreateUser().equals(other.getCreateUser()))
+            && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()));
     }
 
     @Override
@@ -190,6 +222,8 @@ public class WorkExportTemplate implements Serializable {
         result = prime * result + ((getWorkNameStyle() == null) ? 0 : getWorkNameStyle().hashCode());
         result = prime * result + ((getWorkContentStyle() == null) ? 0 : getWorkContentStyle().hashCode());
         result = prime * result + ((getWorkProgressStyle() == null) ? 0 : getWorkProgressStyle().hashCode());
+        result = prime * result + ((getCreateUser() == null) ? 0 : getCreateUser().hashCode());
+        result = prime * result + ((getUpdateTime() == null) ? 0 : getUpdateTime().hashCode());
         return result;
     }
 
@@ -212,6 +246,8 @@ public class WorkExportTemplate implements Serializable {
         sb.append(", workNameStyle=").append(workNameStyle);
         sb.append(", workContentStyle=").append(workContentStyle);
         sb.append(", workProgressStyle=").append(workProgressStyle);
+        sb.append(", createUser=").append(createUser);
+        sb.append(", updateTime=").append(updateTime);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

@@ -1,11 +1,11 @@
 package com.detailList.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +13,7 @@ import com.detailList.dao.DetailWorkMapper;
 import com.detailList.dao.WorkExportTemplateMapper;
 import com.detailList.dao.WorkLabelMapper;
 import com.detailList.dao.WorkMapper;
+import com.detailList.dao.WorkMsgMapper;
 import com.detailList.dao.WorkNodeMapper;
 import com.detailList.dao.WorkTalkRecordMapper;
 import com.detailList.dao.WorkTypeMapper;
@@ -24,7 +25,7 @@ import com.detailList.dto.DetailListDto;
 import com.detailList.dto.DetailListTypeDto;
 import com.detailList.entity.DetailWork;
 import com.detailList.entity.Work;
-import com.detailList.entity.WorkLabel;
+import com.detailList.entity.WorkMsg;
 import com.detailList.entity.WorkNode;
 import com.detailList.entity.WorkType;
 import com.detailList.entity.WorkTypeRelation;
@@ -69,6 +70,9 @@ public class WorkServiceImpl implements WorkService{
 	@Autowired
 	private mergeWorkMapper mergeWorkMapper;
 	
+	@Autowired
+	private WorkMsgMapper msgMapper;
+	
 
 	public DetailListDto selectWorkType(String detailListId,Work work){
 		List<DetailListTypeDto> dtolist = new ArrayList<DetailListTypeDto>();
@@ -93,8 +97,41 @@ public class WorkServiceImpl implements WorkService{
 		dto.setNoTypeWorkList(workList);
 		return dto;
 	}
-	public List<Work> selectWork(String userId){
-		return workMapper.selectWork(userId);
+	public DetailListDto exportWorkType(String detailListId,Work work){
+		List<DetailListTypeDto> dtolist = new ArrayList<DetailListTypeDto>();
+		List<WorkType> typeList = workTypeMapper.selectWorkType(detailListId);
+		for (WorkType workType : typeList) {
+			DetailListTypeDto dto = new DetailListTypeDto();
+			dto.setWorkTypeId(workType.getId());
+			dto.setWorkTypeName(workType.getWorkTypeName());
+			Map<String, Object> paramMap = new HashMap<String, Object>();
+			paramMap.put("workTypeId", workType.getId());
+			paramMap.put("queryWork", work);
+			List<Work> workList = workMapper.selectWorkByWorkTypeId(paramMap);
+			for (Work typeWork : workList) {
+				paramMap.put("workId", typeWork.getId());
+				typeWork.setRelationWork(workMapper.selectRelationWork(paramMap));
+				typeWork.setNodeList(workNodeMapper.selectByWorkId(typeWork.getId()));
+			}
+			dto.setList(workList);
+			dtolist.add(dto);
+		}
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("detailListId", detailListId);
+		paramMap.put("queryWork", work);
+		List<Work> workList = workMapper.selectNoTypeWork(paramMap);
+		for (Work noTypeWork : workList) {
+			paramMap.put("workId", noTypeWork.getId());
+			noTypeWork.setRelationWork(workMapper.selectRelationWork(paramMap));
+			noTypeWork.setNodeList(workNodeMapper.selectByWorkId(noTypeWork.getId()));
+		}
+		DetailListDto dto = new DetailListDto();
+		dto.setTypeWorkListDto(dtolist);
+		dto.setNoTypeWorkList(workList);
+		return dto;
+	}
+	public List<Work> selectWork(Map<String, Object> queryMap){
+		return workMapper.selectWork(queryMap);
 	}
 	public WorkType insertWorkType(WorkType workType) {
 		workTypeMapper.insertSelective(workType);
@@ -160,4 +197,90 @@ public class WorkServiceImpl implements WorkService{
 	public void addWorkEnclosure(workEnclosure e) {
 		workEnclosureMapper.insertSelective(e);
 	}
+	public List<WorkNode> queryNodeByWorkId(String workId) {
+		return workNodeMapper.queryNodeByWorkId(workId);
+	}
+	public Work qeruyWorkById(String workId) {
+		return workMapper.qeruyWorkById(workId);
+	}
+	
+	public String queryWorkPerson(Map<String,Object> map) {
+		return workMapper.queryWorkPerson(map);
+	}
+	
+	public List<mergeWork> queryMergeWork(String workId){
+		return  mergeWorkMapper.queryMergeWork(workId);
+	}  
+
+	public List<workEnclosure> queryEnclosureWork(String workId){
+		return  workEnclosureMapper.queryEnclosureWork(workId);
+	}  
+	
+	public void updateByPrimaryKeySelective(Work work){
+		workMapper.updateByPrimaryKeySelective(work);
+	}
+	
+	public void updateWorkPersonRelation(Work aWork,Work fWork) {
+		String [] aPerson =aWork.getLiablePersonUserId().split(",");
+		String [] fPerson =fWork.getLiablePerson().split(",");
+		String [] aSupervisor =aWork.getSupervisorUserId().split(",");
+		String [] fSupervisor =fWork.getSupervisor().split(",");
+		List<String> addPList=compare(aPerson,fPerson);
+		List<String> addSList=compare(aSupervisor,fSupervisor);
+		List<String> delPList=compare(fPerson,aPerson);
+		List<String> delSList=compare(fSupervisor,aSupervisor);
+		//督办人	
+		for (String supervisor : addPList) {
+			workPerson p = new workPerson();
+			p.setId(StringUtils.genUUid());
+			p.setType("1");
+			p.setUserId(supervisor);
+			p.setWorkId(aWork.getId());
+			workPersonMapper.insertSelective(p);
+		}
+		for (String supervisor : delSList) {
+			Map<String,Object> delMap=new HashMap<String,Object>();
+			delMap.put("workId", aWork.getId());
+			delMap.put("userId", supervisor);
+			workMapper.delWorkPerson(delMap);
+		}
+		//责任人
+		for (String liablePerson : addSList) {
+			workPerson p = new workPerson();
+			p.setId(StringUtils.genUUid());
+			p.setType("0");
+			p.setUserId(liablePerson);
+			p.setWorkId(aWork.getId());
+			workPersonMapper.insertSelective(p);
+		}
+		for (String liablePerson : delSList) {
+			Map delMap=new HashMap<>();
+			delMap.put("workId", aWork.getId());
+			delMap.put("userId", liablePerson);
+			workMapper.delWorkPerson(delMap);
+		}
+	}
+	
+	public List<WorkMsg> queryWorkMsg(String workId){
+		return msgMapper.queryWorkMsg(workId);
+	}
+	public void updateWorkNode(WorkNode workNode) {
+		workNodeMapper.updateByPrimaryKeySelective(workNode);
+	}
+	public void insertWorkMsg(Map<String,Object> map){
+		workMapper.insertWorkMsg(map);
+	}
+	public void updateState(Map<String,Object> map) {
+		workMapper.updateState(map);
+	}
+	public static <T> List<T> compare(T[] t1, T[] t2) {    
+	      List<T> list1 = Arrays.asList(t1);    
+	      List<T> list2 = new ArrayList<T>();    
+	      for (T t : t2) {    
+	          if (!list1.contains(t)) {    
+	              list2.add(t);    
+	          }    
+	      }    
+	      return list2;    
+	  }
 }

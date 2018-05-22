@@ -1,5 +1,7 @@
 package com.detailList.dao;
 
+import java.util.List;
+
 import com.detailList.entity.workEnclosure;
 
 public interface workEnclosureMapper {
@@ -14,4 +16,6 @@ public interface workEnclosureMapper {
     int updateByPrimaryKeySelective(workEnclosure record);
 
     int updateByPrimaryKey(workEnclosure record);
+    
+    List<workEnclosure> queryEnclosureWork(String workId);
 }

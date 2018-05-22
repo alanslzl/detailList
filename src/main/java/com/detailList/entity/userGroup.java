@@ -8,6 +8,10 @@ public class userGroup implements Serializable {
     private String groupName;
 
     private String groupComment;
+    
+    private String groupUserId;
+    
+    private String groupUser;
 
     private String insertUser;
 
@@ -74,7 +78,23 @@ public class userGroup implements Serializable {
         return result;
     }
 
-    @Override
+    public String getGroupUserId() {
+		return groupUserId;
+	}
+
+	public void setGroupUserId(String groupUserId) {
+		this.groupUserId = groupUserId;
+	}
+
+	public String getGroupUser() {
+		return groupUser;
+	}
+
+	public void setGroupUser(String groupUser) {
+		this.groupUser = groupUser;
+	}
+
+	@Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(getClass().getSimpleName());

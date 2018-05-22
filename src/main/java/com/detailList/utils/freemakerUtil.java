@@ -28,7 +28,7 @@ public class freemakerUtil {
 //	        }
 	        allTemplate = new HashMap<String,Template>();
 	        try{
-	            allTemplate.put("workDetail", configuration.getTemplate("workDetail.ftl"));
+	            allTemplate.put("workDetail", configuration.getTemplate("jfdx.ftl"));
 	        }catch(IOException e){
 	            e.printStackTrace();
 	            throw new RuntimeException(e);

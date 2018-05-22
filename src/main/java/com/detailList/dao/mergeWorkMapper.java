@@ -1,5 +1,7 @@
 package com.detailList.dao;
 
+import java.util.List;
+
 import com.detailList.entity.mergeWork;
 
 public interface mergeWorkMapper {
@@ -14,4 +16,6 @@ public interface mergeWorkMapper {
     int updateByPrimaryKeySelective(mergeWork record);
 
     int updateByPrimaryKey(mergeWork record);
+    
+    List<mergeWork> queryMergeWork(String workId);
 }

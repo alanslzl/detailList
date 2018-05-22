@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.detailList.dto.Result;
 import com.detailList.entity.DetailList;
@@ -23,6 +24,13 @@ public class ObDetailListController {
 	
 	@Autowired
 	private ObDetailListService obDetailListService;
+	
+	
+	@RequestMapping("/obDetailList")
+	public ModelAndView descDetailList(HttpServletRequest request,HttpServletResponse response,String detailListId) {
+		ModelAndView view = new ModelAndView("page/obDetailList");
+		return view;
+	}
 	
 	/**
 	 * 借阅用户查询

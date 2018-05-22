@@ -1,5 +1,7 @@
 package com.detailList.dao;
 
+import java.util.List;
+
 import com.detailList.entity.WorkNode;
 
 public interface WorkNodeMapper {
@@ -14,4 +16,8 @@ public interface WorkNodeMapper {
     int updateByPrimaryKeySelective(WorkNode record);
 
     int updateByPrimaryKey(WorkNode record);
+    
+    List<WorkNode> selectByWorkId(String workId);
+    
+    List<WorkNode> queryNodeByWorkId(String workId);
 }

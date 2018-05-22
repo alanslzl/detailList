@@ -14,4 +14,6 @@ public interface userGroupInsMapper {
     int updateByPrimaryKeySelective(userGroupIns record);
 
     int updateByPrimaryKey(userGroupIns record);
+    
+    int deleteByGroupId(Integer id);
 }

@@ -19,6 +19,10 @@
     delete from dl_user_group_ins
     where id = #{id,jdbcType=INTEGER}
   </delete>
+  <delete id="deleteByGroupId" parameterType="java.lang.Integer">
+    delete from dl_user_group_ins
+    where group_id = #{groupId,jdbcType=INTEGER}
+  </delete>
   <insert id="insert" parameterType="com.detailList.entity.userGroupIns">
     insert into dl_user_group_ins (id, group_id, user_id
       )

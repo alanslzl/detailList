@@ -68,4 +68,10 @@
       enclosure = #{enclosure,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
+  <select id="queryEnclosureWork" parameterType="java.lang.String" resultMap="BaseResultMap">
+  			select * from dl_work_enclosure 
+  			where
+  			1=1
+  			and work_id=#{workId}
+  </select>
 </mapper>

@@ -1,5 +1,7 @@
 package com.detailList.dao;
 
+import java.util.List;
+
 import com.detailList.entity.WorkExportTemplate;
 
 public interface WorkExportTemplateMapper {
@@ -14,4 +16,6 @@ public interface WorkExportTemplateMapper {
     int updateByPrimaryKeySelective(WorkExportTemplate record);
 
     int updateByPrimaryKey(WorkExportTemplate record);
+    
+    List<WorkExportTemplate> selectByName(String templateName);
 }

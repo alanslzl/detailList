@@ -4,6 +4,8 @@
   <resultMap id="BaseResultMap" type="com.detailList.entity.userGroup">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="group_name" jdbcType="VARCHAR" property="groupName" />
+    <result column="group_user" jdbcType="VARCHAR" property="groupUser" />
+    <result column="group_user_id" jdbcType="VARCHAR" property="groupUserId" />
     <result column="group_comment" jdbcType="VARCHAR" property="groupComment" />
   </resultMap>
   <sql id="Base_Column_List">
@@ -11,14 +13,16 @@
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
-    <include refid="Base_Column_List" />
-    from dl_user_group
-    where id = #{id,jdbcType=INTEGER}
+ 	dup.id,dup.group_name,dup.group_comment,GROUP_CONCAT(CONCAT(z1.NACHN,z1.VORNA)) as group_user,GROUP_CONCAT(user_id) as group_user_id
+    from dl_user_group dup left join dl_user_group_ins dupi on dup.id=dupi.group_id left join zhr2_001 z1 on dupi.user_id=z1.PERNR
+    where dup.id = #{id,jdbcType=INTEGER}
+    group by dup.id
   </select>
   <select id="selectGroup" parameterType="com.detailList.entity.userGroup" resultMap="BaseResultMap">
     select 
-    <include refid="Base_Column_List" />
-    from dl_user_group
+ 	dup.id,dup.group_name,dup.group_comment,GROUP_CONCAT(CONCAT(z1.NACHN,z1.VORNA)) as group_user,GROUP_CONCAT(user_id) as group_user_id
+    from dl_user_group dup left join dl_user_group_ins dupi on dup.id=dupi.group_id left join zhr2_001 z1 on dupi.user_id=z1.PERNR
+    group by dup.id
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from dl_user_group
@@ -30,7 +34,7 @@
     values (#{id,jdbcType=INTEGER}, #{groupName,jdbcType=VARCHAR}, #{groupComment,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.detailList.entity.userGroup">
+  <insert id="insertSelective" parameterType="com.detailList.entity.userGroup" useGeneratedKeys="true" keyProperty="id">
     insert into dl_user_group
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">

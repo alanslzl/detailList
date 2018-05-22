@@ -1,5 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@include file="./include.jsp" %>
+<%
+	Zhr2001 userInfo = (Zhr2001)request.getSession().getAttribute("userInfo");
+	if(userInfo == null){
+		request.getRequestDispatcher("/page/login.jsp").forward(request, response);
+	} 
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -58,6 +64,7 @@
 		} catch (ex) {
 		}
 	}
+	
 	function logout(){
 		window.location.href="<%=path%>/logout.do";
 	}
@@ -85,19 +92,19 @@
 		            <i class="glyphicon glyphicon-exclamation-sign">工作事项</i>
 		            <span class="notification">(6)</span>
 		        </a>
-		        <a href="#" onclick="logout();" class="top-block">退出</a>
+		        <a href="#" target="_parent" onclick="logout();" class="top-block">退出</a>
 			</div>
 		</div>
 	</div>
 	<nav class="navbar navbar-default" role="navigation">
 		<div class="container-fluid" style="background-color: rgb(179,39,39);"> 
 		    <div class="navbar-header">
-		        <a class="navbar-brand" href="#" onclick="loadPage('<%=path%>/page/descDetailList.jsp');">首页</a>
-		        <a class="navbar-brand" href="#" onclick="loadPage('<%=path%>/page/addWork.jsp');">工作录入</a>
+		        <a class="navbar-brand" href="#" onclick="loadPage('<%=path%>/detailList/descDetailList.do');">首页</a>
+		        <a class="navbar-brand" href="#" onclick="loadPage('<%=path%>/work/toAddWork.do');">工作录入</a>
 		        <a class="navbar-brand" href="#" onclick="loadPage('<%=path%>/detailList/queryDetailListManager.do');">清单管理</a>
 		        <a class="navbar-brand" href="#" onclick="loadPage('<%=path%>/work/queryWorkManager.do');">工作管理</a>
-		        <a class="navbar-brand" href="#" onclick="loadPage('<%=path%>/page/obDetailList.jsp');">查看他人清单</a>
-		        <a class="navbar-brand" href="#" onclick="loadPage('<%=path%>/page/templateManager.jsp');">导出模板管理</a>
+		        <a class="navbar-brand" href="#" onclick="loadPage('<%=path%>/obDetailList/obDetailList.do');">查看他人清单</a>
+		        <a class="navbar-brand" href="#" onclick="loadPage('<%=path%>/template/query.do');">导出模板管理</a>
 		        <a class="navbar-brand" href="#" onclick="loadPage('<%=path%>/workLabel/query.do');">工作标签管理</a>
 		        <a class="navbar-brand" href="#" onclick="loadPage('<%=path%>/mettingType/query.do');">会议类型管理</a>
 		        <a class="navbar-brand" href="#" onclick="loadPage('<%=path%>/userGroup/query.do');">工作组管理</a>

@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.web.multipart.MultipartFile;
-
 public class Work implements Serializable {
     private String id;
 
@@ -14,18 +12,26 @@ public class Work implements Serializable {
     private String jobRequire;
 
     private String mettingTypeId;
+    
+    private String mettingName;
 
     private String workCompany;
+    
+    private String workCompanyName;
 
     private Date finishTime;
 
     private String workLabelId;
+    
+    private String labelName;
 
     private String workStatus;
 
     private String workLevel;
 
     private String inputCompany;
+    
+    private String inputCompanyName;
 
     private String supervisorStrategy;
 
@@ -36,14 +42,28 @@ public class Work implements Serializable {
     private String workProgress;
 
     private String workPublishPerson;
+    
+    private String workPublishPersonName;
 
     private Date mettingTime;
     
+    private String supervisorId;
+    
     private String supervisor;
+    
+    private String liablePersonId;
     
     private String liablePerson;
     
+    private String supervisorUserId;
+    
+    private String relationId;
+    
+    private String liablePersonUserId;
+    
     public List<WorkNode> nodeList;
+    
+    public List<Work> relationWork;
     
 	private static final long serialVersionUID = 1L;
 
@@ -55,7 +75,23 @@ public class Work implements Serializable {
         this.id = id == null ? null : id.trim();
     }
 
-    public String getWorkName() {
+    public String getSupervisorId() {
+		return supervisorId;
+	}
+
+	public void setSupervisorId(String supervisorId) {
+		this.supervisorId = supervisorId;
+	}
+
+	public String getLiablePersonId() {
+		return liablePersonId;
+	}
+
+	public void setLiablePersonId(String liablePersonId) {
+		this.liablePersonId = liablePersonId;
+	}
+
+	public String getWorkName() {
         return workName;
     }
 
@@ -83,7 +119,15 @@ public class Work implements Serializable {
         return workCompany;
     }
 
-    public String getSupervisor() {
+    public List<Work> getRelationWork() {
+		return relationWork;
+	}
+
+	public void setRelationWork(List<Work> relationWork) {
+		this.relationWork = relationWork;
+	}
+
+	public String getSupervisor() {
 		return supervisor;
 	}
 
@@ -107,8 +151,72 @@ public class Work implements Serializable {
         return finishTime;
     }
 
-    public List<WorkNode> getNodeList() {
+    public String getMettingName() {
+		return mettingName;
+	}
+
+	public void setMettingName(String mettingName) {
+		this.mettingName = mettingName;
+	}
+
+	public String getWorkCompanyName() {
+		return workCompanyName;
+	}
+
+	public void setWorkCompanyName(String workCompanyName) {
+		this.workCompanyName = workCompanyName;
+	}
+
+	public String getLabelName() {
+		return labelName;
+	}
+
+	public void setLabelName(String labelName) {
+		this.labelName = labelName;
+	}
+
+	public String getInputCompanyName() {
+		return inputCompanyName;
+	}
+
+	public void setInputCompanyName(String inputCompanyName) {
+		this.inputCompanyName = inputCompanyName;
+	}
+
+	public String getWorkPublishPersonName() {
+		return workPublishPersonName;
+	}
+
+	public void setWorkPublishPersonName(String workPublishPersonName) {
+		this.workPublishPersonName = workPublishPersonName;
+	}
+
+	public String getSupervisorUserId() {
+		return supervisorUserId;
+	}
+
+	public void setSupervisorUserId(String supervisorUserId) {
+		this.supervisorUserId = supervisorUserId;
+	}
+
+	public String getLiablePersonUserId() {
+		return liablePersonUserId;
+	}
+
+	public void setLiablePersonUserId(String liablePersonUserId) {
+		this.liablePersonUserId = liablePersonUserId;
+	}
+
+	public List<WorkNode> getNodeList() {
 		return nodeList;
+	}
+
+	public String getRelationId() {
+		return relationId;
+	}
+
+	public void setRelationId(String relationId) {
+		this.relationId = relationId;
 	}
 
 	public void setNodeList(List<WorkNode> nodeList) {

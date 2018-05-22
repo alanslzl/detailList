@@ -20,19 +20,29 @@
 	function editDetailList(detailListId){
 		window.location.href="<%=path%>/detailList/editDetailList.do?detailListId="+detailListId;
 	}
-	function queryLabelPage(page){
-		window.location.href="<%=path%>/detailList/queryDetailListManager.do?page="+page;
+	function initType(){
+		var type = "${type}";
+		$("#type").val(type);
+		if(type=='label'){
+			$("#Graphical").show();
+			$("#Bar").hide();
+		}else{
+			$("#Graphical").hide();
+			$("#Bar").show();
+		}
 	}
-	$(function(){ 
-	      $("#Bar").hide();
-	});
 	$(document).ready(function(){
+		initType();
 		$("#hide").click(function(){
 			$("#Graphical").toggle();
 			$("#Bar").toggle();
 		});
 	});
-
+	function queryDeviceRecords(page){
+		var val = $("#queryDetailListName").val();
+		var type = $("#type").val();
+		window.location.href="<%=path%>/detailList/queryDetailListManager.do?detailListName="+val+"&type="+type+"&page="+page;
+	}
 </script>
 <body>
 	<div class="ch-container">
@@ -42,19 +52,8 @@
 					<div class="col-md-4">
 						<label class="col-md-3">清单名称</label>
 						<div class="col-md-8">
-							<input class="form-control" id="focusedInput" type="text">
-						</div>
-					</div>
-					<div class="col-md-4">
-						<label class="col-md-3">工作类别</label>
-						<div class="col-md-8">
-							<input class="form-control" id="focusedInput" type="text">
-						</div>
-					</div>
-					<div class="col-md-4">
-						<label class="col-md-3">责任人</label>
-						<div class="col-md-8">
-							<input class="form-control" id="focusedInput" type="text">
+							<input class="form-control" id="type" type="text">
+							<input class="form-control" id="queryDetailListName" type="text">
 						</div>
 					</div>
 				</div>
@@ -63,7 +62,7 @@
 		   		<div class="col-md12">
 		   			<div class="form-group">
 						<div class="col-md-11" align="right">
-							<button class="btn btn-primary">查询</button>
+							<button class="btn btn-primary" onclick="queryDetail();">查询</button>
 							<button class="btn btn-primary">重置</button>
 						</div>
 					</div>  
@@ -192,20 +191,20 @@
                     <div style="text-align:center;">
                         <ul class="pagination">
                             <c:if test="${!labelPage.isFirstPage}">
-                                <li><a href="javascript:queryLabelPage(${labelPage.firstPage});">首页</a></li>
-                                <li><a href="javascript:queryLabelPage(${labelPage.prePage});">上一页</a></li>
+                                <li><a href="javascript:queryDeviceRecords(${labelPage.firstPage});">首页</a></li>
+                                <li><a href="javascript:queryDeviceRecords(${labelPage.prePage});">上一页</a></li>
                             </c:if>
                             <c:forEach items="${labelPage.navigatepageNums}" var="navigatepageNum">
                                 <c:if test="${navigatepageNum==labelPage.pageNum}">
-                                    <li class="active"><a href="javascript:queryLabelPage(${navigatepageNum});">${navigatepageNum}</a></li>
+                                    <li class="active"><a href="javascript:queryDeviceRecords(${navigatepageNum});">${navigatepageNum}</a></li>
                                 </c:if>
                                 <c:if test="${navigatepageNum!=labelPage.pageNum}">
-                                    <li><a href="javascript:queryLabelPage(${navigatepageNum});">${navigatepageNum}</a></li>
+                                    <li><a href="javascript:queryDeviceRecords(${navigatepageNum});">${navigatepageNum}</a></li>
                                 </c:if>
                             </c:forEach>
                             <c:if test="${!labelPage.isLastPage}">
-                                <li><a href="javascript:queryLabelPage(${labelPage.nextPage});">下一页</a></li>
-                                <li><a href="javascript:queryLabelPage(${labelPage.lastPage});">最后一页</a></li>
+                                <li><a href="javascript:queryDeviceRecords(${labelPage.nextPage});">下一页</a></li>
+                                <li><a href="javascript:queryDeviceRecords(${labelPage.lastPage});">最后一页</a></li>
                             </c:if>
                         </ul>
                     </div>

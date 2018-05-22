@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -28,11 +27,11 @@ import com.alibaba.fastjson.JSONArray;
 import com.detailList.dto.DetailListDto;
 import com.detailList.dto.DetailListManagerDto;
 import com.detailList.dto.Result;
+import com.detailList.dto.TemplateDto;
 import com.detailList.dto.WorkTypeDto;
 import com.detailList.entity.DetailList;
 import com.detailList.entity.DetailObServer;
 import com.detailList.entity.DetailWork;
-import com.detailList.entity.User;
 import com.detailList.entity.Work;
 import com.detailList.entity.WorkExportTemplate;
 import com.detailList.entity.WorkType;
@@ -40,6 +39,7 @@ import com.detailList.entity.WorkTypeRelation;
 import com.detailList.entity.Zhr2001;
 import com.detailList.service.DetailListService;
 import com.detailList.service.ObDetailListService;
+import com.detailList.service.TemplateService;
 import com.detailList.service.WorkService;
 import com.detailList.utils.DateUtils;
 import com.detailList.utils.StringUtils;
@@ -60,6 +60,15 @@ public class DetailListController{
 	@Autowired
 	private ObDetailListService obDetailListService;
 	
+	@Autowired
+	private TemplateService templateService;
+	
+	
+	@RequestMapping("/descDetailList")
+	public ModelAndView descDetailList(HttpServletRequest request,HttpServletResponse response,String detailListId) {
+		ModelAndView view = new ModelAndView("page/descDetailList");
+		return view;
+	}
 	@RequestMapping("/editDetailList")
 	public ModelAndView editDetailList(HttpServletRequest request,HttpServletResponse response,String detailListId) {
 		ModelAndView view = new ModelAndView("page/editDetailList");
@@ -75,12 +84,15 @@ public class DetailListController{
 		}
 		return view;
 	}
-	@RequestMapping("/queryDetailListManager")
-	public ModelAndView queryDetailListManager(HttpServletRequest request,HttpServletResponse response,DetailList detailList,Integer page) {
+	@RequestMapping(value = "/queryDetailListManager" ,produces={"application/json;charset=UTF-8"})
+	public ModelAndView queryDetailListManager(HttpServletRequest request,HttpServletResponse response,DetailList detailList,Integer page,String type) {
 		ModelAndView view = new ModelAndView("page/detailListManager");
 		try {
 			if(null == page) {
 				page = 1;
+			}
+			if(null == type || org.apache.commons.lang.StringUtils.isEmpty(type)){
+				type = "label";
 			}
 			List<DetailListManagerDto> dtoList = new ArrayList<>();
 			Zhr2001 user = (Zhr2001)request.getSession().getAttribute("userInfo");
@@ -102,6 +114,7 @@ public class DetailListController{
 			PageInfo<DetailList> tablePage=new PageInfo<DetailList>(queryList);
 			view.addObject("tablePage", tablePage);
 			view.addObject("tableData", queryList);
+			view.addObject("type", type);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -252,20 +265,16 @@ public class DetailListController{
 		}
 	}
 	@RequestMapping("/exportDetailList")
-	public String exportDetailList(HttpServletRequest request,HttpServletResponse response,String detailListId) throws IOException{
+	public String exportDetailList(HttpServletRequest request,HttpServletResponse response,String detailListId,String templateId) throws IOException{
 		DetailList dt = detailListService.selectDetailListById(detailListId);
-		DetailListDto allWork = workService.selectWorkType(detailListId,new Work());
-		WorkExportTemplate template = new WorkExportTemplate();
-		template.setDense("公司机密⭐十年");
-		template.setMettingName("商务、研发和信息化周会");
-		template.setUpdateTime(DateUtils.getDateFormat("yyyy-MM-dd"));
-		template.setCompanyName("董办");
-		template.setDetailTypeStyle("楷体");
+		DetailListDto allWork = workService.exportWorkType(detailListId,new Work());
+		WorkExportTemplate template = templateService.selectByPrimaryKey(templateId);
+		TemplateDto dto = TemplateDto.converDto(template);
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("typeWorkList", allWork.getTypeWorkListDto());
 		map.put("notypeWorkList", allWork.getNoTypeWorkList());
 		map.put("detailList", dt);
-		map.put("template", template);
+		map.put("template", dto);
 		//提示：在调用工具类生成Word文档之前应当检查所有字段是否完整
         //否则Freemarker的模板殷勤在处理时可能会因为找不到值而报错，这里暂时忽略这个步骤
         File file = null;

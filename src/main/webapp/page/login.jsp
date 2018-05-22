@@ -9,8 +9,16 @@
 	content="Charisma, a fully featured, responsive, HTML5, Bootstrap admin template.">
 <meta name="author" content="Muhammad Usman">
 <link rel="shortcut icon" href="img/favicon.ico">
+<script type="text/javascript">
+//判断当前窗口是否有顶级窗口，如果有就让当前的窗口的地址栏发生变化，   
+function loadTopWindow(){   
+    if (window.top!=null && window.top.document.URL!=document.URL){   
+        window.top.location= document.URL; //这样就可以让登陆窗口显示在整个窗口了   
+    }   
+}
+</script>
 </head>
-<body>
+<body onload="loadTopWindow();">
 	<div class="ch-container">
 		<div class="row">
 			<div class="row">

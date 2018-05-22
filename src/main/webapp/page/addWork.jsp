@@ -122,12 +122,13 @@ function subFunction(){
 		work.supervisorStrategy= $(this).find("#supervisorStrategy").val();
 		work.mergeId = $(this).find("#mergeIds").val();
 		work.enclosure=$(this).find("#enclosureId").val();
+		work.relationId=$(this).find("#relationId").val();
 		work.nodeList = [];
 		$(this).find("#nodediv").find(".nodeclz").each(function(){
 			var node = {};
 			node.nodeName = $(this).find("#nodeName").val();
 			node.nodeContent = $(this).find("#nodeContent").val();
-			node.nodeFinishTime = $(this).find("#nodeFinishTime").val();
+			node.finishTime = $(this).find("#nodeFinishTime").val();
 			node.nodeLiable = $(this).find("#nodeLiableId").val();
 			work.nodeList.push(node);
 		});
@@ -136,18 +137,26 @@ function subFunction(){
 	$.ajax({   
 		type:"POST", //提交方式   
 		url:"<%=path%>/work/addWork.do",//路径
+		dataType:'json',
 		data:{
 			"workListStr":JSON.stringify(manyWork)
 		},//数据，这里使用的是Json格式进行传输   
 		success:function(data) {//返回数据根据结果进行相应的处理
-			alert(data);
+			if(data.resultCode==0){
+				$("#successMsg").removeClass("hide");
+				setTimeout(function(){
+					window.location.reload();
+				}, 1000);
+			}
 		}
 	});
 }
 function fileInputs(){
-	$("#manyDiv").find(".workclz").each(function(){
-		$(this).find('#enclosure').fileinput('upload');
-	});
+	if($("#manyDiv").find(".workclz").find("#enclosure")[0].files.length>0){
+		$("#manyDiv").find(".workclz").each(function(){
+			$(this).find('#enclosure').fileinput('upload');
+		});
+	}
 	return true;
 }
 function closeWorkDiv(obj){
@@ -166,107 +175,71 @@ function createChoicePersonTable(){
 function createChoiceWorkTable(){
 	$('#choiceWorkTable').bootstrapTable('refresh', { pageNumber: 1 });
 }
-
+function createChoicePersonGroupTable(){
+	$('#choicePersonGroupTable').bootstrapTable('refresh', { pageNumber: 1 });
+}
 var personInput;
 //选择责任人人员信息窗口
 function choicePerson(obj){
+	personInput = obj;
 	$("#choicePersonInfo").val("");
-	createChoicePersonTable();
 	$("#choicePersonModal").modal().css({
 		"margin-top":function(){
-			if($(obj).offset().top<150){
-				return +($(obj).offset().top-150)
+			if($(obj).offset().top<280){
+				return +($(obj).offset().top-250)
 			}else{
 				return +($(obj).offset().top-440)
 			}
 		}
 	});
-	personInput = obj;
+	createChoicePersonTable();
+	createChoicePersonGroupTable();
+	createTable("choicePersonTable");
+	createGroupTable("choicePersonGroupTable");
 }
-//责任人人人员选择方法
-function choicePersonInfo(){
-	var choiceInfoArr = [];
-	var showNames = [];
-	var userNos = [];
-	var personVal = $(personInput).val();
-	var personNo = $(personInput).prev().val();
-	if(personVal!=''){
-		showNames.push(personVal);
-		userNos.push(personNo);
-	}
-	var rows = $('#choicePersonTable').bootstrapTable('getSelections');
-	for(var i = 0 ; i < rows.length;i++){
-		var userNo = rows[i].pernr;
-		var surnName = rows[i].nachn;
-		var name = rows[i].vorna;
-		var info = {
-			'userNo':userNo,	
-			'names':surnName + "" +name
-		}
-		if(!IsInArray(userNos,userNo)){
-			showNames.push(surnName + "" +name);
-			choiceInfoArr.push(info);
-			userNos.push(userNo);
+//去除数组里重复方法
+function hovercUnique(arr) {
+	var result = [], hash = {};
+	for (var i = 0, elem; (elem = arr[i]) != null; i++) {
+		if (!hash[elem]) {
+			result.push(elem);
+			hash[elem] = true;
 		}
 	}
-	$("#choicePersonModal").modal("hide");
-	$(personInput).val(showNames);
-	$(personInput).prev().val(userNos);
+	return result;
 }
-Array.prototype.contains = function(val)  
-{  
-     for (var i = 0; i < this.length; i++)  
-    {  
-       if (this[i] == val)  
-      {  
-       return true;  
-      }  
-    }  
-     return false;  
-}; 
-Array.prototype.remove = function(val) {
-	var index = this.indexOf(val);
-	if (index > -1) {
-	this.splice(index, 1);
-	}
-	};
-Array.prototype.each = function(fn){
-	fn = fn || Function.K;
-	var a = [];
-	var args = Array.prototype.slice.call(arguments, 1);
-	for(var i = 0; i < this.length; i++){
-	var res = fn.apply(this,[this[i],i].concat(args));
-	if(res != null) a.push(res);
-	}
-	return a;
-}; 
-Array.intersect = function(a, b){
-	return a.uniquelize().each(function(o){return b.contains(o) ? o : null});
-};
-/**
-* 得到一个数组不重复的元素集合<br/>
-* 唯一化一个数组
-* @returns {Array} 由不重复元素构成的数组
-*/
-Array.prototype.uniquelize = function(){
-	var ra = new Array();
-	for(var i = 0; i < this.length; i ++){
-		if(!ra.contains(this[i])){
-			ra.push(this[i]);
-		}
-	}
-	return ra;
-}; 
 //判断方法 后面的值是否在前面的数组中
 function IsInArray(arr,val){ 
 	var testStr=','+arr.join(",")+","; 
 	return testStr.indexOf(","+val+",")!=-1; 
 }
+Array.prototype.indexOf = function(val) {
+	for (var i = 0; i < this.length; i++) {
+		if (this[i] == val) 
+			return i;
+	}
+	return -1;
+};
+Array.prototype.remove = function(val) {
+	var index = this.indexOf(val);
+		if (index > -1) {
+		this.splice(index, 1);
+	}
+};
 var workInput;
 //选择工作信息窗口
 function choiceWork(obj){
+	createChoiceWorkTable();
 	createWorkTable("choiceWorkTable");
-	$("#choiceWorkModal").modal();
+	$("#choiceWorkModal").modal().css({
+		"margin-top":function(){
+			if($(obj).offset().top<280){
+				return +($(obj).offset().top-250)
+			}else{
+				return +($(obj).offset().top-440)
+			}
+		}
+	});
 	workInput = obj;
 }
 //工作选择方法
@@ -304,8 +277,7 @@ function getTreeJSON(){
                  expand: false,
                  highlightSelected: true,
                  onNodeSelected: function(event, data) {
-                	 console.log(data);
-                     selectedNode.id=data['nodeId'];
+                     selectedNode.id=data['nid'];
                      selectedNode.text=data['text'];
                  }
              });
@@ -322,6 +294,89 @@ function choiceCompanyInfo(){
 	$(choiceCompanyInput).val(selectedNode.text);
 	$("#choiceCompany").modal("hide");
 }
+function createGroupTable(tableName){
+	$("#"+tableName).bootstrapTable({ // 对应table标签的id
+		  method: 'post',
+		  contentType : "application/x-www-form-urlencoded",
+	      url: "<%=path%>/userGroup/queryAll.do", // 获取表格数据的url
+	      cache: true, // 设置为 false 禁用 AJAX 数据缓存， 默认为true
+	      striped: true,  //表格显示条纹，默认为false
+	      pagination: true, // 在表格底部显示分页组件，默认false
+	      clickToSelect: true,
+	      pageList: [5,10], // 设置页面可以显示的数据条数
+	      height: 440,
+	      pageSize: 7, // 页面数据条数
+	      pageNumber: 1, // 首页页码
+	      //search: true,
+	      //searchAlign: "left",
+	      strictSearch: true,
+	      searchOnEnterKey: true,
+	      sidePagination: 'client', // 设置为服务器端分页
+	      queryParams: function (params) { // 请求服务器数据时发送的参数，可以在这里添加额外的查询参数，返回false则终止请求
+	          return {
+	              personInfo: $("#choiceGroupPersonInfo").val() // 额外添加的参数
+	          }
+	      },
+	      sortName: 'id', // 要排序的字段
+	      sortOrder: 'desc', // 排序规则
+	      columns: [
+	          {
+	        	  field:'choiceUserCheck',
+	        	  checkbox: true, // 显示一个勾选框
+	              align: 'center' // 居中显示
+	              
+	          }, {
+	              field: 'id', // 返回json数据中的name
+	              visible:false,
+	              align: 'center', // 左右居中
+	              valign: 'middle' // 上下居中
+	          },{
+	              field: 'groupUserId', // 返回json数据中的name
+	              visible:false,
+	              align: 'center', // 左右居中
+	              valign: 'middle' // 上下居中
+	          }, {
+	              field: 'groupName', // 返回json数据中的name
+	              title: '工作组名', // 表格表头显示文字
+	              align: 'center', // 左右居中
+	              valign: 'middle' // 上下居中
+	          }, {
+	              field: 'groupUser',
+	              title: '组员名称',
+	              align: 'center',
+	              valign: 'middle'
+	          }, {
+	              field: 'groupComment',
+	              title: '说明',
+	              align: 'center',
+	              valign: 'middle'
+	          }
+	      ],
+	      onClickRow:function(row, tr,flied){
+				var personVal =[];
+				var personNo = [];
+				var pval = $(personInput).val().trim();
+				var rval = $(personInput).prev().val().trim();
+				if(pval!='' && rval!=''){
+					personVal=personVal.concat($(personInput).val().trim().split(","));
+					personNo=personNo.concat($(personInput).prev().val().trim().split(","));
+				}
+				personVal = personVal.concat(row.groupUser.split(","));
+				personNo = personNo.concat(row.groupUserId.split(","));
+				personVal = hovercUnique(personVal);
+				personNo = hovercUnique(personNo);
+				$(personInput).val(personVal);
+				$(personInput).prev().val(personNo);
+	      },
+	      onLoadSuccess: function(){  //加载成功时执行
+	            console.info("加载成功");
+	      },
+	      onLoadError: function(){  //加载失败时执行
+	            console.info("加载数据失败");
+	      }
+	});
+}
+
 //创建选择人员信息表格
 function createTable(tableName){
 	$("#"+tableName).bootstrapTable({ // 对应table标签的id
@@ -340,10 +395,12 @@ function createTable(tableName){
 	      //searchAlign: "left",
 	      strictSearch: true,
 	      searchOnEnterKey: true,
-	      sidePagination: 'client', // 设置为服务器端分页
+	      sidePagination: 'server', // 设置为服务器端分页
+	      queryParamsType:'',
 	      queryParams: function (params) { // 请求服务器数据时发送的参数，可以在这里添加额外的查询参数，返回false则终止请求
 	          return {
-	              personInfo: $("#choicePersonInfo").val() // 额外添加的参数
+	              personInfo: $("#choicePersonInfo").val(), // 额外添加的参数
+	              page: params.pageNumber
 	          }
 	      },
 	      sortName: 'id', // 要排序的字段
@@ -351,8 +408,9 @@ function createTable(tableName){
 	      columns: [
 	          {
 	        	  field:'choiceUserCheck',
-	              radio: true, // 显示一个勾选框
-	              align: 'center' // 居中显示
+	              checkbox: true, // 显示一个勾选框
+	              align: 'center', // 居中显示
+	              formatter:stateFormatter
 	              
 	          }, {
 	              field: 'id', // 返回json数据中的name
@@ -391,13 +449,53 @@ function createTable(tableName){
 	              valign: 'middle'
 	          }
 	      ],
+	      onClickRow:function(row, tr,flied){
+			var personVal =[];
+			var personNo = [];
+			var pval = $(personInput).val().trim();
+			var rval = $(personInput).prev().val().trim();
+			var name = row.nachn+""+row.vorna;
+			if(pval!='' && rval!=''){
+				personVal=personVal.concat($(personInput).val().trim().split(","));
+				personNo=personNo.concat($(personInput).prev().val().trim().split(","));
+			}
+			if(IsInArray(personVal,name)&&IsInArray(personNo,row.pernr)){
+				personVal.remove(name);
+				personNo.remove(row.pernr)
+			}else{
+				personVal = personVal.concat(name);
+				personNo = personNo.concat(row.pernr);
+			}
+			personVal = hovercUnique(personVal);
+			personNo = hovercUnique(personNo);
+			$(personInput).val(personVal);
+			$(personInput).prev().val(personNo);
+	      },
 	      onLoadSuccess: function(){  //加载成功时执行
-	            console.info("加载成功");
+	    	  console.info("加载数据成功");
 	      },
 	      onLoadError: function(){  //加载失败时执行
 	            console.info("加载数据失败");
 	      }
 	});
+}
+function stateFormatter(value, row, index){
+	var personVal =[];
+	var personNo = [];
+	var pval = $(personInput).val().trim();
+	var rval = $(personInput).prev().val().trim();
+	var name = row.nachn+""+row.vorna;
+	if(pval!='' && rval!=''){
+		personVal=personVal.concat($(personInput).val().trim().split(","));
+		personNo=personNo.concat($(personInput).prev().val().trim().split(","));
+		if(IsInArray(personVal,name)&&IsInArray(personNo,row.pernr)){
+			return {
+				disabled : false,//设置是否可用
+	            checked : true//设置选中
+			}
+		}
+	}
+	return value;
 }
 function createWorkTable(tableName){
 	$("#"+tableName).bootstrapTable({ // 对应table标签的id
@@ -412,7 +510,7 @@ function createWorkTable(tableName){
 	      height: 440,
 	      pageSize: 7, // 页面数据条数
 	      pageNumber: 1, // 首页页码
-	      search: true,
+	      search: false,
 	      searchAlign: "left",
 	      searchOnEnterKey: true,
 	      sidePagination: 'client', // 设置为服务器端分页
@@ -424,7 +522,7 @@ function createWorkTable(tableName){
 	      columns: [
 	          {
 	        	  field:'choiceWorkCheck',
-	        	  radio: true, // 显示一个勾选框
+	        	  checkbox: true, // 显示一个勾选框
 	              align: 'center' // 居中显示
 	              
 	          }, {
@@ -486,7 +584,7 @@ function createFileInput(obj){
         //maxImageWidth: 1000,//图片的最大宽度
         //maxImageHeight: 1000,//图片的最大高度
         maxFileSize: 0,//单位为kb，如果为0表示不限制文件大小
-        //minFileCount: 0,
+        minFileCount: 0,
         maxFileCount: 10, //表示允许同时上传的最大文件个数
         enctype: 'multipart/form-data',
         validateInitialCount:true,
@@ -516,6 +614,10 @@ function removeChoice(obj){
 </script>
 </head>
 <body>
+	<div id="successMsg" class="hide alert alert-success">
+		<a href="#" class="close" data-dismiss="alert">&times;</a>
+		<strong>成功！</strong>录入成功！
+	</div>
 	<div id="manyDiv">
 		<div class="row">
 			<div class="col-md-12">
@@ -528,7 +630,6 @@ function removeChoice(obj){
 		   		</div>
 			</div>
 		</div>
-		
 	</div>
 	<div style="padding-top: 30px;"></div>
 	<div class="row">
@@ -551,6 +652,17 @@ function removeChoice(obj){
 							<input class="form-control" id="workName" type="text">
 						</div>
 						<a id="closeDivGly" href="#" style="display: none;" class="btn btn-round btn-default" onclick="closeWorkDiv(this);"><i class="glyphicon glyphicon-remove"></i></a>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="form-group">
+					<div class="col-lg-12">
+						<label class="col-md-1">工作要求</label>
+						<div class="col-md-10">
+							<textarea class="form-control" id="jobRequire" rows="5"
+								cols="5"></textarea>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -583,16 +695,25 @@ function removeChoice(obj){
 				</div>
 			</div>
 			<div class="row">
-				<div class="form-group">
-					<div class="col-lg-12">
-						<label class="col-md-1">工作要求</label>
-						<div class="col-md-9">
-							<textarea class="form-control" id="jobRequire" rows="5"
-								cols="5"></textarea>
+					<div class="form-group">
+						<div class="col-lg-6">
+							<label class="col-md-2">会议类型</label>
+							<div class="col-md-10">
+								<select id="mettingType">
+								</select>
+							</div>
+						</div>
+						<div class="col-lg-6">
+							<label class="col-md-2">会议时间</label>
+							<div class="col-md-6" style="padding-left: 28px;">
+								<div class="input-group date form_date col-md-12" data-date="" data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd">
+				                    <input id="mettingTime" class="form-control" type="text" placeholder="时间格式为YYYY-mm-dd">
+				                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+				                </div>
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
 			<div class="addInfo row">
 				<div class="form-group">
 					<div class="col-lg-12">
@@ -608,17 +729,20 @@ function removeChoice(obj){
 				<div class="row">
 					<div class="form-group">
 						<div class="col-lg-6">
-							<label class="col-md-2">会议类型</label>
-							<div class="col-md-10">
-								<select id="mettingType">
-								</select>
-							</div>
-						</div>
-						<div class="col-lg-6">
 							<label class="col-md-2">工作单位</label>
 							<div class="col-md-5">
 								<input class="form-control" id="workCompanyId" type="hidden">
 								<input class="form-control" id="workCompany" type="text" onfocus="choiceCompany(this);">
+							</div>
+						</div>
+						<div class="col-lg-6">
+							<label class="col-md-2">工作状态</label>
+							<div class="col-md-10">
+								<select size="50" id="workStatus">
+									<option value="未开始">未开始</option>
+									<option value="进行中">进行中</option>
+									<option value="已完成">已完成</option>
+								</select>
 							</div>
 						</div>
 					</div>
@@ -629,7 +753,7 @@ function removeChoice(obj){
 							<label class="col-md-2">完成日期</label>
 							<div class="col-md-6">
 								<div class="input-group date form_date col-md-12" data-date="" data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd">
-				                    <input id="finishTime" class="form-control" type="text" readonly>
+				                    <input id="finishTime" class="form-control" type="text" placeholder="时间格式为YYYY-mm-dd">
 				                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 				                </div>
 							</div>
@@ -638,29 +762,6 @@ function removeChoice(obj){
 							<label class="col-md-2">工作标签</label>
 							<div class="col-md-10">
 								<select size="50" id="workLabel">
-								</select>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="form-group">
-						<div class="col-lg-6">
-							<label class="col-md-2">会议时间</label>
-							<div class="col-md-6">
-								<div class="input-group date form_date col-md-12" data-date="" data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd">
-				                    <input id="mettingTime" class="form-control" type="text" readonly>
-				                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-				                </div>
-							</div>
-						</div>
-						<div class="col-lg-6">
-							<label class="col-md-2">工作状态</label>
-							<div class="col-md-10">
-								<select size="50" id="workStatus">
-									<option value="未开始">未开始</option>
-									<option value="进行中">进行中</option>
-									<option value="已完成">已完成</option>
 								</select>
 							</div>
 						</div>
@@ -692,7 +793,7 @@ function removeChoice(obj){
 					<div class="form-group">
 						<div class="col-lg-12">
 							<label class="col-md-1">督办策略</label>
-							<div class="col-md-9">
+							<div class="col-md-10">
 								<textarea id="supervisorStrategy" class="form-control" rows="5" cols="5"></textarea>
 							</div>
 						</div>
@@ -722,7 +823,20 @@ function removeChoice(obj){
 								<button type="button" class="btn btn-default" data-toggle="modal" onclick="choiceWork(this);">合并工作</button>
 							</div>
 						</div>
-						
+					</div>
+				</div>
+				<div style="padding-top: 30px;"></div>
+				<div class="row">
+					<div class="form-group">
+						<div id="mergeWorkDiv" class="col-lg-12">
+						</div>
+						<div class="col-lg-12">
+							<label class="col-md-1">关联工作</label>
+							<div class="col-md-11">
+								<input class="form-control" id="relationIds" type="hidden">
+								<button type="button" class="btn btn-default" data-toggle="modal" onclick="choiceWork(this);">工作关联</button>
+							</div>
+						</div>
 					</div>
 				</div>
 				<div class="row">
@@ -769,7 +883,7 @@ function removeChoice(obj){
 					<label class="col-md-2">完成日期</label>
 					<div class="col-md-6">
 						<div class="input-group date form_date col-md-12" data-date="" data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd">
-		                    <input id="nodeFinishTime" class="form-control" type="text" readonly>
+		                    <input id="nodeFinishTime" class="form-control" type="text" placeholder="时间格式为YYYY-mm-dd">
 		                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 		                </div>
 					</div>
@@ -785,8 +899,8 @@ function removeChoice(obj){
 		</div>
 	</div>
 	<div class="modal fade" id="choiceWorkModal" tabindex="-1" role="dialog"
-		aria-labelledby="myModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
+		aria-labelledby="myModalLabel" aria-hidden="true" >
+		<div class="modal-dialog" style="width:800px;">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
@@ -801,9 +915,8 @@ function removeChoice(obj){
 										<div class="col-lg-12">
 											<label class="col-md-3">工作信息</label>
 											<div class="col-md-7">
-												<input class="form-control" id="queryWorkInfo" type="text">
+												<input class="form-control" id="queryWorkInfo" type="text" onchange="createChoiceWorkTable();">
 											</div>
-											<button type="button" class="btn btn-primary" onclick="createChoiceWorkTable();">查询</button>
 										</div>
 									</div>
 								</div>
@@ -837,8 +950,8 @@ function removeChoice(obj){
 					<div class="modal-body">
 						<div style="height:600px;overflow: auto;">
 							<ul class="nav nav-tabs" id="myTab">
-								  <li class="active"><a href="#home">人员选择</a></li>
-								  <li><a href="#profile">工作组选择</a></li>
+								  <li class="active"><a href="#home" onclick="createChoicePersonTable();">人员选择</a></li>
+								  <li><a href="#profile" onclick="createChoicePersonGroupTable();">工作组选择</a></li>
 							</ul>
 							<div class="tab-content">
 							  <div class="tab-pane active" id="home">
@@ -848,9 +961,8 @@ function removeChoice(obj){
 												<div class="col-lg-12">
 													<label class="col-md-3">人员信息</label>
 													<div class="col-md-7">
-														<input class="form-control" id="choicePersonInfo" type="text">
+														<input class="form-control" id="choicePersonInfo" type="text" onkeyup="createChoicePersonTable();">
 													</div>
-													<button type="button" class="btn btn-primary" onclick="createChoicePersonTable();">查询</button>
 												</div>
 											</div>
 										</div>
@@ -869,7 +981,6 @@ function removeChoice(obj){
 													<div class="col-md-7">
 														<input class="form-control" id="choicePersonGroupInfo" type="text">
 													</div>
-													<button type="button" class="btn btn-primary" onclick="createChoicePersonGroupTable();">查询</button>
 												</div>
 											</div>
 										</div>
@@ -884,9 +995,6 @@ function removeChoice(obj){
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal">关闭
-						</button>
-						<button type="button" class="btn btn-primary" onclick="choicePersonInfo();">
-							确认
 						</button>
 					</div>
 				</div><!-- /.modal-content -->
@@ -927,8 +1035,11 @@ function removeChoice(obj){
 		//initWorkLabel();
 		//$("#cpworkDiv").find("#workLevel").selectpicker("refresh");
 		//$("#cpworkDiv").find("#workStatus").selectpicker("refresh");
-		createTable("choicePersonTable");
 		addManyWork();
+		$('#choicePersonModal').on('hide.bs.modal', function () {
+			createChoicePersonTable();
+			createChoicePersonGroupTable();
+		});
 	});
 </script>
 </html>

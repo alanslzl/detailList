@@ -5,6 +5,7 @@ import java.util.List;
 
 public class NodeDto {
 	private String nodeId;
+	private String nid;
 	private String pid;
 	private String text;
 	private List<NodeDto> nodes;
@@ -16,6 +17,12 @@ public class NodeDto {
 	}
 	public NodeDto() {
 		this.nodes=new ArrayList<NodeDto>();
+	}
+	public String getNid() {
+		return nid;
+	}
+	public void setNid(String nid) {
+		this.nid = nid;
 	}
 	public List<NodeDto> getNodes() {
 		return nodes;

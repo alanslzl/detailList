@@ -104,7 +104,7 @@
 					noTypeWorkDiv+="<div style='width:100%;'>";
 					noTypeWorkDiv+="<div class='slot' style='width: 100%;min-height: 100px;border: 0;'><ul class='slot-list'>";
 					for(var i = 0 ; i < data.noTypeWorkList.length;i++){
-						noTypeWorkDiv+= "<li class='slot-item'><div class='slot-handler'><div class='slot-handler clearfix'><div class='avator'><img src='images/avatar6.jpg' />"+
+						noTypeWorkDiv+= "<li class='slot-item'><div class='slot-handler'><div class='slot-handler clearfix'><div class='avator'><img src='<%=path%>/page/images/avatar6.jpg' />"+
 						"</div><div class='content'><div class='item-title'>"+data.noTypeWorkList[i].workName+"</div>"+
 						"<div align='right'><button class='btn btn-default' onclick='easyWork(&quot;"+data.noTypeWorkList[i].id+"&quot;);'>简介</button>"+
 						"<button class='btn btn-default' onclick='descWork(&quot;"+data.noTypeWorkList[i].id+"&quot;);'>详细</button></div></div></div></div></li>";
@@ -124,7 +124,7 @@
 						}
 						typeWorkDiv+="</div><div class='slot' style='width: 100%;min-height: 110px;border: 0;'><ul class='slot-list'>";
 						for(var j = 0 ; j < data.typeWorkListDto[i].list.length;j++){
-							typeWorkDiv+= "<li class='slot-item'><div class='slot-handler'><div class='slot-handler clearfix'><div class='avator'><img src='images/avatar6.jpg' />"+
+							typeWorkDiv+= "<li class='slot-item'><div class='slot-handler'><div class='slot-handler clearfix'><div class='avator'><img src='<%=path%>/page/images/avatar6.jpg' />"+
 							"</div><div class='content'><div class='item-title'>"+data.typeWorkListDto[i].list[j].workName+"</div>"+
 							"<div align='right'><button class='btn btn-default' onclick='easyWork(&quot;"+data.typeWorkListDto[i].list[j].id+"&quot;);'>简介</button>"+
 							"<button class='btn btn-default' onclick='descWork(&quot;"+data.typeWorkListDto[i].list[j].id+"&quot;);'>详细</button></div></div></div></div></li>";
@@ -148,14 +148,13 @@
 	}
 	//导出modal展示
 	function exportDetailList(){
-		//$("#exportDetailListModal").modal();
 		var colors = [];
 		var lis = $("#workDetailListUl").find("li");
 		for(var i = 0 ; i < lis.length ; i++){
 			colors.push(lis[i].style.backgroundColor);
 		}
 		if(IsInArray(colors,"rgb(100, 214, 244)")){
-			window.location.href="<%=path%>/detailList/exportDetailList.do?detailListId="+detailListId;
+			$("#exportDetailListModal").modal();
 		}else{
 			alert("请选择清单!");
 		}
@@ -163,8 +162,7 @@
 	}
 	//切换选择模板或创建模板
 	function showNewExportDetailDiv(){
-		$("#newExportDetailDiv").show();
-		$("#hasExportDetailDiv").hide();
+		window.location.href="<%=path%>/template/query.do";
 	}
 	//切换选择模板或创建模板
 	function showHasExportDetailDiv(){
@@ -185,11 +183,61 @@
 			alert("请选择需要增加工作的清单!");
 		}
 	}
+	//创建责任人table
+	function createChoicePersonTable(){
+		$('#choicePersonTable').bootstrapTable('refresh', { pageNumber: 1 });
+	}
+	function createChoicePersonGroupTable(){
+		$('#choicePersonGroupTable').bootstrapTable('refresh', { pageNumber: 1 });
+	}
+	var personInput;
+	//选择责任人人员信息窗口
+	function choicePerson(obj){
+		personInput = obj;
+		$("#choicePersonInfo").val("");
+		$("#choicePersonModal").modal().css({
+			"margin-top":function(){
+				if($(obj).offset().top<280){
+					return +($(obj).offset().top-250)
+				}else{
+					return +($(obj).offset().top-440)
+				}
+			}
+		});
+		createChoicePersonTable();
+		createChoicePersonGroupTable();
+		createTable("choicePersonTable");
+		createGroupTable("choicePersonGroupTable");
+	}
+	//去除数组里重复方法
+	function hovercUnique(arr) {
+		var result = [], hash = {};
+		for (var i = 0, elem; (elem = arr[i]) != null; i++) {
+			if (!hash[elem]) {
+				result.push(elem);
+				hash[elem] = true;
+			}
+		}
+		return result;
+	}
 	//判断方法 后面的值是否在前面的数组中
 	function IsInArray(arr,val){ 
 		var testStr=','+arr.join(",")+","; 
 		return testStr.indexOf(","+val+",")!=-1; 
 	}
+	Array.prototype.indexOf = function(val) {
+		for (var i = 0; i < this.length; i++) {
+			if (this[i] == val) 
+				return i;
+		}
+		return -1;
+	};
+	Array.prototype.remove = function(val) {
+		var index = this.indexOf(val);
+			if (index > -1) {
+			this.splice(index, 1);
+		}
+	};
 	//选择工作单位
 	function choiceCompany(){
 		getTreeJSON();
@@ -197,71 +245,93 @@
 		$("#choiceCompany").modal();
 	}
 	function choiceCompanyInfo(){
-		$("#workCompany").val(selectedNode.text);
+		$("#workCompany").val(selectedNode.id);
+		$("#workCompanyName").val(selectedNode.text);
 		$("#choiceCompany").modal("hide");
 		$("#queryWorkModal").modal();
 	}
-	//创建督办人table
-	function createChoiceSupervisorTable(){
-		$('#choiceSupervisorTable').bootstrapTable('refresh', { pageNumber: 1 });
-	}
-	//创建责任人table
-	function createChoiceLiablePersonTable(){
-		$('#choiceLiablePersonTable').bootstrapTable('refresh', { pageNumber: 1 });
-	}
-	//选择责任人人员信息窗口
-	function choiceLiablePerson(){
-		$("#choiceLiablePersonModal").modal();
-	}
-	//选择督办人人员信息窗口
-	function choiceSupervisor(){
-		$("#choiceSupervisorModal").modal();
-	}
-	//督办人人员选择方法
-	function choiceSupervisorInfo(){
-		var choiceInfoArr = [];
-		var showNames = [];
-		var userNos = [];
-		$("#choiceSupervisorTable input[type='checkbox']:checked").each(function(){
-			var userNo = $(this).parent().parent().children("td").eq(1).text();
-			var surnName = $(this).parent().parent().children("td").eq(2).text();
-			var name = $(this).parent().parent().children("td").eq(3).text();
-			var info = {
-				'userNo':userNo,	
-				'names':surnName + "" +name
-			}
-			showNames.push(surnName + "" +name);
-			choiceInfoArr.push(info);
-			userNos.push(userNo);
+
+	function createGroupTable(tableName){
+		$("#"+tableName).bootstrapTable({ // 对应table标签的id
+			  method: 'post',
+			  contentType : "application/x-www-form-urlencoded",
+		      url: "<%=path%>/userGroup/queryAll.do", // 获取表格数据的url
+		      cache: true, // 设置为 false 禁用 AJAX 数据缓存， 默认为true
+		      striped: true,  //表格显示条纹，默认为false
+		      pagination: true, // 在表格底部显示分页组件，默认false
+		      clickToSelect: true,
+		      pageList: [5,10], // 设置页面可以显示的数据条数
+		      height: 440,
+		      pageSize: 7, // 页面数据条数
+		      pageNumber: 1, // 首页页码
+		      //search: true,
+		      //searchAlign: "left",
+		      strictSearch: true,
+		      searchOnEnterKey: true,
+		      sidePagination: 'client', // 设置为服务器端分页
+		      queryParams: function (params) { // 请求服务器数据时发送的参数，可以在这里添加额外的查询参数，返回false则终止请求
+		          return {
+		              personInfo: $("#choiceGroupPersonInfo").val() // 额外添加的参数
+		          }
+		      },
+		      sortName: 'id', // 要排序的字段
+		      sortOrder: 'desc', // 排序规则
+		      columns: [
+		          {
+		        	  field:'choiceUserCheck',
+		        	  checkbox: true, // 显示一个勾选框
+		              align: 'center' // 居中显示
+		              
+		          }, {
+		              field: 'id', // 返回json数据中的name
+		              visible:false,
+		              align: 'center', // 左右居中
+		              valign: 'middle' // 上下居中
+		          },{
+		              field: 'groupUserId', // 返回json数据中的name
+		              visible:false,
+		              align: 'center', // 左右居中
+		              valign: 'middle' // 上下居中
+		          }, {
+		              field: 'groupName', // 返回json数据中的name
+		              title: '工作组名', // 表格表头显示文字
+		              align: 'center', // 左右居中
+		              valign: 'middle' // 上下居中
+		          }, {
+		              field: 'groupUser',
+		              title: '组员名称',
+		              align: 'center',
+		              valign: 'middle'
+		          }, {
+		              field: 'groupComment',
+		              title: '说明',
+		              align: 'center',
+		              valign: 'middle'
+		          }
+		      ],
+		      onClickRow:function(row, tr,flied){
+					var personVal =[];
+					var personNo = [];
+					var pval = $(personInput).val().trim();
+					var rval = $(personInput).prev().val().trim();
+					if(pval!='' && rval!=''){
+						personVal=personVal.concat($(personInput).val().trim().split(","));
+						personNo=personNo.concat($(personInput).prev().val().trim().split(","));
+					}
+					personVal = personVal.concat(row.groupUser.split(","));
+					personNo = personNo.concat(row.groupUserId.split(","));
+					personVal = hovercUnique(personVal);
+					personNo = hovercUnique(personNo);
+					$(personInput).val(personVal);
+					$(personInput).prev().val(personNo);
+		      },
+		      onLoadSuccess: function(){  //加载成功时执行
+		            console.info("加载成功");
+		      },
+		      onLoadError: function(){  //加载失败时执行
+		            console.info("加载数据失败");
+		      }
 		});
-		$("#choiceSupervisorModal").modal("hide");
-		$("#newSupervisor").val(showNames);
-		$("#newSupervisorId").val(userNos);
-		$("#supervisor").val(showNames);
-		$("#supervisorId").val(userNos);
-	}
-	//责任人人人员选择方法
-	function choiceLiablePersonInfo(){
-		var choiceInfoArr = [];
-		var showNames = [];
-		var userNos = [];
-		$("#choiceLiablePersonTable input[type='checkbox']:checked").each(function(){
-			var userNo = $(this).parent().parent().children("td").eq(1).text();
-			var surnName = $(this).parent().parent().children("td").eq(2).text();
-			var name = $(this).parent().parent().children("td").eq(3).text();
-			var info = {
-				'userNo':userNo,	
-				'names':surnName + "" +name
-			}
-			showNames.push(surnName + "" +name);
-			choiceInfoArr.push(info);
-			userNos.push(userNo);
-		});
-		$("#choiceLiablePersonModal").modal("hide");
-		$("#newLiablePerson").val(showNames);
-		$("#newLiablePersonId").val(userNos);
-		$("#liablePerson").val(showNames);
-		$("#liablePersonId").val(userNos);
 	}
 	//创建选择人员信息表格
 	function createTable(tableName){
@@ -269,21 +339,24 @@
 			  method: 'post',
 			  contentType : "application/x-www-form-urlencoded",
 		      url: "<%=path%>/personInfo/queryPersonInfo.do", // 获取表格数据的url
-		      cache: false, // 设置为 false 禁用 AJAX 数据缓存， 默认为true
+		      cache: true, // 设置为 false 禁用 AJAX 数据缓存， 默认为true
 		      striped: true,  //表格显示条纹，默认为false
 		      pagination: true, // 在表格底部显示分页组件，默认false
 		      clickToSelect: true,
 		      pageList: [5,10], // 设置页面可以显示的数据条数
-		      height: 340,
+		      height: 440,
 		      pageSize: 7, // 页面数据条数
 		      pageNumber: 1, // 首页页码
-		      search: true,
-		      searchAlign: "left",
+		      //search: true,
+		      //searchAlign: "left",
+		      strictSearch: true,
 		      searchOnEnterKey: true,
-		      sidePagination: 'client', // 设置为服务器端分页
+		      sidePagination: 'server', // 设置为服务器端分页
+		      queryParamsType:'',
 		      queryParams: function (params) { // 请求服务器数据时发送的参数，可以在这里添加额外的查询参数，返回false则终止请求
 		          return {
-		              personInfo: $("#personInfo").val() // 额外添加的参数
+		              personInfo: $("#choicePersonInfo").val(), // 额外添加的参数
+		              page: params.pageNumber
 		          }
 		      },
 		      sortName: 'id', // 要排序的字段
@@ -292,7 +365,8 @@
 		          {
 		        	  field:'choiceUserCheck',
 		              checkbox: true, // 显示一个勾选框
-		              align: 'center' // 居中显示
+		              align: 'center', // 居中显示
+		              formatter:stateFormatter
 		              
 		          }, {
 		              field: 'id', // 返回json数据中的name
@@ -331,13 +405,53 @@
 		              valign: 'middle'
 		          }
 		      ],
+		      onClickRow:function(row, tr,flied){
+				var personVal =[];
+				var personNo = [];
+				var pval = $(personInput).val().trim();
+				var rval = $(personInput).prev().val().trim();
+				var name = row.nachn+""+row.vorna;
+				if(pval!='' && rval!=''){
+					personVal=personVal.concat($(personInput).val().trim().split(","));
+					personNo=personNo.concat($(personInput).prev().val().trim().split(","));
+				}
+				if(IsInArray(personVal,name)&&IsInArray(personNo,row.pernr)){
+					personVal.remove(name);
+					personNo.remove(row.pernr)
+				}else{
+					personVal = personVal.concat(name);
+					personNo = personNo.concat(row.pernr);
+				}
+				personVal = hovercUnique(personVal);
+				personNo = hovercUnique(personNo);
+				$(personInput).val(personVal);
+				$(personInput).prev().val(personNo);
+		      },
 		      onLoadSuccess: function(){  //加载成功时执行
-		            console.info("加载成功");
+		    	  console.info("加载数据成功");
 		      },
 		      onLoadError: function(){  //加载失败时执行
 		            console.info("加载数据失败");
 		      }
 		});
+	}
+	function stateFormatter(value, row, index){
+		var personVal =[];
+		var personNo = [];
+		var pval = $(personInput).val().trim();
+		var rval = $(personInput).prev().val().trim();
+		var name = row.nachn+""+row.vorna;
+		if(pval!='' && rval!=''){
+			personVal=personVal.concat($(personInput).val().trim().split(","));
+			personNo=personNo.concat($(personInput).prev().val().trim().split(","));
+			if(IsInArray(personVal,name)&&IsInArray(personNo,row.pernr)){
+				return {
+					disabled : false,//设置是否可用
+		            checked : true//设置选中
+				}
+			}
+		}
+		return value;
 	}
 	//提交简单新增
 	function easyAddDetailWork(){
@@ -370,7 +484,7 @@
 	        return false; // 阻止表单自动提交事件
 	    });
 	}
-	 var selectedNode = {};
+	var selectedNode = {};
 	function getTreeJSON(){
 	     $.ajax({
 	         type: "POST",
@@ -383,7 +497,7 @@
 	                 expand: false,
 	                 highlightSelected: true,
 	                 onNodeSelected: function(event, data) {
-	                     selectedNode.id=data['id'];
+	                     selectedNode.id=data['nid'];
 	                     selectedNode.text=data['text'];
 	                 }
 	             });
@@ -405,10 +519,11 @@
 		var work = new Object();
 		work.workName=$("#workName").val();
 		work.workCompany=$("#workCompany").val();
-		work.liablePerson=$("#liablePersonId").val();
-		work.supervisor=$("#supervisorId").val();
+		work.liablePersonId=$("#liablePersonId").val();
+		work.supervisorId=$("#supervisorId").val();
 		work.workLevel=$("#workLevel").val();
-		console.log(work);
+		work.mettingTypeId=$("#mettingType").val();
+		work.workLabelId=$("#workLabel").val();
 		createWorkLi(detailListId,work);
 		$("#queryWorkModal").modal("hide");
 	}
@@ -429,7 +544,68 @@
 		});
 		$("#easyWorkModal").modal();
 	}
+	function removeChoice(obj){
+		$(obj).parent().prev().find("input").each(function(){
+			$(this).val("");
+		});
+	}
+	
+	function initMettingType(workdiv){
+		$.ajax({   
+			type:"POST", //提交方式   
+			url:"<%=path%>/mettingType/queryAll.do",//路径
+			async:false,
+			success:function(data) {//返回数据根据结果进行相应的处理
+				var select = $(workdiv).find("#mettingType");
+				select.html("");
+				select.append("<option value='' >请选择</option>")
+				for(var i = 0 ; i < data.length;i++){
+					select.append("<option value='"+data[i].id+"'>" + data[i].mettingName + "</option>");
+				}
+				$(select).selectpicker("refresh");
+			}
+		});
+	}
+	function initWorkLabel(workdiv){
+		$.ajax({   
+			type:"POST", //提交方式   
+			url:"<%=path%>/workLabel/queryAll.do",//路径
+			async:false,
+			success:function(data) {//返回数据根据结果进行相应的处理
+				var select = $(workdiv).find("#workLabel");
+				select.html("");
+				select.append("<option value='' >请选择</option>")
+				for(var i = 0 ; i < data.length;i++){
+					select.append("<option value='"+data[i].id+"'>" + data[i].labelName + "</option>");
+				}
+				$(select).selectpicker("refresh");
+			}
+		});
+	}
+	function initExportTemplate(){
+		$.ajax({   
+			type:"POST", //提交方式   
+			url:"<%=path%>/template/queryAll.do",//路径
+			async:false,
+			success:function(data) {//返回数据根据结果进行相应的处理
+				var select = $("#exportTemplate");
+				select.html("");
+				select.append("<option value='' >请选择</option>")
+				for(var i = 0 ; i < data.length;i++){
+					select.append("<option value='"+data[i].id+"'>" + data[i].templateName + "</option>");
+				}
+				$(select).selectpicker("refresh");
+			}
+		});
+	}
+	function exportDetailListDu(){
+		var templateId = $("#exportTemplate").val();
+		window.location.href="<%=path%>/detailList/exportDetailList.do?detailListId="+detailListId+"&templateId="+templateId;
+	}
 	$(function(){
+		initExportTemplate();
+		initMettingType($("#queryWorkModal"));
+		initWorkLabel($("#queryWorkModal"));
 		$("#cp1,#cp2,#cp3,#cp4,#cp5,#cp6,#cp7").colorpicker();
 		createDetailListLi();
 		createTable("choiceSupervisorTable");
@@ -443,7 +619,6 @@
 			<div class="col-md-12" align="right">
 	   			<div class="form-group">
 					<div class="col-md-12">
-						<button class="btn btn-primary" onclick="addDetailList();">新增清单</button>
 						<button class="btn btn-primary" onclick="exportDetailList();">导出清单</button>
 					</div>
 				</div>  
@@ -455,6 +630,7 @@
 			<div id="dragslot" class="container">
 				<div class="slot-title bg-red border-red">清单列表
 					<div style="float: right;" align="right">
+						<label style="cursor:pointer;" onclick="addDetailList();">新增</label>
 						<label style="cursor:pointer;" onclick="editDetailList();">编辑</label>
 						<label style="cursor:pointer;" data-toggle="modal" data-target="#queryDetailListModal">筛选</label>
 					</div>
@@ -546,7 +722,8 @@
 											<div class="col-lg-12">
 												<label class="col-md-3">工作单位</label>
 												<div class="col-md-9">
-													<input class="form-control" id="workCompany" type="text" onfocus="choiceCompany();">
+													<input class="form-control" id="workCompany" type="hidden">
+													<input class="form-control" id="workCompanyName" type="text" onfocus="choiceCompany();">
 												</div>
 											</div>
 										</div>
@@ -555,9 +732,14 @@
 										<div class="form-group">
 											<div class="col-lg-12">
 												<label class="col-md-3">责任人</label>
-												<div class="col-md-9">
-													<input class="form-control" id="liablePersonId" type="hidden">
-													<input class="form-control" id="liablePerson" type="text" onfocus="choiceLiablePerson();">
+												<div class="col-md-9" style="padding-left: 0px;">
+													<div class="col-md-7">
+														<input class="form-control" id="liablePersonId" type="hidden">
+														<input class="form-control" id="liablePerson" type="text" onfocus="choicePerson(this);">
+													</div>
+													<div class="col-md-5">
+														<button class="form-control" onclick="removeChoice(this);">清除选中</button>
+													</div>
 												</div>
 											</div>
 										</div>
@@ -566,9 +748,14 @@
 										<div class="form-group">
 											<div class="col-lg-12">
 												<label class="col-md-3">督办人</label>
-												<div class="col-md-9">
-													<input class="form-control" id="supervisorId" type="hidden">
-													<input class="form-control" id="supervisor" type="text" onfocus="choiceSupervisor();">
+												<div class="col-md-9" style="padding-left: 0px;">
+													<div class="col-md-7">
+														<input class="form-control" id="supervisorId" type="hidden">
+														<input class="form-control" id="supervisor" type="text" onfocus="choicePerson(this);">
+													</div>
+													<div class="col-md-5">
+														<button class="form-control" onclick="removeChoice(this);">清除选中</button>
+													</div>
 												</div>
 											</div>
 										</div>
@@ -579,7 +766,33 @@
 												<label class="col-md-3">工作等级</label>
 												<div class="col-md-9">
 													<select class="form-control selectpicker" id="workLevel">
-														<option value="1">A</option>
+														<option value="">请选择</option>
+														<option value="A">A</option>
+														<option value="B">B</option>
+														<option value="C">C</option>
+														<option value="L">L</option>
+													</select>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="form-group">
+											<div class="col-lg-12">
+												<label class="col-md-3">工作标签</label>
+												<div class="col-md-9">
+													<select class="form-control selectpicker" id="workLabel">
+													</select>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="form-group">
+											<div class="col-lg-12">
+												<label class="col-md-3">会议类型</label>
+												<div class="col-md-9">
+													<select class="form-control selectpicker" id="mettingType">
 													</select>
 												</div>
 											</div>
@@ -639,9 +852,12 @@
 										<div class="form-group">
 											<div class="col-lg-12">
 												<label class="col-md-3">责任人</label>
-												<div class="col-md-9">
+												<div class="col-md-6">
 													<input class="form-control" id="newLiablePersonId" type="hidden">
-													<input class="form-control" id="newLiablePerson" type="text" onfocus="choiceLiablePerson();">
+													<input class="form-control" id="newLiablePerson" type="text" onfocus="choicePerson(this);">
+												</div>
+												<div class="col-md-3">
+													<button class="form-control" onclick="removeChoice(this);return false;">清除选中</button>
 												</div>
 											</div>
 										</div>
@@ -650,9 +866,12 @@
 										<div class="form-group">
 											<div class="col-lg-12">
 												<label class="col-md-3">督办人</label>
-												<div class="col-md-9">
+												<div class="col-md-6">
 													<input class="form-control" id="newSupervisorId" type="hidden">
-													<input class="form-control" id="newSupervisor" type="text" onfocus="choiceSupervisor();">
+													<input class="form-control" id="newSupervisor" type="text" onfocus="choicePerson(this);">
+												</div>
+												<div class="col-md-3">
+													<button class="form-control" onclick="removeChoice(this);return false;">清除选中</button>
 												</div>
 											</div>
 										</div>
@@ -682,7 +901,8 @@
 				</div><!-- /.modal-content -->
 			</div><!-- /.modal -->
 		</div>
-		<div class="modal fade" id="choiceLiablePersonModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		
+		<div class="modal fade" id="choicePersonModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="overflow-y:hidden;">
 			<div class="modal-dialog" style="width:800px;">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -694,78 +914,59 @@
 						</h4>
 					</div>
 					<div class="modal-body">
-						<div style="height:530px;overflow: auto;">
-							<div class="ch-container">
-								<div class="row">
-									<div class="form-group">
-										<div class="col-lg-12">
-											<label class="col-md-3">人员信息</label>
-											<div class="col-md-7">
-												<input class="form-control" id="choiceLiablePersonInfo" type="text">
+						<div style="height:600px;overflow: auto;">
+							<ul class="nav nav-tabs" id="myTab">
+								  <li class="active"><a href="#home" onclick="createChoicePersonTable();">人员选择</a></li>
+								  <li><a href="#profile" onclick="createChoicePersonGroupTable();">工作组选择</a></li>
+							</ul>
+							<div class="tab-content">
+							  <div class="tab-pane active" id="home">
+							  		<div class="ch-container">
+										<div class="row">
+											<div class="form-group">
+												<div class="col-lg-12">
+													<label class="col-md-3">人员信息</label>
+													<div class="col-md-7">
+														<input class="form-control" id="choicePersonInfo" type="text" onkeyup="createChoicePersonTable();">
+													</div>
+												</div>
 											</div>
-											<button type="button" class="btn btn-primary" onclick="createChoiceLiablePersonTable();">查询</button>
+										</div>
+										<div class="row">
+											<table class="table table-striped table-bordered responsive" id="choicePersonTable">
+											</table>
 										</div>
 									</div>
-								</div>
-								<div class="row">
-									<table class="table table-striped table-bordered responsive" id="choiceLiablePersonTable">
-									</table>
-								</div>
+							  </div>
+							  <div class="tab-pane" id="profile">
+							  		<div class="ch-container">
+										<div class="row">
+											<div class="form-group">
+												<div class="col-lg-12">
+													<label class="col-md-3">工作组信息</label>
+													<div class="col-md-7">
+														<input class="form-control" id="choicePersonGroupInfo" type="text">
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<table class="table table-striped table-bordered responsive" id="choicePersonGroupTable">
+											</table>
+										</div>
+									</div>
+							  </div>
 							</div>
 						</div>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal">关闭
 						</button>
-						<button type="button" class="btn btn-primary" onclick="choiceLiablePersonInfo();">
-							确认
-						</button>
 					</div>
 				</div><!-- /.modal-content -->
 			</div><!-- /.modal -->
 		</div>
-		<div class="modal fade" id="choiceSupervisorModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-			<div class="modal-dialog" style="width:800px;">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-							&times;
-						</button>
-						<h4 class="modal-title" id="myModalLabel">
-							选择人员信息
-						</h4>
-					</div>
-					<div class="modal-body">
-						<div style="height:530px;overflow: auto;">
-							<div class="ch-container">
-								<div class="row">
-									<div class="form-group">
-										<div class="col-lg-12">
-											<label class="col-md-3">人员信息</label>
-											<div class="col-md-7">
-												<input class="form-control" id="choiceSupervisorInfo" type="text">
-											</div>
-											<button type="button" class="btn btn-primary" onclick="createChoiceSupervisorTable();">查询</button>
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<table class="table table-striped table-bordered responsive" id="choiceSupervisorTable">
-									</table>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">关闭
-						</button>
-						<button type="button" class="btn btn-primary" onclick="choiceSupervisorInfo();">
-							确认
-						</button>
-					</div>
-				</div><!-- /.modal-content -->
-			</div><!-- /.modal -->
-		</div>
+		
 		<div class="modal fade" id="easyWorkModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-dialog" style="width:800px;">
 				<div class="modal-content">
@@ -864,7 +1065,7 @@
 			</div><!-- /.modal -->
 		</div>
 		<div class="modal fade" id="exportDetailListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-			<div class="modal-dialog" style="width:800px;">
+			<div class="modal-dialog" style="width:630px;">
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
@@ -875,429 +1076,26 @@
 						</h4>
 					</div>
 					<div class="modal-body">
-						<div style="height:500px;overflow: auto;">
+						<div style="height:180px;">
 							<div class="container">
-								<form class="form-horizontal" role="form">
-									<div class="row">
-										<div class="form-group">
-											<div class="col-lg-12">
-												<label class="col-md-4">选择导出方式</label>
-												<div class="col-md-8">
-													<input type="radio" name="exportRadio" checked="checked" onclick="showHasExportDetailDiv();"/>使用已有的清单导出模板
-													<input type="radio" name="exportRadio" onclick="showNewExportDetailDiv();"/>新增清单导出模板
-												</div>
+								<div class="row">
+									<div class="form-group">
+										<div class="col-lg-12">
+											<label class="col-md-3">选择导出模板</label>
+											<div class="col-md-5">
+												<select class="selectpicker" id="exportTemplate">
+												</select>
 											</div>
 										</div>
 									</div>
-									<div id="hasExportDetailDiv">
-										<div class="row">
-											<div class="form-group">
-												<div class="col-lg-12">
-													<label class="col-md-4">导出模板</label>
-													<div class="col-md-8">
-														<select class="selectpicker">
-															<option value="1">模板1</option>
-															<option value="2">模板2</option>
-															<option value="3">模板3</option>
-														</select>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div id="newExportDetailDiv" style="display: none;">
-										<div class="row">
-											<div class="form-group">
-												<div class="col-lg-12">
-													<label class="col-md-3">密级</label>
-													<div class="col-md-9">
-														<input class="form-control" id="focusedInput" type="text">
-													</div>
-													<div class="col-md-11" align="center">
-														<div class="col-md-12">
-															<label class="col-md-3">字体</label>
-															<div class="col-md-9">
-																<select class="form-control selectpicker">
-																	<option value="1">宋体</option>
-																	<option value="1">新宋体</option>
-																	<option value="1">楷体</option>
-																	<option value="1">仿宋</option>
-																	<option value="1">微软雅黑</option>
-																</select>
-															</div>
-														</div>
-														<div class="col-md-12">
-															<label class="col-md-3">字体大小</label>
-															<div class="col-md-9">
-																<select class="form-control selectpicker">
-																	<option value="1">8</option>
-																	<option value="1">9</option>
-																	<option value="1">10</option>
-																	<option value="1">10.5</option>
-																	<option value="1">11</option>
-																	<option value="1">12</option>
-																	<option value="1">14</option>
-																	<option value="1">16</option>
-																	<option value="1">18</option>
-																	<option value="1">20</option>
-																	<option value="1">22</option>
-																	<option value="1">26</option>
-																	<option value="1">28</option>
-																	<option value="1">36</option>
-																	<option value="1">48</option>
-																	<option value="1">72</option>
-																</select>
-															</div>
-														</div>
-														<div class="col-md-12">
-															<label class="col-md-3">颜色</label>
-															<div class="col-md-9">
-																<div id="cp1" class="input-group colorpicker-component">
-																	<input type="text" class="form-control" />
-																	<span class="input-group-addon"><i></i></span>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="row">
-											<div class="form-group">
-												<div class="col-lg-12">
-													<label class="col-md-3">清单类型</label>
-													<div class="col-md-9">
-														<input class="form-control" id="focusedInput" type="text">
-													</div>
-													<div class="col-md-11" align="center">
-														<div class="col-md-12">
-															<label class="col-md-3">字体</label>
-															<div class="col-md-9">
-																<select class="form-control selectpicker">
-																	<option value="1">宋体</option>
-																	<option value="1">新宋体</option>
-																	<option value="1">楷体</option>
-																	<option value="1">仿宋</option>
-																	<option value="1">微软雅黑</option>
-																</select>
-															</div>
-														</div>
-														<div class="col-md-12">
-															<label class="col-md-3">字体大小</label>
-															<div class="col-md-9">
-																<select class="form-control selectpicker">
-																	<option value="1">8</option>
-																	<option value="1">9</option>
-																	<option value="1">10</option>
-																	<option value="1">10.5</option>
-																	<option value="1">11</option>
-																	<option value="1">12</option>
-																	<option value="1">14</option>
-																	<option value="1">16</option>
-																	<option value="1">18</option>
-																	<option value="1">20</option>
-																	<option value="1">22</option>
-																	<option value="1">26</option>
-																	<option value="1">28</option>
-																	<option value="1">36</option>
-																	<option value="1">48</option>
-																	<option value="1">72</option>
-																</select>
-															</div>
-														</div>
-														<div class="col-md-12">
-															<label class="col-md-3">颜色</label>
-															<div class="col-md-9">
-																<div id="cp2" class="input-group colorpicker-component">
-																	<input type="text" class="form-control" />
-																	<span class="input-group-addon"><i></i></span>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="row">
-											<div class="form-group">
-												<div class="col-lg-12">
-													<label class="col-md-3">会议名称</label>
-													<div class="col-md-9">
-														<input class="form-control" id="focusedInput" type="text">
-													</div>
-													<div class="col-md-11" align="center">
-														<div class="col-md-12">
-															<label class="col-md-3">字体</label>
-															<div class="col-md-9">
-																<select class="form-control selectpicker">
-																	<option value="1">宋体</option>
-																	<option value="1">新宋体</option>
-																	<option value="1">楷体</option>
-																	<option value="1">仿宋</option>
-																	<option value="1">微软雅黑</option>
-																</select>
-															</div>
-														</div>
-														<div class="col-md-12">
-															<label class="col-md-3">字体大小</label>
-															<div class="col-md-9">
-																<select class="form-control selectpicker">
-																	<option value="1">8</option>
-																	<option value="1">9</option>
-																	<option value="1">10</option>
-																	<option value="1">10.5</option>
-																	<option value="1">11</option>
-																	<option value="1">12</option>
-																	<option value="1">14</option>
-																	<option value="1">16</option>
-																	<option value="1">18</option>
-																	<option value="1">20</option>
-																	<option value="1">22</option>
-																	<option value="1">26</option>
-																	<option value="1">28</option>
-																	<option value="1">36</option>
-																	<option value="1">48</option>
-																	<option value="1">72</option>
-																</select>
-															</div>
-														</div>
-														<div class="col-md-12">
-															<label class="col-md-3">颜色</label>
-															<div class="col-md-9">
-																<div id="cp3" class="input-group colorpicker-component">
-																	<input type="text" class="form-control" />
-																	<span class="input-group-addon"><i></i></span>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="row">
-											<div class="form-group">
-												<div class="col-lg-12">
-													<label class="col-md-3">单位名称</label>
-													<div class="col-md-9">
-														<input class="form-control" id="focusedInput" type="text">
-													</div>
-													<div class="col-md-11" align="center">
-														<div class="col-md-12">
-															<label class="col-md-3">字体</label>
-															<div class="col-md-9">
-																<select class="form-control selectpicker">
-																	<option value="1">宋体</option>
-																	<option value="1">新宋体</option>
-																	<option value="1">楷体</option>
-																	<option value="1">仿宋</option>
-																	<option value="1">微软雅黑</option>
-																</select>
-															</div>
-														</div>
-														<div class="col-md-12">
-															<label class="col-md-3">字体大小</label>
-															<div class="col-md-9">
-																<select class="form-control selectpicker">
-																	<option value="1">8</option>
-																	<option value="1">9</option>
-																	<option value="1">10</option>
-																	<option value="1">10.5</option>
-																	<option value="1">11</option>
-																	<option value="1">12</option>
-																	<option value="1">14</option>
-																	<option value="1">16</option>
-																	<option value="1">18</option>
-																	<option value="1">20</option>
-																	<option value="1">22</option>
-																	<option value="1">26</option>
-																	<option value="1">28</option>
-																	<option value="1">36</option>
-																	<option value="1">48</option>
-																	<option value="1">72</option>
-																</select>
-															</div>
-														</div>
-														<div class="col-md-12">
-															<label class="col-md-3">颜色</label>
-															<div class="col-md-9">
-																<div id="cp4" class="input-group colorpicker-component">
-																	<input type="text" class="form-control" />
-																	<span class="input-group-addon"><i></i></span>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="row">
-											<div class="form-group">
-												<div class="col-lg-12">
-													<label class="col-md-3">工作名称</label>
-													<div class="col-md-11" align="center">
-														<div class="col-md-12">
-															<label class="col-md-3">字体</label>
-															<div class="col-md-9">
-																<select class="form-control selectpicker">
-																	<option value="1">宋体</option>
-																	<option value="1">新宋体</option>
-																	<option value="1">楷体</option>
-																	<option value="1">仿宋</option>
-																	<option value="1">微软雅黑</option>
-																</select>
-															</div>
-														</div>
-														<div class="col-md-12">
-															<label class="col-md-3">字体大小</label>
-															<div class="col-md-9">
-																<select class="form-control selectpicker">
-																	<option value="1">8</option>
-																	<option value="1">9</option>
-																	<option value="1">10</option>
-																	<option value="1">10.5</option>
-																	<option value="1">11</option>
-																	<option value="1">12</option>
-																	<option value="1">14</option>
-																	<option value="1">16</option>
-																	<option value="1">18</option>
-																	<option value="1">20</option>
-																	<option value="1">22</option>
-																	<option value="1">26</option>
-																	<option value="1">28</option>
-																	<option value="1">36</option>
-																	<option value="1">48</option>
-																	<option value="1">72</option>
-																</select>
-															</div>
-														</div>
-														<div class="col-md-12">
-															<label class="col-md-3">颜色</label>
-															<div class="col-md-9">
-																<div id="cp5" class="input-group colorpicker-component">
-																	<input type="text" class="form-control" />
-																	<span class="input-group-addon"><i></i></span>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="row">
-											<div class="form-group">
-												<div class="col-lg-12">
-													<label class="col-md-3">工作内容</label>
-													<div class="col-md-11" align="center">
-														<div class="col-md-12">
-															<label class="col-md-3">字体</label>
-															<div class="col-md-9">
-																<select class="form-control selectpicker">
-																	<option value="1">宋体</option>
-																	<option value="1">新宋体</option>
-																	<option value="1">楷体</option>
-																	<option value="1">仿宋</option>
-																	<option value="1">微软雅黑</option>
-																</select>
-															</div>
-														</div>
-														<div class="col-md-12">
-															<label class="col-md-3">字体大小</label>
-															<div class="col-md-9">
-																<select class="form-control selectpicker">
-																	<option value="1">8</option>
-																	<option value="1">9</option>
-																	<option value="1">10</option>
-																	<option value="1">10.5</option>
-																	<option value="1">11</option>
-																	<option value="1">12</option>
-																	<option value="1">14</option>
-																	<option value="1">16</option>
-																	<option value="1">18</option>
-																	<option value="1">20</option>
-																	<option value="1">22</option>
-																	<option value="1">26</option>
-																	<option value="1">28</option>
-																	<option value="1">36</option>
-																	<option value="1">48</option>
-																	<option value="1">72</option>
-																</select>
-															</div>
-														</div>
-														<div class="col-md-12">
-															<label class="col-md-3">颜色</label>
-															<div class="col-md-9">
-																<div id="cp6" class="input-group colorpicker-component">
-																	<input type="text" class="form-control" />
-																	<span class="input-group-addon"><i></i></span>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="row">
-											<div class="form-group">
-												<div class="col-lg-12">
-													<label class="col-md-3">工作进展</label>
-													<div class="col-md-11" align="center">
-														<div class="col-md-12">
-															<label class="col-md-3">字体</label>
-															<div class="col-md-9">
-																<select class="form-control selectpicker">
-																	<option value="1">宋体</option>
-																	<option value="1">新宋体</option>
-																	<option value="1">楷体</option>
-																	<option value="1">仿宋</option>
-																	<option value="1">微软雅黑</option>
-																</select>
-															</div>
-														</div>
-														<div class="col-md-12">
-															<label class="col-md-3">字体大小</label>
-															<div class="col-md-9">
-																<select class="form-control selectpicker">
-																	<option value="1">8</option>
-																	<option value="1">9</option>
-																	<option value="1">10</option>
-																	<option value="1">10.5</option>
-																	<option value="1">11</option>
-																	<option value="1">12</option>
-																	<option value="1">14</option>
-																	<option value="1">16</option>
-																	<option value="1">18</option>
-																	<option value="1">20</option>
-																	<option value="1">22</option>
-																	<option value="1">26</option>
-																	<option value="1">28</option>
-																	<option value="1">36</option>
-																	<option value="1">48</option>
-																	<option value="1">72</option>
-																</select>
-															</div>
-														</div>
-														<div class="col-md-12">
-															<label class="col-md-3">颜色</label>
-															<div class="col-md-9">
-																<div id="cp7" class="input-group colorpicker-component">
-																	<input type="text" class="form-control" />
-																	<span class="input-group-addon"><i></i></span>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</form>
+								</div>
 							</div>
 						</div>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal">关闭
 						</button>
-						<button type="button" class="btn btn-primary">
+						<button type="button" class="btn btn-primary" onclick="exportDetailListDu();">
 							导出
 						</button>
 					</div>

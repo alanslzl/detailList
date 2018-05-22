@@ -1,3 +1,4 @@
+<%@page import="com.detailList.entity.Zhr2001"%>
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -10,7 +11,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <link rel="stylesheet" href="<%=path %>/page/css/bootstrap-select.css">
 <link rel="stylesheet" href="<%=path %>/page/css/bootstrap-table.css">
 <link rel="stylesheet" href="<%=path %>/page/css/bootstrap-datetimepicker.css">
-
 <link href="<%=path %>/page/css/charisma-app.css" rel="stylesheet">
 <link href='<%=path %>/page/bower_components/fullcalendar/dist/fullcalendar.css' rel='stylesheet'>
 <link href='<%=path %>/page/bower_components/fullcalendar/dist/fullcalendar.print.css' rel='stylesheet' media='print'>
@@ -35,7 +35,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <script src="<%=path %>/page/js/bootstrap/dist/js/bootstrap-datetimepicker.zh-CN.js"></script>
 <script src="<%=path %>/page/js/bootstrap/dist/js/bootstrap-table.js"></script>
 <script src="<%=path %>/page/js/bootstrap/dist/js/bootstrap-table-zh-CN.js"></script>
-
 <script src="<%=path %>/page/js/jquery.cookie.js"></script>
 <script src='<%=path %>/page/bower_components/moment/min/moment.min.js'></script>
 <script src='<%=path %>/page/bower_components/fullcalendar/dist/fullcalendar.min.js'></script>

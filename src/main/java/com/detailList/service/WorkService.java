@@ -1,11 +1,13 @@
 package com.detailList.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.detailList.dto.DetailListDto;
 import com.detailList.entity.DetailWork;
 import com.detailList.entity.Work;
 import com.detailList.entity.WorkLabel;
+import com.detailList.entity.WorkMsg;
 import com.detailList.entity.WorkNode;
 import com.detailList.entity.WorkType;
 import com.detailList.entity.WorkTypeRelation;
@@ -25,7 +27,7 @@ public interface WorkService {
 	 * @param userId
 	 * @return
 	 */
-	public List<Work> selectWork(String userId);
+	public List<Work> selectWork(Map<String, Object> queryMap);
 	/**
 	 * 新增工作类别
 	 * @param workType
@@ -87,4 +89,33 @@ public interface WorkService {
 	public void addMergeWork(mergeWork record);
 	
 	public void addWorkEnclosure(workEnclosure e);
+	
+	public DetailListDto exportWorkType(String detailListId,Work work);
+	
+	/**
+	 * 根据工作ID查询关键节点
+	 */
+	public List<WorkNode> queryNodeByWorkId(String workId);
+	/**
+	 * 根据工作ID查询详细工作任务
+	 */
+	public Work qeruyWorkById(String workId) ;
+	
+	public String queryWorkPerson(Map<String,Object> map);
+	
+	public List<mergeWork> queryMergeWork(String workId);
+	
+	public List<workEnclosure> queryEnclosureWork(String workId);
+	
+	public void updateByPrimaryKeySelective(Work work);
+	
+	public void updateWorkPersonRelation(Work aWork,Work fWork);
+	
+	public void updateWorkNode(WorkNode workNode);
+	
+	public List<WorkMsg> queryWorkMsg(String workId);
+	
+	public void insertWorkMsg(Map<String,Object> map);
+	
+	public void updateState(Map<String,Object> map);
 }

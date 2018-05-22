@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class WorkNode implements Serializable {
-    private String id;
+	private String id;
 
     private String workId;
 
@@ -20,6 +20,8 @@ public class WorkNode implements Serializable {
 
     private String nodeKnotApply;
 
+    private String nodeLiableName;
+    
     private String nodeStatus;
 
     private static final long serialVersionUID = 1L;
@@ -32,7 +34,15 @@ public class WorkNode implements Serializable {
         this.id = id == null ? null : id.trim();
     }
 
-    public String getWorkId() {
+    public String getNodeLiableName() {
+		return nodeLiableName;
+	}
+
+	public void setNodeLiableName(String nodeLiableName) {
+		this.nodeLiableName = nodeLiableName;
+	}
+
+	public String getWorkId() {
         return workId;
     }
 

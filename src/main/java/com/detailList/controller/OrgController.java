@@ -46,6 +46,7 @@ public class OrgController {
 			NodeDto node = new NodeDto();
 			node.setNodeId(sysOrganize.getOrgeh());
 			node.setPid(sysOrganize.getObjid());
+			node.setNid(sysOrganize.getOrgeh());
 			node.setText(sysOrganize.getStext());
 			nodes.add(node);
 		}
