@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.detailList.dao.workEnclosureMapper">
+  <resultMap id="BaseResultMap" type="com.detailList.entity.workEnclosure">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="work_id" jdbcType="VARCHAR" property="workId" />
+    <result column="enclosure" jdbcType="VARCHAR" property="enclosure" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, work_id, enclosure
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dl_work_enclosure
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from dl_work_enclosure
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.detailList.entity.workEnclosure">
+    insert into dl_work_enclosure (id, work_id, enclosure
+      )
+    values (#{id,jdbcType=VARCHAR}, #{workId,jdbcType=VARCHAR}, #{enclosure,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.detailList.entity.workEnclosure">
+    insert into dl_work_enclosure
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="workId != null">
+        work_id,
+      </if>
+      <if test="enclosure != null">
+        enclosure,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="workId != null">
+        #{workId,jdbcType=VARCHAR},
+      </if>
+      <if test="enclosure != null">
+        #{enclosure,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.detailList.entity.workEnclosure">
+    update dl_work_enclosure
+    <set>
+      <if test="workId != null">
+        work_id = #{workId,jdbcType=VARCHAR},
+      </if>
+      <if test="enclosure != null">
+        enclosure = #{enclosure,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.detailList.entity.workEnclosure">
+    update dl_work_enclosure
+    set work_id = #{workId,jdbcType=VARCHAR},
+      enclosure = #{enclosure,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="queryEnclosureWork" parameterType="java.lang.String" resultMap="BaseResultMap">
+  			select * from dl_work_enclosure 
+  			where
+  			1=1
+  			and work_id=#{workId}
+  </select>
+</mapper>

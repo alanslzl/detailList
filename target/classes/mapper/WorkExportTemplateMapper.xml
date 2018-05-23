@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.detailList.dao.WorkExportTemplateMapper">
+  <resultMap id="BaseResultMap" type="com.detailList.entity.WorkExportTemplate">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="template_name" jdbcType="VARCHAR" property="templateName" />
+    <result column="dense" jdbcType="VARCHAR" property="dense" />
+    <result column="dense_style" jdbcType="VARCHAR" property="denseStyle" />
+    <result column="detail_type" jdbcType="VARCHAR" property="detailType" />
+    <result column="detail_type_style" jdbcType="VARCHAR" property="detailTypeStyle" />
+    <result column="metting_name" jdbcType="VARCHAR" property="mettingName" />
+    <result column="metting_name_style" jdbcType="VARCHAR" property="mettingNameStyle" />
+    <result column="company_name" jdbcType="VARCHAR" property="companyName" />
+    <result column="company_style" jdbcType="VARCHAR" property="companyStyle" />
+    <result column="work_name_style" jdbcType="VARCHAR" property="workNameStyle" />
+    <result column="work_content_style" jdbcType="VARCHAR" property="workContentStyle" />
+    <result column="work_progress_style" jdbcType="VARCHAR" property="workProgressStyle" />
+    <result column="relation_work_style" jdbcType="VARCHAR" property="relationWorkStyle" />
+    <result column="node_style" jdbcType="VARCHAR" property="nodeStyle" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, template_name, dense, dense_style, detail_type, detail_type_style, metting_name, 
+    metting_name_style, company_name, company_style, work_name_style, work_content_style, 
+    work_progress_style, create_user, update_time,relation_work_style,node_style
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dl_work_export_template
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT
+		dwet.id,
+		dwet.template_name,
+		dwet.dense,
+		dwet.dense_style,
+		dwet.detail_type,
+		dwet.detail_type_style,
+		dwet.metting_name,
+		dwet.metting_name_style,
+		dwet.company_name,
+		dwet.company_style,
+		dwet.work_name_style,
+		dwet.work_content_style,
+		dwet.work_progress_style,
+		CONCAT(z1.NACHN,z1.VORNA) as create_user,
+		dwet.update_time,dwet.relation_work_style,dwet.node_style
+	from dl_work_export_template dwet left join zhr2_001 z1 on dwet.create_user=z1.PERNR
+    where 
+    1=1
+    <if test="templateName!=null and templateName!=''">
+    	and template_name like concat('%',#{templateName},'%')
+    </if>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from dl_work_export_template
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.detailList.entity.WorkExportTemplate">
+    insert into dl_work_export_template (id, template_name, dense, 
+      dense_style, detail_type, detail_type_style, 
+      metting_name, metting_name_style, company_name, 
+      company_style, work_name_style, work_content_style, 
+      work_progress_style, create_user, update_time,relation_work_style,node_style
+      )
+    values (#{id,jdbcType=VARCHAR}, #{templateName,jdbcType=VARCHAR}, #{dense,jdbcType=VARCHAR}, 
+      #{denseStyle,jdbcType=VARCHAR}, #{detailType,jdbcType=VARCHAR}, #{detailTypeStyle,jdbcType=VARCHAR}, 
+      #{mettingName,jdbcType=VARCHAR}, #{mettingNameStyle,jdbcType=VARCHAR}, #{companyName,jdbcType=VARCHAR}, 
+      #{companyStyle,jdbcType=VARCHAR}, #{workNameStyle,jdbcType=VARCHAR}, #{workContentStyle,jdbcType=VARCHAR}, 
+      #{workProgressStyle,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},#{relationWorkStyle,jdbcType=VARCHAR},#{nodeStyle,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.detailList.entity.WorkExportTemplate">
+    insert into dl_work_export_template
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="templateName != null">
+        template_name,
+      </if>
+      <if test="dense != null">
+        dense,
+      </if>
+      <if test="denseStyle != null">
+        dense_style,
+      </if>
+      <if test="detailType != null">
+        detail_type,
+      </if>
+      <if test="detailTypeStyle != null">
+        detail_type_style,
+      </if>
+      <if test="mettingName != null">
+        metting_name,
+      </if>
+      <if test="mettingNameStyle != null">
+        metting_name_style,
+      </if>
+      <if test="companyName != null">
+        company_name,
+      </if>
+      <if test="companyStyle != null">
+        company_style,
+      </if>
+      <if test="workNameStyle != null">
+        work_name_style,
+      </if>
+      <if test="workContentStyle != null">
+        work_content_style,
+      </if>
+      <if test="workProgressStyle != null">
+        work_progress_style,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="relationWorkStyle != null">
+        relation_work_style,
+      </if>
+      <if test="nodeStyle != null">
+        node_style,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="templateName != null">
+        #{templateName,jdbcType=VARCHAR},
+      </if>
+      <if test="dense != null">
+        #{dense,jdbcType=VARCHAR},
+      </if>
+      <if test="denseStyle != null">
+        #{denseStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="detailType != null">
+        #{detailType,jdbcType=VARCHAR},
+      </if>
+      <if test="detailTypeStyle != null">
+        #{detailTypeStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="mettingName != null">
+        #{mettingName,jdbcType=VARCHAR},
+      </if>
+      <if test="mettingNameStyle != null">
+        #{mettingNameStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="companyName != null">
+        #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="companyStyle != null">
+        #{companyStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="workNameStyle != null">
+        #{workNameStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="workContentStyle != null">
+        #{workContentStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="workProgressStyle != null">
+        #{workProgressStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+       <if test="relationWorkStyle != null">
+        #{relationWorkStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="nodeStyle != null">
+        #{nodeStyle,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.detailList.entity.WorkExportTemplate">
+    update dl_work_export_template
+    <set>
+      <if test="templateName != null">
+        template_name = #{templateName,jdbcType=VARCHAR},
+      </if>
+      <if test="dense != null">
+        dense = #{dense,jdbcType=VARCHAR},
+      </if>
+      <if test="denseStyle != null">
+        dense_style = #{denseStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="detailType != null">
+        detail_type = #{detailType,jdbcType=VARCHAR},
+      </if>
+      <if test="detailTypeStyle != null">
+        detail_type_style = #{detailTypeStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="mettingName != null">
+        metting_name = #{mettingName,jdbcType=VARCHAR},
+      </if>
+      <if test="mettingNameStyle != null">
+        metting_name_style = #{mettingNameStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="companyName != null">
+        company_name = #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="companyStyle != null">
+        company_style = #{companyStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="workNameStyle != null">
+        work_name_style = #{workNameStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="workContentStyle != null">
+        work_content_style = #{workContentStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="workProgressStyle != null">
+        work_progress_style = #{workProgressStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+       <if test="relationWorkStyle != null">
+        relation_work_style = #{relationWorkStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="nodeStyle != null">
+        node_style = #{nodeStyle,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.detailList.entity.WorkExportTemplate">
+    update dl_work_export_template
+    set template_name = #{templateName,jdbcType=VARCHAR},
+      dense = #{dense,jdbcType=VARCHAR},
+      dense_style = #{denseStyle,jdbcType=VARCHAR},
+      detail_type = #{detailType,jdbcType=VARCHAR},
+      detail_type_style = #{detailTypeStyle,jdbcType=VARCHAR},
+      metting_name = #{mettingName,jdbcType=VARCHAR},
+      metting_name_style = #{mettingNameStyle,jdbcType=VARCHAR},
+      company_name = #{companyName,jdbcType=VARCHAR},
+      company_style = #{companyStyle,jdbcType=VARCHAR},
+      work_name_style = #{workNameStyle,jdbcType=VARCHAR},
+      work_content_style = #{workContentStyle,jdbcType=VARCHAR},
+      work_progress_style = #{workProgressStyle,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      relation_work_style = #{relationWorkStyle,jdbcType=TIMESTAMP},
+      node_style = #{nodeStyle,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

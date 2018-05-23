@@ -1,0 +1,626 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.detailList.dao.WorkMapper">
+  <resultMap id="BaseResultMap" type="com.detailList.entity.Work">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="work_name" jdbcType="VARCHAR" property="workName" />
+    <result column="job_require" jdbcType="VARCHAR" property="jobRequire" />
+    <result column="metting_type_id" jdbcType="VARCHAR" property="mettingTypeId" />
+    <result column="metting_name" jdbcType="VARCHAR" property="mettingName" />
+    <result column="work_company" jdbcType="VARCHAR" property="workCompany" />
+    <result column="work_company_name" jdbcType="VARCHAR" property="workCompanyName" />
+    <result column="finish_time" jdbcType="TIMESTAMP" property="finishTime" />
+    <result column="work_label_id" jdbcType="VARCHAR" property="workLabelId" />
+    <result column="label_name" jdbcType="VARCHAR" property="labelName" />
+    <result column="work_status" jdbcType="CHAR" property="workStatus" />
+    <result column="work_level" jdbcType="VARCHAR" property="workLevel" />
+    <result column="input_company" jdbcType="VARCHAR" property="inputCompany" />
+    <result column="input_company_name" jdbcType="VARCHAR" property="inputCompanyName" />
+    <result column="supervisor_strategy" jdbcType="VARCHAR" property="supervisorStrategy" />
+    <result column="work_progress" jdbcType="VARCHAR" property="workProgress" />
+    <result column="work_publish_person" jdbcType="VARCHAR" property="workPublishPerson" />
+    <result column="work_publish_person_name" jdbcType="VARCHAR" property="workPublishPersonName" />
+    <result column="metting_time" jdbcType="TIMESTAMP" property="mettingTime" />
+    <result column="supervisor" jdbcType="VARCHAR" property="supervisor" />
+    <result column="supervisor_user_id" jdbcType="VARCHAR" property="supervisorUserId" />
+    <result column="liable_person" jdbcType="VARCHAR" property="liablePerson" />
+    <result column="liable_person_user_id" jdbcType="VARCHAR" property="liablePersonUserId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, work_name, job_require, metting_type_id, work_company, finish_time, work_label_id, 
+    work_status, work_level, input_company, supervisor_strategy, enclosure, merge_id, 
+    work_progress, work_publish_person, metting_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dl_work
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from dl_work
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.detailList.entity.Work">
+    insert into dl_work (id, work_name, job_require, 
+      metting_type_id, work_company, finish_time, 
+      work_label_id, work_status, work_level, 
+      input_company, supervisor_strategy, enclosure, 
+      merge_id, work_progress, work_publish_person, 
+      metting_time)
+    values (#{id,jdbcType=VARCHAR}, #{workName,jdbcType=VARCHAR}, #{jobRequire,jdbcType=VARCHAR}, 
+      #{mettingTypeId,jdbcType=VARCHAR}, #{workCompany,jdbcType=VARCHAR}, #{finishTime,jdbcType=TIMESTAMP}, 
+      #{workLabelId,jdbcType=VARCHAR}, #{workStatus,jdbcType=CHAR}, #{workLevel,jdbcType=VARCHAR}, 
+      #{inputCompany,jdbcType=VARCHAR}, #{supervisorStrategy,jdbcType=VARCHAR}, #{enclosure,jdbcType=VARCHAR}, 
+      #{mergeId,jdbcType=VARCHAR}, #{workProgress,jdbcType=VARCHAR}, #{workPublishPerson,jdbcType=VARCHAR}, 
+      #{mettingTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.detailList.entity.Work">
+    insert into dl_work
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="workName != null">
+        work_name,
+      </if>
+      <if test="jobRequire != null">
+        job_require,
+      </if>
+      <if test="mettingTypeId != null">
+        metting_type_id,
+      </if>
+      <if test="workCompany != null">
+        work_company,
+      </if>
+      <if test="finishTime != null">
+        finish_time,
+      </if>
+      <if test="workLabelId != null">
+        work_label_id,
+      </if>
+      <if test="workStatus != null">
+        work_status,
+      </if>
+      <if test="workLevel != null">
+        work_level,
+      </if>
+      <if test="inputCompany != null">
+        input_company,
+      </if>
+      <if test="supervisorStrategy != null">
+        supervisor_strategy,
+      </if>
+      <if test="workProgress != null">
+        work_progress,
+      </if>
+      <if test="workPublishPerson != null">
+        work_publish_person,
+      </if>
+      <if test="mettingTime != null">
+        metting_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="workName != null">
+        #{workName,jdbcType=VARCHAR},
+      </if>
+      <if test="jobRequire != null">
+        #{jobRequire,jdbcType=VARCHAR},
+      </if>
+      <if test="mettingTypeId != null">
+        #{mettingTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="workCompany != null">
+        #{workCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="finishTime != null">
+        #{finishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="workLabelId != null">
+        #{workLabelId,jdbcType=VARCHAR},
+      </if>
+      <if test="workStatus != null">
+        #{workStatus,jdbcType=CHAR},
+      </if>
+      <if test="workLevel != null">
+        #{workLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="inputCompany != null">
+        #{inputCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="supervisorStrategy != null">
+        #{supervisorStrategy,jdbcType=VARCHAR},
+      </if>
+      <if test="workProgress != null">
+        #{workProgress,jdbcType=VARCHAR},
+      </if>
+      <if test="workPublishPerson != null">
+        #{workPublishPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="mettingTime != null">
+        #{mettingTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.detailList.entity.Work">
+    update dl_work
+    <set>
+      <if test="workName != null">
+        work_name = #{workName,jdbcType=VARCHAR},
+      </if>
+      <if test="jobRequire != null">
+        job_require = #{jobRequire,jdbcType=VARCHAR},
+      </if>
+      <if test="mettingTypeId != null">
+        metting_type_id = #{mettingTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="workCompany != null">
+        work_company = #{workCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="finishTime != null">
+        finish_time = #{finishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="workLabelId != null">
+        work_label_id = #{workLabelId,jdbcType=VARCHAR},
+      </if>
+      <if test="workStatus != null">
+        work_status = #{workStatus,jdbcType=CHAR},
+      </if>
+      <if test="workLevel != null">
+        work_level = #{workLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="inputCompany != null">
+        input_company = #{inputCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="supervisorStrategy != null">
+        supervisor_strategy = #{supervisorStrategy,jdbcType=VARCHAR},
+      </if>
+      <if test="enclosure != null">
+        enclosure = #{enclosure,jdbcType=VARCHAR},
+      </if>
+      <if test="mergeId != null">
+        merge_id = #{mergeId,jdbcType=VARCHAR},
+      </if>
+      <if test="workProgress != null">
+        work_progress = #{workProgress,jdbcType=VARCHAR},
+      </if>
+      <if test="workPublishPerson != null">
+        work_publish_person = #{workPublishPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="mettingTime != null">
+        metting_time = #{mettingTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.detailList.entity.Work">
+    update dl_work
+    set work_name = #{workName,jdbcType=VARCHAR},
+      job_require = #{jobRequire,jdbcType=VARCHAR},
+      metting_type_id = #{mettingTypeId,jdbcType=VARCHAR},
+      work_company = #{workCompany,jdbcType=VARCHAR},
+      finish_time = #{finishTime,jdbcType=TIMESTAMP},
+      work_label_id = #{workLabelId,jdbcType=VARCHAR},
+      work_status = #{workStatus,jdbcType=CHAR},
+      work_level = #{workLevel,jdbcType=VARCHAR},
+      input_company = #{inputCompany,jdbcType=VARCHAR},
+      supervisor_strategy = #{supervisorStrategy,jdbcType=VARCHAR},
+      enclosure = #{enclosure,jdbcType=VARCHAR},
+      merge_id = #{mergeId,jdbcType=VARCHAR},
+      work_progress = #{workProgress,jdbcType=VARCHAR},
+      work_publish_person = #{workPublishPerson,jdbcType=VARCHAR},
+      metting_time = #{mettingTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="selectWorkByWorkTypeId" parameterType="java.util.Map" resultMap="BaseResultMap">
+  		select
+  		dw.*
+  		from dl_work_type dwt 
+		left join dl_work_type_relation dwtr on dwt.id=dwtr.work_type_id
+		left join 
+		(select dw.*,lp.liable_person,sv.supervisor from (SELECT
+			dw.id,
+			dw.work_name,
+			dw.job_require,
+			dm.metting_name as metting_type_id,
+			cpz2.stext as work_company,
+			dw.finish_time,
+			dwl.label_name as work_label_id,
+			dw.work_status,
+			dw.work_level,
+			ipz2.stext as input_company,
+			dw.supervisor_strategy,
+			dw.enclosure,
+			dw.merge_id,
+			dw.work_progress,
+			CONCAT(wpz1.NACHN,wpz1.VORNA) as work_publish_person
+			FROM
+			dl_work AS dw 
+			left join dl_metting dm on dw.metting_type_id=dm.id 
+			left JOIN dl_work_label dwl on dw.work_label_id=dwl.id
+			left join zhr2_001 wpz1 on dw.work_publish_person=wpz1.PERNR
+			left join zhr2_002 ipz2 on dw.input_company=ipz2.orgeh
+			left JOIN zhr2_002 cpz2 on dw.work_company=cpz2.orgeh
+			where
+			1=1
+				<if test="queryWork!=null">
+					<if test="queryWork.workLabelId!=null and queryWork.workLabelId!=''">
+						AND dwl.id = #{queryWork.workLabelId}
+					</if>
+					<if test="queryWork.mettingTypeId!=null and queryWork.mettingTypeId!=''">
+						AND dm.id = #{queryWork.mettingTypeId}
+					</if>
+					<if test="queryWork.workCompany!=null and queryWork.workCompany!=''">
+						AND dw.cpz2.orgeh = #{queryWork.workCompany}
+					</if>
+				</if>
+			) dw
+			inner join (select dwp.work_id,GROUP_CONCAT(CONCAT(z1.NACHN,z1.VORNA)) as liable_person,GROUP_CONCAT(CONCAT(dwp.user_id)) as user_id from dl_work_person dwp inner join zhr2_001 z1 on dwp.user_id=z1.pernr and dwp.type=0 
+			where 1=1 
+			<if test="queryWork!=null">
+				<if test="queryWork.liablePersonId!=null and queryWork.liablePersonId!=''">
+					and z1.PERNR in (#{queryWork.liablePersonId})
+				</if>
+			</if>
+			group by dwp.work_id) lp on dw.id=lp.work_id
+			inner join (select dwp.work_id,GROUP_CONCAT(CONCAT(z1.NACHN,z1.VORNA)) as supervisor,GROUP_CONCAT(CONCAT(dwp.user_id)) as user_id  from dl_work_person dwp inner join zhr2_001 z1 on dwp.user_id=z1.pernr and dwp.type=1 
+			where 1=1 
+			<if test="queryWork!=null">
+			<if test="queryWork.supervisorId!=null and queryWork.supervisorId!=''">
+			and z1.PERNR in (#{queryWork.supervisorId})
+			</if>
+			</if>
+			group by dwp.work_id) sv on dw.id=sv.work_id
+			) dw on dwtr.work_id=dw.id
+		<where>
+			1=1
+			and dwt.id=#{workTypeId}
+			<if test="queryWork!=null">
+				<if test="queryWork.workName!=null and queryWork.workName!=''">
+					AND dw.work_name LIKE concat('%',#{queryWork.workName},'%')
+				</if>
+				<if test="queryWork.workCompany!=null and queryWork.workCompany!=''">
+					AND dw.work_company = #{queryWork.workCompany}
+				</if>
+				<if test="queryWork.workLevel!=null and queryWork.workLevel!=''">
+					AND dw.work_level = #{queryWork.workLevel}
+				</if>
+			</if>
+			and dw.id not in (select DISTINCT merge_work_id from dl_merge_work where 1=1 and type=0)
+		</where>
+  </select>
+  <select id="selectNoTypeWork" parameterType="java.util.Map" resultMap="BaseResultMap">
+  		select * from (select dw.*,lp.liable_person,sv.supervisor from (SELECT
+				dw.id,
+				dw.work_name,
+				dw.job_require,
+				dm.metting_name as metting_type_id,
+				cpz2.stext as work_company,
+				dw.finish_time,
+				dwl.label_name as work_label_id,
+				dw.work_status,
+				dw.work_level,
+				ipz2.stext as input_company,
+				dw.supervisor_strategy,
+				dw.enclosure,
+				dw.merge_id,
+				dw.work_progress,
+				CONCAT(wpz1.NACHN,wpz1.VORNA) as work_publish_person
+				FROM
+				dl_work AS dw 
+				left join dl_metting dm on dw.metting_type_id=dm.id 
+				left JOIN dl_work_label dwl on dw.work_label_id=dwl.id
+				left join zhr2_001 wpz1 on dw.work_publish_person=wpz1.PERNR
+				left join zhr2_002 ipz2 on dw.input_company=ipz2.orgeh
+				left JOIN zhr2_002 cpz2 on dw.work_company=cpz2.orgeh
+				where
+				1=1
+				<if test="queryWork!=null">
+					<if test="queryWork.workLabelId!=null and queryWork.workLabelId!=''">
+						AND dwl.id = #{queryWork.workLabelId}
+					</if>
+					<if test="queryWork.mettingTypeId!=null and queryWork.mettingTypeId!=''">
+						AND dm.id = #{queryWork.mettingTypeId}
+					</if>
+					<if test="queryWork.workCompany!=null and queryWork.workCompany!=''">
+						AND dw.cpz2.orgeh = #{queryWork.workCompany}
+					</if>
+				</if>
+				) dw
+				inner join (select dwp.work_id,GROUP_CONCAT(CONCAT(z1.NACHN,z1.VORNA)) as liable_person,GROUP_CONCAT(CONCAT(dwp.user_id)) as user_id from dl_work_person dwp inner join zhr2_001 z1 on dwp.user_id=z1.PERNR and dwp.type=0 
+				where
+				1=1
+				<if test="queryWork!=null">
+				<if test="queryWork.liablePersonId!=null and queryWork.liablePersonId!=''">
+					and z1.PERNR in (#{queryWork.liablePersonId})
+				</if>
+				</if>
+				group by dwp.work_id) lp on dw.id=lp.work_id
+				inner join (select dwp.work_id,GROUP_CONCAT(CONCAT(z1.NACHN,z1.VORNA)) as supervisor,GROUP_CONCAT(CONCAT(dwp.user_id)) as user_id  from dl_work_person dwp inner join zhr2_001 z1 on dwp.user_id=z1.PERNR and dwp.type=1 
+				where
+				1=1
+				<if test="queryWork!=null">
+				<if test="queryWork.supervisorId!=null and queryWork.supervisorId!=''">
+					and z1.PERNR in (#{queryWork.supervisorId})
+				</if>
+				</if>
+				group by dwp.work_id) sv on dw.id=sv.work_id
+				) dw
+			left join dl_detail_work ddw on dw.id=ddw.work_id
+			left join dl_detail_list ddl on ddw.detail_list_id=ddl.id
+			WHERE
+		1=1
+		and ddl.id=#{detailListId}
+		<if test="queryWork!=null">
+			<if test="queryWork.workName!=null and queryWork.workName!=''">
+				AND dw.work_name LIKE concat('%',#{queryWork.workName},'%')
+			</if>
+			<if test="queryWork.workLevel!=null and queryWork.workLevel!=''">
+				AND dw.work_level = #{queryWork.workLevel}
+			</if>
+		</if>
+		and dw.id not in (select DISTINCT merge_work_id from dl_merge_work where 1=1 and type=0)
+  </select>
+  <select id="selectWork" parameterType="java.lang.String" resultMap="BaseResultMap">
+  		select * from (select dw.*,lp.liable_person,sv.supervisor from (SELECT
+				dw.id,
+				dw.work_name,
+				dw.job_require,
+				dm.metting_name as metting_type_id,
+				cpz2.stext as work_company,
+				dw.finish_time,
+				dwl.label_name as work_label_id,
+				dw.work_status,
+				dw.work_level,
+				ipz2.stext as input_company,
+				dw.supervisor_strategy,
+				dw.enclosure,
+				dw.merge_id,
+				dw.work_progress,
+				CONCAT(wpz1.NACHN,wpz1.VORNA) as work_publish_person
+				FROM
+				dl_work AS dw 
+				left join dl_metting dm on dw.metting_type_id=dm.id 
+				left JOIN dl_work_label dwl on dw.work_label_id=dwl.id
+				left join zhr2_001 wpz1 on dw.work_publish_person=wpz1.PERNR
+				left join zhr2_002 ipz2 on dw.input_company=ipz2.orgeh
+				left JOIN zhr2_002 cpz2 on dw.work_company=cpz2.orgeh
+				where
+				1=1
+				<if test="queryWork!=null">
+					<if test="queryWork.workLabelId!=null and queryWork.workLabelId!=''">
+						AND dwl.id = #{queryWork.workLabelId}
+					</if>
+					<if test="queryWork.mettingTypeId!=null and queryWork.mettingTypeId!=''">
+						AND dm.id = #{queryWork.mettingTypeId}
+					</if>
+					<if test="queryWork.workCompany!=null and queryWork.workCompany!=''">
+						AND cpz2.orgeh = #{queryWork.workCompany}
+					</if>
+				</if>) dw
+				inner join (select dwp.work_id,GROUP_CONCAT(CONCAT(z1.NACHN,z1.VORNA)) as liable_person,GROUP_CONCAT(CONCAT(dwp.user_id)) as user_id from dl_work_person dwp inner join zhr2_001 z1 on dwp.user_id=z1.PERNR and dwp.type=0 
+				where
+				1=1
+				<if test="queryWork!=null">
+					<if test="queryWork.liablePersonId!=null and queryWork.liablePersonId!=''">
+						and z1.PERNR in (#{queryWork.liablePersonId})
+					</if>
+				</if>
+				group by dwp.work_id) lp on dw.id=lp.work_id
+				inner join (select dwp.work_id,GROUP_CONCAT(CONCAT(z1.NACHN,z1.VORNA)) as supervisor,GROUP_CONCAT(CONCAT(dwp.user_id)) as user_id  from dl_work_person dwp inner join zhr2_001 z1 on dwp.user_id=z1.PERNR and dwp.type=1 
+				where
+				1=1
+				<if test="queryWork!=null">
+					<if test="queryWork.supervisorId!=null and queryWork.supervisorId!=''">
+						and z1.PERNR in (#{queryWork.supervisorId})
+					</if>
+				</if>
+				group by dwp.work_id) sv on dw.id=sv.work_id
+				where
+				1=1
+				<if test="userId!=null and userId!=''">
+					and (FIND_IN_SET(#{userId},lp.user_id) or FIND_IN_SET(#{userId},sv.user_id))
+				</if>
+				) dw
+			left join dl_detail_work ddw on dw.id=ddw.work_id
+			left join dl_detail_list ddl on ddw.detail_list_id=ddl.id
+		WHERE
+		1=1
+		
+		<if test="queryWork!=null">
+			<if test="queryWork.workName!=null and queryWork.workName!=''">
+				AND dw.work_name LIKE concat('%',#{queryWork.workName},'%')
+			</if>
+			<if test="queryWork.workLevel!=null and queryWork.workLevel!=''">
+				AND dw.work_level = #{queryWork.workLevel}
+			</if>
+		</if>
+		and dw.id not in (select DISTINCT merge_work_id from dl_merge_work where 1=1 and type=0)
+  </select>
+  
+  <select id="selectByWorkId" parameterType="java.lang.String" resultMap="BaseResultMap">
+  		select dw.*,lp.liable_person,sv.supervisor from (SELECT
+				dw.id,
+				dw.work_name,
+				dw.job_require,
+				dm.metting_name as metting_type_id,
+				cpz2.stext as work_company,
+				dw.finish_time,
+				dwl.label_name as work_label_id,
+				dw.work_status,
+				dw.work_level,
+				ipz2.stext as input_company,
+				dw.supervisor_strategy,
+				dw.enclosure,
+				dw.merge_id,
+				dw.work_progress,
+				CONCAT(wpz1.NACHN,wpz1.VORNA) as work_publish_person
+				FROM
+				dl_work AS dw 
+				left join dl_metting dm on dw.metting_type_id=dm.id 
+				left JOIN dl_work_label dwl on dw.work_label_id=dwl.id
+				left join zhr2_001 wpz1 on dw.work_publish_person=wpz1.PERNR
+				left join zhr2_002 ipz2 on dw.input_company=ipz2.orgeh
+				left JOIN zhr2_002 cpz2 on dw.work_company=cpz2.orgeh) dw
+				inner join (select dwp.work_id,GROUP_CONCAT(CONCAT(z1.NACHN,z1.VORNA)) as liable_person,GROUP_CONCAT(CONCAT(dwp.user_id)) as user_id from dl_work_person dwp inner join zhr2_001 z1 on dwp.user_id=z1.PERNR and dwp.type=0 group by dwp.work_id) lp on dw.id=lp.work_id
+				inner join (select dwp.work_id,GROUP_CONCAT(CONCAT(z1.NACHN,z1.VORNA)) as supervisor,GROUP_CONCAT(CONCAT(dwp.user_id)) as user_id  from dl_work_person dwp inner join zhr2_001 z1 on dwp.user_id=z1.PERNR and dwp.type=1 group by dwp.work_id) sv on dw.id=sv.work_id
+		WHERE
+		1=1
+		and dw.id=#{workId}
+  </select>
+  
+  <select id="selectRelationWork"  parameterType="java.util.Map" resultMap="BaseResultMap">
+  	select * from (select dw.*,lp.liable_person,sv.supervisor from (SELECT
+				dw.id,
+				dw.work_name,
+				dw.job_require,
+				dm.metting_name as metting_type_id,
+				cpz2.stext as work_company,
+				dw.finish_time,
+				dwl.label_name as work_label_id,
+				dw.work_status,
+				dw.work_level,
+				ipz2.stext as input_company,
+				dw.supervisor_strategy,
+				dw.enclosure,
+				dw.merge_id,
+				dw.work_progress,
+				CONCAT(wpz1.NACHN,wpz1.VORNA) as work_publish_person
+				FROM
+				dl_work AS dw 
+				left join dl_metting dm on dw.metting_type_id=dm.id 
+				left JOIN dl_work_label dwl on dw.work_label_id=dwl.id
+				left join zhr2_001 wpz1 on dw.work_publish_person=wpz1.PERNR
+				left join zhr2_002 ipz2 on dw.input_company=ipz2.orgeh
+				left JOIN zhr2_002 cpz2 on dw.work_company=cpz2.orgeh
+				where
+				1=1
+				<if test="queryWork!=null">
+					<if test="queryWork.workLabelId!=null and queryWork.workLabelId!=''">
+						AND dwl.id = #{queryWork.workLabelId}
+					</if>
+					<if test="queryWork.mettingTypeId!=null and queryWork.mettingTypeId!=''">
+						AND dm.id = #{queryWork.mettingTypeId}
+					</if>
+					<if test="queryWork.workCompany!=null and queryWork.workCompany!=''">
+						AND cpz2.orgeh = #{queryWork.workCompany}
+					</if>
+				</if>) dw
+				inner join (select dwp.work_id,GROUP_CONCAT(CONCAT(z1.NACHN,z1.VORNA)) as liable_person,GROUP_CONCAT(CONCAT(dwp.user_id)) as user_id from dl_work_person dwp inner join zhr2_001 z1 on dwp.user_id=z1.PERNR and dwp.type=0 
+				where
+				1=1
+				<if test="queryWork!=null">
+					<if test="queryWork.liablePersonId!=null and queryWork.liablePersonId!=''">
+						and z1.PERNR in (#{queryWork.liablePersonId})
+					</if>
+				</if>
+				group by dwp.work_id) lp on dw.id=lp.work_id
+				inner join (select dwp.work_id,GROUP_CONCAT(CONCAT(z1.NACHN,z1.VORNA)) as supervisor,GROUP_CONCAT(CONCAT(dwp.user_id)) as user_id  from dl_work_person dwp inner join zhr2_001 z1 on dwp.user_id=z1.PERNR and dwp.type=1 
+				where
+				1=1
+				<if test="queryWork!=null">
+					<if test="queryWork.supervisorId!=null and queryWork.supervisorId!=''">
+						and z1.PERNR in (#{queryWork.supervisorId})
+					</if>
+				</if>
+				group by dwp.work_id) sv on dw.id=sv.work_id
+				where
+				1=1
+				<if test="userId!=null and userId!=''">
+					and (FIND_IN_SET(#{userId},lp.user_id) or FIND_IN_SET(#{userId},sv.user_id))
+				</if>
+				) dw
+			left join dl_detail_work ddw on dw.id=ddw.work_id
+			left join dl_detail_list ddl on ddw.detail_list_id=ddl.id
+			left join dl_merge_work dmw on dw.id=dmw.merge_work_id and dmw.type=1
+		WHERE
+		1=1
+		
+		<if test="queryWork!=null">
+			<if test="queryWork.workName!=null and queryWork.workName!=''">
+				AND dw.work_name LIKE concat('%',#{queryWork.workName},'%')
+			</if>
+			<if test="queryWork.workLevel!=null and queryWork.workLevel!=''">
+				AND dw.work_level = #{queryWork.workLevel}
+			</if>
+		</if>
+		and dw.id=#{workId}
+		and dw.id not in (select DISTINCT merge_work_id from dl_merge_work where 1=1 and type=0)
+  </select>
+  <select id="qeruyWorkById" parameterType="java.lang.String" resultMap="BaseResultMap">
+  					select dw.*,lp.liable_person,lp.liable_person_user_id,sv.supervisor,sv.supervisor_user_id from (SELECT
+				dw.id,
+				dw.work_name,
+				dw.job_require,
+				dm.metting_name,
+				dw.metting_type_id,
+				cpz2.stext as work_company_name,
+				dw.work_company,
+				dw.finish_time,
+				dw.metting_time,
+				dwl.label_name ,
+				dw.work_label_id,
+				dw.work_status,
+				dw.work_level,
+				ipz2.stext as input_company_name,
+				dw.input_company,
+				dw.supervisor_strategy,
+				dw.enclosure,
+				dw.merge_id,
+				dw.work_progress,
+				CONCAT(wpz1.NACHN,wpz1.VORNA) as work_publish_person_name,
+				dw.work_publish_person 
+				FROM
+				dl_work AS dw 
+				left join dl_metting dm on dw.metting_type_id=dm.id 
+				left JOIN dl_work_label dwl on dw.work_label_id=dwl.id
+				left join zhr2_001 wpz1 on dw.work_publish_person=wpz1.PERNR
+				left join zhr2_002 ipz2 on dw.input_company=ipz2.orgeh
+				left JOIN zhr2_002 cpz2 on dw.work_company=cpz2.orgeh) dw
+				inner join (select dwp.work_id,GROUP_CONCAT(CONCAT(z1.NACHN,z1.VORNA)) as liable_person,GROUP_CONCAT(CONCAT(dwp.user_id)) as liable_person_user_id from dl_work_person dwp inner join zhr2_001 z1 on dwp.user_id=z1.PERNR and dwp.type=0 group by dwp.work_id) lp on dw.id=lp.work_id
+				inner join (select dwp.work_id,GROUP_CONCAT(CONCAT(z1.NACHN,z1.VORNA)) as supervisor,GROUP_CONCAT(CONCAT(dwp.user_id)) as supervisor_user_id  from dl_work_person dwp inner join zhr2_001 z1 on dwp.user_id=z1.PERNR and dwp.type=1 group by dwp.work_id) sv on dw.id=sv.work_id
+		WHERE
+		1=1
+		and dw.id=#{workId}
+  </select>
+  
+  <select id="queryWorkPerson" parameterType="java.util.Map" resultType="java.lang.String">
+			   select type from dl_work_person 
+			   where 
+			   1=1
+			  and work_id=#{workId}
+			  and user_id=#{userId}
+  </select>
+   <select id="queryEnclosureWork" parameterType="java.lang.String" resultType="java.util.List">
+  			select * from dl_work_enclosure 
+  			where
+  			1=1
+  			and work_id=#{workId}
+  </select>
+  
+    <delete id="delWorkPerson" parameterType="java.util.Map" >
+			  DELETE FROM dl_work_person 
+			  where
+			   1=1
+			  and work_id=#{workId}
+			  and user_id=#{userId}
+  </delete>
+   <select id="queryWorkMsg" parameterType="java.lang.String" resultType="java.util.List">
+  			select id,msg_name as msgName, msg_content as msgContent, msg_time as msgTime, work_id as workId from dl_work_msg 
+  			where
+  			1=1
+  			and work_id=#{workId}
+  			ORDER BY msg_time ASC 
+  </select>
+  <insert id="insertWorkMsg" parameterType="java.util.Map">
+    insert into dl_work_msg (id,msg_name,msg_content,msg_time,work_id)
+    values (#{id,jdbcType=VARCHAR},#{msgName,jdbcType=VARCHAR},#{msgContent,jdbcType=VARCHAR},#{msgTime,jdbcType=TIMESTAMP},#{workId,jdbcType=VARCHAR}) 
+  </insert>
+  <update id="updateState" parameterType="java.util.Map">
+   update dl_work set work_status =#{workStatus} where id=#{workId}
+  </update>
+</mapper>

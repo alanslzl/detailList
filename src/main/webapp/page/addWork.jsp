@@ -739,9 +739,7 @@ function removeChoice(obj){
 							<label class="col-md-2">工作状态</label>
 							<div class="col-md-10">
 								<select size="50" id="workStatus">
-									<option value="未开始">未开始</option>
 									<option value="进行中">进行中</option>
-									<option value="已完成">已完成</option>
 								</select>
 							</div>
 						</div>
@@ -773,6 +771,7 @@ function removeChoice(obj){
 							<label class="col-md-2">工作等级</label>
 							<div class="col-md-10">
 								<select size="50" id="workLevel">
+									<option value="">请选择</option>
 									<option value="A">A</option>
 									<option value="B">B</option>
 									<option value="C">C</option>

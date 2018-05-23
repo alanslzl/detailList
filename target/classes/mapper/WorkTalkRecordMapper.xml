@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.detailList.dao.WorkTalkRecordMapper">
+  <resultMap id="BaseResultMap" type="com.detailList.entity.WorkTalkRecord">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="work_id" jdbcType="VARCHAR" property="workId" />
+    <result column="talk_record_content" jdbcType="VARCHAR" property="talkRecordContent" />
+    <result column="talk_time" jdbcType="TIMESTAMP" property="talkTime" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, work_id, talk_record_content, talk_time, user_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dl_work_talk_record
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from dl_work_talk_record
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.detailList.entity.WorkTalkRecord">
+    insert into dl_work_talk_record (id, work_id, talk_record_content, 
+      talk_time, user_id)
+    values (#{id,jdbcType=VARCHAR}, #{workId,jdbcType=VARCHAR}, #{talkRecordContent,jdbcType=VARCHAR}, 
+      #{talkTime,jdbcType=TIMESTAMP}, #{userId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.detailList.entity.WorkTalkRecord">
+    insert into dl_work_talk_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="workId != null">
+        work_id,
+      </if>
+      <if test="talkRecordContent != null">
+        talk_record_content,
+      </if>
+      <if test="talkTime != null">
+        talk_time,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="workId != null">
+        #{workId,jdbcType=VARCHAR},
+      </if>
+      <if test="talkRecordContent != null">
+        #{talkRecordContent,jdbcType=VARCHAR},
+      </if>
+      <if test="talkTime != null">
+        #{talkTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.detailList.entity.WorkTalkRecord">
+    update dl_work_talk_record
+    <set>
+      <if test="workId != null">
+        work_id = #{workId,jdbcType=VARCHAR},
+      </if>
+      <if test="talkRecordContent != null">
+        talk_record_content = #{talkRecordContent,jdbcType=VARCHAR},
+      </if>
+      <if test="talkTime != null">
+        talk_time = #{talkTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.detailList.entity.WorkTalkRecord">
+    update dl_work_talk_record
+    set work_id = #{workId,jdbcType=VARCHAR},
+      talk_record_content = #{talkRecordContent,jdbcType=VARCHAR},
+      talk_time = #{talkTime,jdbcType=TIMESTAMP},
+      user_id = #{userId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

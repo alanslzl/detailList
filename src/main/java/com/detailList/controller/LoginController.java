@@ -50,10 +50,10 @@ public class LoginController{
         		request.getSession().setAttribute("userInfo", userInfo);
         		return "redirect:/index.do";
         	}else {
-        		throw new AuthenticationException("用户验证失败");
+        		return "redirect:page/login.jsp";
         	}
-        }catch (AuthenticationException e) {
-            //token.clear();
+        }catch (Exception e) {
+        	e.printStackTrace();
             return "redirect:page/login.jsp";
         }
     }

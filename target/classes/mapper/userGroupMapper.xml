@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.detailList.dao.userGroupMapper">
+  <resultMap id="BaseResultMap" type="com.detailList.entity.userGroup">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="group_name" jdbcType="VARCHAR" property="groupName" />
+    <result column="group_user" jdbcType="VARCHAR" property="groupUser" />
+    <result column="group_user_id" jdbcType="VARCHAR" property="groupUserId" />
+    <result column="group_comment" jdbcType="VARCHAR" property="groupComment" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, group_name, group_comment
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+ 	dup.id,dup.group_name,dup.group_comment,GROUP_CONCAT(CONCAT(z1.NACHN,z1.VORNA)) as group_user,GROUP_CONCAT(user_id) as group_user_id
+    from dl_user_group dup left join dl_user_group_ins dupi on dup.id=dupi.group_id left join zhr2_001 z1 on dupi.user_id=z1.PERNR
+    where dup.id = #{id,jdbcType=INTEGER}
+    group by dup.id
+  </select>
+  <select id="selectGroup" parameterType="com.detailList.entity.userGroup" resultMap="BaseResultMap">
+    select 
+ 	dup.id,dup.group_name,dup.group_comment,GROUP_CONCAT(CONCAT(z1.NACHN,z1.VORNA)) as group_user,GROUP_CONCAT(user_id) as group_user_id
+    from dl_user_group dup left join dl_user_group_ins dupi on dup.id=dupi.group_id left join zhr2_001 z1 on dupi.user_id=z1.PERNR
+    group by dup.id
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from dl_user_group
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.detailList.entity.userGroup">
+    insert into dl_user_group (id, group_name, group_comment
+      )
+    values (#{id,jdbcType=INTEGER}, #{groupName,jdbcType=VARCHAR}, #{groupComment,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.detailList.entity.userGroup" useGeneratedKeys="true" keyProperty="id">
+    insert into dl_user_group
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="groupName != null">
+        group_name,
+      </if>
+      <if test="groupComment != null">
+        group_comment,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="groupName != null">
+        #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="groupComment != null">
+        #{groupComment,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.detailList.entity.userGroup">
+    update dl_user_group
+    <set>
+      <if test="groupName != null">
+        group_name = #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="groupComment != null">
+        group_comment = #{groupComment,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.detailList.entity.userGroup">
+    update dl_user_group
+    set group_name = #{groupName,jdbcType=VARCHAR},
+      group_comment = #{groupComment,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

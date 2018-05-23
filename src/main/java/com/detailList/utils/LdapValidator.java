@@ -132,6 +132,7 @@ public final class LdapValidator {
 			if (logger.isErrorEnabled()) {
 				logger.error(e.getMessage());
 			}
+			e.printStackTrace();
 			r.setResultCode(LdapValidator.INVALID_CREDENTIALS);
 			r.setResultMessage(e.getMessage());
 		}
